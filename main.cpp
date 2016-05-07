@@ -1,361 +1,153 @@
+#include "regtree.hpp"
 #include <cstdio>
-// #include <cstring>
-#include <string>
-// #include <utility>
-#include <algorithm>
 #include <fstream>
+#include <vector>
+#include <queue>
 
-using std::ifstream;
-using std::string;
+using std::pair;
 
-const int N = 1024;
-
-enum Operator {
-    EMPTY = 0,
-    CAT = '.',
-    OR = '|',
-    STAR = '*',
-};
-
-const char OP_CAT = '.';
-const char OP_OR = '|';
-const char OP_STAR = '*';
-const char OP_EMPTY = 0;
-
-class RegTree {
+class NFANode {
   public:
-    RegTree(): _leaf(false), _ope(OP_EMPTY), _lson(NULL), _rson(NULL) {}
+    NFANode(): _end(true) {}
 
-    RegTree(char data)
-        : _leaf(true),
-          _ope(data),
-          _lson(NULL),
-          _rson(NULL) {
-
+    NFANode(char tag, NFANode *next, bool end = false): _end(end) {
+        _vecNext.push_back(std::move(std::make_pair(tag, next)));
     }
 
-
-    RegTree(char ope, RegTree *lson, RegTree *rson)
-        : _leaf(false),
-          _ope(ope),
-          _lson(lson),
-          _rson(rson) {
-
+    NFANode(NFANode *next, bool end = false): _end(end) {
+        _vecNext.push_back(std::make_pair(0, next));
     }
 
-    RegTree *lson() {
-        return _lson;
+    // explicit NFANode(bool end): _end(end) {}
+
+    const std::vector<pair<char, NFANode *>> &next() {
+        return _vecNext;
     }
 
-    RegTree *lson(RegTree *const data) {
-        _leaf = false;
-        _lson = data;
-        return _lson;
+    bool end() {
+        return _end;
     }
 
-    RegTree *rson() {
-        return _rson;
-    }
+    void display() {
+        printf("cur: ");
 
-    RegTree *rson( RegTree *const &data) {
-#ifdef DEBUG
-        printf("modify rson with lvalue\n");
-#endif
-        _leaf = false;
-        _rson = data;
-        return _rson;
-    }
-
-    RegTree *rson( RegTree * const &&data) {
-        _leaf = false;
-        _rson = std::move(data);
-        return _rson;
-    }
-
-    char data(const char data) {
-        _ope = data;
-        return _ope;
-    }
-
-    char data() {
-        return _ope;
-    }
-
-    bool leaf() const {
-        return _leaf;
-    }
-
-    bool leaf() {
-        return _leaf;
-    }
-
-    void _backOrderDisplay(const RegTree *root) {
-        // printf("root = %p\n", static_cast<void *>(const_cast<RegTree *>(root)));
-
-        if (!root) {
+        if (_end) {
+            printf("end.\n");
             return;
         }
 
-        if (root -> _leaf) {
-            printf("data = %c\n", root -> _ope);
-        } else {
-            if (root -> _lson) {
-#ifdef DEBUG
-                printf("to left\n");
-#endif
-                _backOrderDisplay(root -> _lson);
-            }
-
-            if (root -> _rson) {
-#ifdef DEBUG
-                printf("to right\n");
-#endif
-                _backOrderDisplay(root -> _rson);
-            }
-
-            printf("op = %c\n", root -> _ope);
+        for (auto &var : _vecNext) {
+            printf("%c ", var.first);
+            var.second -> display();
         }
     }
 
-    void backOrderDisplay() {
-        backOrderDisplay(this);
-    }
-
-    void backOrderDisplay(RegTree *other) {
-        _backOrderDisplay(other);
-        printf("------------------------\n");
-    }
-
-    void _preOrderDisplay(const RegTree *root) {
-        // printf("root = %p\n", static_cast<void *>(const_cast<RegTree *>(root)));
-
-        if (!root) {
-            return;
-        }
-
-        if (root -> _leaf) {
-            printf("data = %c\n", root -> _ope);
-        } else {
-            printf("op = %c\n", root -> _ope);
-
-            if (root -> _lson) {
-#ifdef DEBUG
-                printf("to left\n");
-#endif
-                _preOrderDisplay(root -> _lson);
-            }
-
-            if (root -> _rson) {
-#ifdef DEBUG
-                printf("to right\n");
-#endif
-                _preOrderDisplay(root -> _rson);
-            }
+    ~NFANode() {
+        for (auto &var : _vecNext) {
+            var.second -> ~NFANode();
+            delete var.second;
         }
     }
 
-    void preOrderDisplay() {
-        preOrderDisplay(this);
-    }
-
-    void preOrderDisplay(RegTree *other) {
-        _preOrderDisplay(other);
-        printf("------------------------\n");
-    }
-
-    void _middleOrderDisplay(const RegTree *root) {
-        // printf("root = %p\n", static_cast<void *>(const_cast<RegTree *>(root)));
-
-        if (!root) {
-            return;
-        }
-
-        if (root -> _leaf) {
-            printf("data = %c\n", root -> _ope);
-        } else {
-            if (root -> _lson) {
-#ifdef DEBUG
-                printf("to left\n");
-#endif
-                _middleOrderDisplay(root -> _lson);
-            }
-
-            printf("op = %c\n", root -> _ope);
-
-            if (root -> _rson) {
-#ifdef DEBUG
-                printf("to right\n");
-#endif
-                _middleOrderDisplay(root -> _rson);
-            }
-        }
-    }
-
-    void middleOrderDisplay() {
-        middleOrderDisplay(this);
-    }
-
-    void middleOrderDisplay(RegTree *other) {
-        _middleOrderDisplay(other);
-        printf("------------------------\n");
-    }
-
-    ~RegTree() = default;
-
-    // private:
-    bool _leaf;
-    char _ope;
-    RegTree *_lson;
-    RegTree *_rson;
+  private:
+    bool _end;
+    std::vector<pair<char, NFANode *>> _vecNext;
+    static unsigned int cnt;
 };
 
-RegTree *buildNFA(const string &reg) {
-#ifdef DEBUG
-    printf("reg = %s\n", reg.data());
-#endif
-    RegTree *root = new RegTree();
-    RegTree *parent = NULL;
-    RegTree *gp = NULL;
-    RegTree *p = root;
+class NFA {
+  public:
+    NFA() {
+        _head = new NFANode();
+    };
 
-    for (auto it = reg.rbegin(); it != reg.rend(); ++it) {
-        char cur = *it;
-#ifdef DEBUG
-        printf("cur = %c\n", cur);
-#endif
+    NFA(NFANode *head): _head(head) {}
 
-        if (*it == '(') {
-            printf("error**: missing symmetric (");
-            return NULL;
-        }
-
-        if (*it == ')') {
-
-            size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);
-
-            if (t == string::npos) {
-                printf("error**: missing symmetric (");
-                return NULL;
-            } else {
-                t += 1;
-                string temp = reg.substr(t, reg.rend() - (it + 1) - t);
-                it = reg.rend() - t;
-
-                if (parent && !parent -> leaf()) {
-                    parent -> data(OP_CAT);
-                }
-
-                RegTree *r = buildNFA(temp);
-                p -> rson(r);
-                p -> lson(new RegTree());
-                gp = parent;
-                parent = p;
-
-                p = p -> lson();
-            }
-
-            continue;
-        }
-
-        if (cur == '|') {
-
-#ifdef DEBUG
-            printf("||||||||\n");
-#endif
-
-            if (!p -> leaf() && !p -> lson() && !p -> rson()) {
-                char data = parent -> rson() -> data();
-                delete parent;
-                parent = new RegTree(data);
-            }
-
-            size_t t = reg.rfind('|', reg.rend() - (it + 2));
-
-            if (t == string::npos) {
-#ifdef DEBUG
-                printf("this is the last |\n");
-#endif
-                p = root;
-                root = new RegTree('|');
-                root -> rson(p);
-                root -> lson(buildNFA(reg.substr(0, reg.rend() - (it + 1))));
-#ifdef DEBUG
-                printf("t == string::npos: \n");
-                printf("the reg = %s\n", reg.data());
-                root -> backOrderDisplay();
-#endif
-                return root;
-            } else {
-#ifdef DEBUG
-                printf("this is not the last |\n");
-#endif
-                t += 1;
-                p = root;
-                root = new RegTree('|');
-                root -> rson(p);
-                root -> lson(buildNFA(reg.substr(t, reg.rend() - (it + 1) - t)));
-                it = reg.rend() - t - 1;
-            }
-
-            continue;
-        }
-
-
-        if (parent && !parent -> leaf()) {
-#ifdef DEBUG
-            printf("add cat to parent\n");
-#endif
-            parent -> data(OP_CAT);
-        }
-
-        p -> rson(new RegTree(cur));
-        p -> lson(new RegTree());
-        gp = parent;
-        parent = p;
-
-        p = p -> lson();
+    ~NFA() {
+        delete _head;
     }
 
-    if (!p -> leaf() && !p -> lson() && !p -> rson()) {
-        RegTree *r = parent -> rson();
+    void display() {
+        std::queue<NFANode *> qnfa;
+        qnfa.push(_head);
+        NFANode *cur = NULL;
+        while (!qnfa.empty()) {
+            cur = qnfa.front();
+            qnfa.pop();
+            if (cur -> end()) {
+                printf("end.\n");
+                continue;
+            }
+            for (auto &var : cur ->next()) {
+                printf("%c ", var.first);
+                qnfa.push(var.second);
+            }
+            putchar(10);
+        }
+    }
 
-        if (gp) {
-#ifdef DEBUG
-            printf("modify gp.\n");
-#endif
-            delete gp -> lson();
-            gp -> lson(r);
+  private:
+    NFANode *_head;
+};
+
+NFANode *_buildNFA(RegTree *root) {
+    if (!root) {
+        return NULL;
+    }
+
+    char first = 0;
+    char tag = 0;
+    NFANode *next = NULL;
+    NFANode *cur = NULL;
+
+    if (root -> lson()) {
+        if (root -> lson() -> leaf()) {
+            first = root -> lson() -> data();
         } else {
-#ifdef DEBUG
-            printf("modify root.\n");
-#endif
-            delete root;
-            root = r;
+            next = _buildNFA(root -> lson());
         }
     }
 
-#ifdef DEBUG
-    printf("before return: \n");
-    root -> backOrderDisplay();
-#endif
-    return root;
+    if (root -> rson()) {
+        if (root -> rson() -> leaf()) {
+            tag = root -> rson() -> data();
+        } else {
+            next = _buildNFA(root -> rson());
+        }
+    }
+
+    if (first) {
+        NFANode *end = new NFANode();
+        next = new NFANode(tag, end);
+        cur = new NFANode(first, next);
+        return cur;
+    }
+
+    cur = new NFANode(tag, next);
+    // printf("op = %c\n", root -> data());
+
+    return cur;
 }
 
-RegTree *inputNFA() {
+NFA *buildNFA(RegTree *root) {
+    NFANode *nfa = _buildNFA(root);
+
+    return new NFA(nfa);
+}
+
+NFA *inputNFA() {
     ifstream input("input.txt");
     string reg;
     input >> reg;
     input.close();
-
-
-    return buildNFA(reg);
+    RegTree *root = buildRegTree(reg);
+    root -> backOrderDisplay();
+    return buildNFA(root);
 }
 
 int main() {
-    // inputNFA();
-    RegTree *root = inputNFA();
-    root -> backOrderDisplay();
-    root -> middleOrderDisplay();
+    NFA *nfa = inputNFA();
+    nfa -> display();
 
     return 0;
 }
