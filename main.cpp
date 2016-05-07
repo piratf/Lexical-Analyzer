@@ -25,6 +25,10 @@ class NFANode {
 
     // explicit NFANode(bool end): _end(end) {}
 
+    void add(char tag, NFANode *next) {
+        _vecNext.push_back(std::make_pair(0, next));
+    }
+
     const std::vector<pair<char, NFANode *>> &children() {
         return _vecNext;
     }
@@ -56,6 +60,7 @@ class NFANode {
             for (auto &var : _vecNext) {
                 if (var.second) {
                     delete var.second;
+                    var.second = NULL;
                 }
             }
         }
@@ -99,7 +104,9 @@ class NFA {
             cur = qnfa.front();
             qnfa.pop();
 
-            if (cur -> end()) {
+            printf("---\n");
+
+            if (cur == _tail -> next()) {
                 printf("end.\n");
                 continue;
             }
@@ -112,6 +119,7 @@ class NFA {
             putchar(10);
         }
 
+        printf("-------display end-------\n");
     }
 
   private:
@@ -141,12 +149,31 @@ NFA *_buildNFA(RegTree *root) {
 
     if (root -> rson()) {
         right = _buildNFA(root -> rson());
-        right -> display();
     }
 
     switch (root -> data()) {
         case '.':
             left -> uion(right);
+            break;
+
+        case '|':
+            // left -> uion(right);
+            NFANode *p;
+            p = new NFANode();
+            left -> uion(new NFA(0, p));
+            // left -> display();
+            // delete p;
+            right -> uion(new NFA(0, p));
+            // left -> uion(right);
+            NFA *ret;
+            ret = new NFA(0, new NFANode());
+            ret -> uion(left);
+            ret -> head() -> add(0, right -> head());
+            right -> display();
+            ret -> display();
+            printf("ret = %p\n", static_cast<void *>(ret));
+            fflush(stdout);
+            return ret;
             break;
 
         default:
@@ -172,8 +199,11 @@ NFA *inputNFA() {
 }
 
 int main() {
-    freopen("output.txt", "w", stdout);
+    // freopen("output.txt", "w", stdout);
     NFA *nfa = inputNFA();
+    printf("ret = %p\n", static_cast<void *>(nfa));
+    fflush(stdout);
+    // nfa -> display();
     delete nfa;
     return 0;
 }
