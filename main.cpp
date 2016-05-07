@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <queue>
+#include <set>
 #include <iostream>
 
 using std::cout;
@@ -55,16 +56,7 @@ class NFANode {
         }
     }
 
-    ~NFANode() {
-        if (!_end) {
-            for (auto &var : _vecNext) {
-                if (var.second) {
-                    delete var.second;
-                    var.second = NULL;
-                }
-            }
-        }
-    }
+    ~NFANode() = default;
 
   private:
     bool _end;
@@ -79,7 +71,33 @@ class NFA {
     }
 
     ~NFA() {
-        delete _head;
+        // delete _head;
+        std::queue<NFANode *> qnfa;
+        std::set<NFANode *> sdel;
+        sdel.insert(_head);
+        qnfa.push(_head);
+        NFANode *cur = NULL;
+
+        while (!qnfa.empty()) {
+            cur = qnfa.front();
+            qnfa.pop();
+
+            if (cur == _tail -> next()) {
+                continue;
+            }
+
+            for (auto &var : cur ->children()) {
+                qnfa.push(var.second);
+
+                if (sdel.find(var.second) == sdel.end()) {
+                    sdel.insert(var.second);
+                }
+            }
+        }
+
+        for (auto var : sdel) {
+            delete var;
+        }
     }
 
     void uion(NFA *other) {
@@ -112,7 +130,12 @@ class NFA {
             }
 
             for (auto &var : cur ->children()) {
-                printf("%c ", var.first);
+                if (var.first) {
+                    printf("%c ", var.first);
+                } else {
+                    printf("|e| ");
+                }
+
                 qnfa.push(var.second);
             }
 
@@ -157,22 +180,14 @@ NFA *_buildNFA(RegTree *root) {
             break;
 
         case '|':
-            // left -> uion(right);
             NFANode *p;
             p = new NFANode();
             left -> uion(new NFA(0, p));
-            // left -> display();
-            // delete p;
             right -> uion(new NFA(0, p));
-            // left -> uion(right);
             NFA *ret;
             ret = new NFA(0, new NFANode());
             ret -> uion(left);
             ret -> head() -> add(0, right -> head());
-            right -> display();
-            ret -> display();
-            printf("ret = %p\n", static_cast<void *>(ret));
-            fflush(stdout);
             return ret;
             break;
 
@@ -199,7 +214,7 @@ NFA *inputNFA() {
 }
 
 int main() {
-    // freopen("output.txt", "w", stdout);
+    freopen("output.txt", "w", stdout);
     NFA *nfa = inputNFA();
     printf("ret = %p\n", static_cast<void *>(nfa));
     fflush(stdout);
