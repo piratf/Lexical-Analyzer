@@ -1,8 +1,13 @@
 #include "regtree.hpp"
 #include <cstdio>
+#include <typeinfo>
 #include <fstream>
 #include <vector>
 #include <queue>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 using std::pair;
 
@@ -20,12 +25,16 @@ class NFANode {
 
     // explicit NFANode(bool end): _end(end) {}
 
-    const std::vector<pair<char, NFANode *>> &next() {
+    const std::vector<pair<char, NFANode *>> &children() {
         return _vecNext;
     }
 
     bool end() {
         return _end;
+    }
+
+    NFANode *&next() {
+        return _vecNext[0].second;
     }
 
     void display() {
@@ -43,9 +52,12 @@ class NFANode {
     }
 
     ~NFANode() {
-        for (auto &var : _vecNext) {
-            var.second -> ~NFANode();
-            delete var.second;
+        if (!_end) {
+            for (auto &var : _vecNext) {
+                if (var.second) {
+                    delete var.second;
+                }
+            }
         }
     }
 
@@ -57,82 +69,96 @@ class NFANode {
 
 class NFA {
   public:
-    NFA() {
-        _head = new NFANode();
-    };
-
-    NFA(NFANode *head): _head(head) {}
+    explicit NFA(char tag, NFANode *next): _head(new NFANode(tag, next)),
+        _tail(_head) {
+    }
 
     ~NFA() {
         delete _head;
+    }
+
+    void uion(NFA *other) {
+        _tail -> next() = other -> head();
+        _tail = other -> tail();
+    }
+
+    NFANode *head() {
+        return _head;
+    }
+
+    NFANode *tail() {
+        return _tail;
     }
 
     void display() {
         std::queue<NFANode *> qnfa;
         qnfa.push(_head);
         NFANode *cur = NULL;
+
         while (!qnfa.empty()) {
             cur = qnfa.front();
             qnfa.pop();
+
             if (cur -> end()) {
                 printf("end.\n");
                 continue;
             }
-            for (auto &var : cur ->next()) {
+
+            for (auto &var : cur ->children()) {
                 printf("%c ", var.first);
                 qnfa.push(var.second);
             }
+
             putchar(10);
         }
+
     }
 
   private:
     NFANode *_head;
+    NFANode *_tail;
 };
 
-NFANode *_buildNFA(RegTree *root) {
+NFA *_buildNFA(RegTree *root) {
     if (!root) {
         return NULL;
     }
 
-    char first = 0;
     char tag = 0;
-    NFANode *next = NULL;
-    NFANode *cur = NULL;
+    NFA *left = NULL;
+    NFA *right = NULL;
+
+    if (root -> leaf()) {
+        tag = root -> data();
+        NFANode *next = new NFANode();
+        NFA *nfa = new NFA(tag, next);
+        return nfa;
+    }
 
     if (root -> lson()) {
-        if (root -> lson() -> leaf()) {
-            first = root -> lson() -> data();
-        } else {
-            next = _buildNFA(root -> lson());
-        }
+        left = _buildNFA(root -> lson());
     }
 
     if (root -> rson()) {
-        if (root -> rson() -> leaf()) {
-            tag = root -> rson() -> data();
-        } else {
-            next = _buildNFA(root -> rson());
-        }
+        right = _buildNFA(root -> rson());
+        right -> display();
     }
 
-    if (first) {
-        NFANode *end = new NFANode();
-        next = new NFANode(tag, end);
-        cur = new NFANode(first, next);
-        return cur;
+    switch (root -> data()) {
+        case '.':
+            left -> uion(right);
+            break;
+
+        default:
+            break;
     }
 
-    cur = new NFANode(tag, next);
-    // printf("op = %c\n", root -> data());
-
-    return cur;
+    return left;
 }
 
 NFA *buildNFA(RegTree *root) {
-    NFANode *nfa = _buildNFA(root);
-
-    return new NFA(nfa);
+    NFA *nfa = _buildNFA(root);
+    return nfa;
 }
 
 NFA *inputNFA() {
@@ -146,8 +172,8 @@ NFA *inputNFA() {
 }
 
 int main() {
+    freopen("output.txt", "w", stdout);
     NFA *nfa = inputNFA();
-    nfa -> display();
-
+    delete nfa;
     return 0;
 }
