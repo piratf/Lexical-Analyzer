@@ -129,12 +129,17 @@ class NFA {
                 continue;
             }
 
+            printf("num = %d\n", cur -> children().size());
+            printf("cur = %p\n", static_cast<void *>(cur));
+
             for (auto &var : cur ->children()) {
                 if (var.first) {
                     printf("%c ", var.first);
                 } else {
                     printf("|e| ");
                 }
+
+                printf("%p\n", static_cast<void *>(var.second));
 
                 qnfa.push(var.second);
             }
@@ -218,7 +223,7 @@ int main() {
     NFA *nfa = inputNFA();
     printf("ret = %p\n", static_cast<void *>(nfa));
     fflush(stdout);
-    // nfa -> display();
+    nfa -> display();
     delete nfa;
     return 0;
 }

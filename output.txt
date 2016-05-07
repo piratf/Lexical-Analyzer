@@ -2,4 +2,35 @@ data = a
 data = b
 op = |
 ------------------------
-ret = 00f60f58
+ret = 001c0f70
+---
+num = 2
+cur = 001c0f80
+|e| 001c1120
+|e| 001c1238
+
+---
+num = 1
+cur = 001c1120
+a 001c0ef8
+
+---
+num = 1
+cur = 001c1238
+b 001c0f30
+
+---
+num = 1
+cur = 001c0ef8
+|e| 001c0ed0
+
+---
+num = 1
+cur = 001c0f30
+|e| 001c0ed0
+
+---
+end.
+---
+end.
+-------display end-------

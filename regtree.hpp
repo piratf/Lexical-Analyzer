@@ -303,10 +303,20 @@ RegTree *buildRegTree(const string &reg) {
 
 
         if (parent && !parent -> leaf()) {
+
 #ifdef DEBUG
-            printf("add cat to parent\n");
+                printf("add star to parent\n");
 #endif
-            parent -> data(OP_CAT);
+            if (cur == '*') {
+                parent -> data(OP_STAR);
+            } else {
+
+#ifdef DEBUG
+                printf("add cat to parent\n");
+#endif
+                parent -> data(OP_CAT);
+
+            }
         }
 
         p -> rson(new RegTree(cur));
