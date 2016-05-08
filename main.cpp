@@ -233,7 +233,7 @@ NFA *_buildNFA(RegTree *root) {
     switch (root -> data()) {
         case '.':
             left -> uion(right);
-            left -> display();
+            // left -> display();
             break;
 
         case '|':
@@ -241,18 +241,16 @@ NFA *_buildNFA(RegTree *root) {
             p = new NFANode();
             left -> uion(new NFA(0, p));
             right -> uion(new NFA(0, p));
-            left -> display();
-            right -> display();
-            printf("left -> tail %p\n", static_cast<void *>(left -> tail()));
-            printf("right -> tail %p\n", static_cast<void *>(right -> tail()));
+            // left -> display();
+            // right -> display();
+            // printf("left -> tail %p\n", static_cast<void *>(left -> tail()));
+            // printf("right -> tail %p\n", static_cast<void *>(right -> tail()));
             NFA *ret;
             ret = new NFA(0, new NFANode());
             ret -> uion(left);
-            fflush(stdout);
-            printf("ret -> tail %p\n", static_cast<void *>(ret -> tail()));
+            // printf("ret -> tail %p\n", static_cast<void *>(ret -> tail()));
             fflush(stdout);
             ret -> head() -> add(0, right -> head());
-            // printf("ret -> tail %p\n", static_cast<void *>(ret -> head() -> children()[1].second -> next() -> next()));
             ret -> display();
             return ret;
             break;
@@ -276,14 +274,14 @@ NFA *inputNFA() {
     input.close();
     RegTree *root = buildRegTree(reg);
     root -> backOrderDisplay();
+    root -> middleOrderDisplay();
+    // return NULL;
     return buildNFA(root);
 }
 
 int main() {
     freopen("output.txt", "w", stdout);
     NFA *nfa = inputNFA();
-    printf("ret = %p\n", static_cast<void *>(nfa));
-    fflush(stdout);
     nfa -> display();
     delete nfa;
     return 0;

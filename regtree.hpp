@@ -225,39 +225,6 @@ RegTree *buildRegTree(const string &reg) {
         printf("cur = %c\n", cur);
 #endif
 
-        if (*it == '(') {
-            printf("error**: missing symmetric (");
-            return NULL;
-        }
-
-        if (*it == ')') {
-
-            size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);
-
-            if (t == string::npos) {
-                printf("error**: missing symmetric (");
-                return NULL;
-            } else {
-                t += 1;
-                string temp = reg.substr(t, reg.rend() - (it + 1) - t);
-                it = reg.rend() - t;
-
-                if (parent && !parent -> leaf()) {
-                    parent -> data(OP_CAT);
-                }
-
-                RegTree *r = buildRegTree(temp);
-                p -> rson(r);
-                p -> lson(new RegTree());
-                gp = parent;
-                parent = p;
-
-                p = p -> lson();
-            }
-
-            continue;
-        }
-
         if (cur == '|') {
 
 #ifdef DEBUG
@@ -301,28 +268,38 @@ RegTree *buildRegTree(const string &reg) {
             continue;
         }
 
-
-        if (parent && !parent -> leaf()) {
-
-#ifdef DEBUG
-                printf("add star to parent\n");
-#endif
-            if (cur == '*') {
-                parent -> data(OP_STAR);
-            } else {
-
-#ifdef DEBUG
-                printf("add cat to parent\n");
-#endif
-                parent -> data(OP_CAT);
-
-            }
+        if (*it == '(') {
+            printf("error**: missing symmetric (");
+            return NULL;
         }
 
-        p -> rson(new RegTree(cur));
+        if (*it == ')') {
+
+            size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);
+
+            if (t == string::npos) {
+                printf("error**: missing symmetric (");
+                return NULL;
+            } else {
+                t += 1;
+                // string temp = reg.substr(t, reg.rend() - (it + 1) - t);
+
+                p -> rson(buildRegTree(reg.substr(t, reg.rend() - (it + 1) - t)));
+                it = reg.rend() - t;
+            }
+        } else {
+            p -> rson(new RegTree(cur));
+        }
+
         p -> lson(new RegTree());
         gp = parent;
         parent = p;
+
+        if (cur == '*') {
+            p -> data(OP_STAR);
+        } else {
+            p -> data(OP_CAT);
+        }
 
         p = p -> lson();
     }
