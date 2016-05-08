@@ -1,36 +1,262 @@
 data = a
 data = b
 op = |
+data = a
+op = .
+data = b
+op = .
+data = b
+op = .
 ------------------------
-ret = 001c0f70
+-----------uion--------------
+cur = 010111b0
+change 01011248 to 01016350
+tail = 01016458
+-----------uion end----------
+-----------uion--------------
+cur = 01016380
+change 010104b0 to 010162f0
+tail = 01016458
+-----------uion end----------
 ---
-num = 2
-cur = 001c0f80
-|e| 001c1120
-|e| 001c1238
+num = 1
+cur = 010111b0
+a next: 01016350
 
 ---
 num = 1
-cur = 001c1120
-a 001c0ef8
-
----
-num = 1
-cur = 001c1238
-b 001c0f30
-
----
-num = 1
-cur = 001c0ef8
-|e| 001c0ed0
-
----
-num = 1
-cur = 001c0f30
-|e| 001c0ed0
+cur = 01016350
+|e| next: 01016458
 
 ---
 end.
+-------display end-------
+---
+num = 1
+cur = 01016380
+b next: 010162f0
+
+---
+num = 1
+cur = 010162f0
+|e| next: 01016458
+
+---
+end.
+-------display end-------
+left -> tail 01016458
+right -> tail 01016458
+-----------uion--------------
+cur = 01016398
+change 010163f8 to 010111b0
+tail = 01016458
+-----------uion end----------
+ret -> tail 01016458
+---
+num = 2
+cur = 01016398
+|e| next: 010111b0
+|e| next: 01016380
+
+---
+num = 1
+cur = 010111b0
+a next: 01016350
+
+---
+num = 1
+cur = 01016380
+b next: 010162f0
+
+---
+num = 1
+cur = 01016350
+|e| next: 01016458
+
+---
+num = 1
+cur = 010162f0
+|e| next: 01016458
+
+---
+end.
+-------display end-------
+-----------uion--------------
+secode 1 = 01016350
+change 01016458 to 010163b0
+secode 1 = 010162f0
+change 01016458 to 010163b0
+tail = 01016488
+-----------uion end----------
+---
+num = 2
+cur = 01016398
+|e| next: 010111b0
+|e| next: 01016380
+
+---
+num = 1
+cur = 010111b0
+a next: 01016350
+
+---
+num = 1
+cur = 01016380
+b next: 010162f0
+
+---
+num = 1
+cur = 01016350
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010162f0
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010163b0
+a next: 01016488
+
+---
+end.
+-------display end-------
+-----------uion--------------
+secode 1 = 010163b0
+change 01016488 to 01016428
+tail = 010163e0
+-----------uion end----------
+---
+num = 2
+cur = 01016398
+|e| next: 010111b0
+|e| next: 01016380
+
+---
+num = 1
+cur = 010111b0
+a next: 01016350
+
+---
+num = 1
+cur = 01016380
+b next: 010162f0
+
+---
+num = 1
+cur = 01016350
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010162f0
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010163b0
+a next: 01016428
+
+---
+num = 1
+cur = 01016428
+b next: 010163e0
+
+---
+end.
+-------display end-------
+-----------uion--------------
+secode 1 = 01016428
+change 010163e0 to 01016308
+tail = 01016410
+-----------uion end----------
+---
+num = 2
+cur = 01016398
+|e| next: 010111b0
+|e| next: 01016380
+
+---
+num = 1
+cur = 010111b0
+a next: 01016350
+
+---
+num = 1
+cur = 01016380
+b next: 010162f0
+
+---
+num = 1
+cur = 01016350
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010162f0
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010163b0
+a next: 01016428
+
+---
+num = 1
+cur = 01016428
+b next: 01016308
+
+---
+num = 1
+cur = 01016308
+b next: 01016410
+
+---
+end.
+-------display end-------
+ret = 01010528
+---
+num = 2
+cur = 01016398
+|e| next: 010111b0
+|e| next: 01016380
+
+---
+num = 1
+cur = 010111b0
+a next: 01016350
+
+---
+num = 1
+cur = 01016380
+b next: 010162f0
+
+---
+num = 1
+cur = 01016350
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010162f0
+|e| next: 010163b0
+
+---
+num = 1
+cur = 010163b0
+a next: 01016428
+
+---
+num = 1
+cur = 01016428
+b next: 01016308
+
+---
+num = 1
+cur = 01016308
+b next: 01016410
+
 ---
 end.
 -------display end-------

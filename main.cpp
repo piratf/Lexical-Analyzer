@@ -30,7 +30,7 @@ class NFANode {
         _vecNext.push_back(std::make_pair(0, next));
     }
 
-    const std::vector<pair<char, NFANode *>> &children() {
+    std::vector<pair<char, NFANode *>> &children() {
         return _vecNext;
     }
 
@@ -67,7 +67,7 @@ class NFANode {
 class NFA {
   public:
     explicit NFA(char tag, NFANode *next): _head(new NFANode(tag, next)),
-        _tail(_head) {
+        _tail(next) {
     }
 
     ~NFA() {
@@ -82,7 +82,7 @@ class NFA {
             cur = qnfa.front();
             qnfa.pop();
 
-            if (cur == _tail -> next()) {
+            if (cur == _tail) {
                 continue;
             }
 
@@ -101,8 +101,51 @@ class NFA {
     }
 
     void uion(NFA *other) {
-        _tail -> next() = other -> head();
+        printf("-----------uion--------------\n");
+        std::queue<NFANode *> qnfa;
+        qnfa.push(_head);
+        NFANode *cur = NULL;
+
+        while (!qnfa.empty()) {
+            cur = qnfa.front();
+            qnfa.pop();
+
+            if (cur == _tail) {
+                continue;
+            }
+
+            if (cur -> children().size() &&
+                    cur -> next() == _tail) {
+                printf("cur = %p\n", static_cast<void *>(cur));
+                printf("change %p to %p\n", static_cast<void *>(cur -> next()), static_cast<void *>(other -> head()));
+                cur -> next() = other -> head();
+                continue;
+            }
+
+            for (auto &var : cur ->children()) {
+
+                if (var.second -> children().size() &&
+                        var.second -> next() == _tail) {
+                    printf("secode 1 = %p\n", static_cast<void *>(var.second));
+                    printf("change %p to %p\n", static_cast<void *>(var.second -> next()), static_cast<void *>(other -> head()));
+                    var.second -> next() = other -> head();
+                }
+
+                if (var.second == _tail) {
+                    printf("secode = %p\n", static_cast<void *>(var.second));
+                    // var.second = other -> head();
+                } else {
+                    qnfa.push(var.second);
+                }
+
+            }
+        }
+
+        // _tail = other -> head();
         _tail = other -> tail();
+
+        printf("tail = %p\n", static_cast<void *>(_tail));
+        printf("-----------uion end----------\n");
     }
 
     NFANode *head() {
@@ -115,7 +158,9 @@ class NFA {
 
     void display() {
         std::queue<NFANode *> qnfa;
+        std::set<NFANode *> svisit;
         qnfa.push(_head);
+        svisit.insert(_head);
         NFANode *cur = NULL;
 
         while (!qnfa.empty()) {
@@ -124,7 +169,7 @@ class NFA {
 
             printf("---\n");
 
-            if (cur == _tail -> next()) {
+            if (cur == _tail) {
                 printf("end.\n");
                 continue;
             }
@@ -133,15 +178,21 @@ class NFA {
             printf("cur = %p\n", static_cast<void *>(cur));
 
             for (auto &var : cur ->children()) {
-                if (var.first) {
-                    printf("%c ", var.first);
+
+                    if (var.first) {
+                        printf("%c ", var.first);
+                    } else {
+                        printf("|e| ");
+                    }
+
+                    printf("next: %p\n", static_cast<void *>(var.second));
+
+                if (svisit.find(var.second) != svisit.end()) {
+                    continue;
                 } else {
-                    printf("|e| ");
+                    qnfa.push(var.second);
+                    svisit.insert(var.second);
                 }
-
-                printf("%p\n", static_cast<void *>(var.second));
-
-                qnfa.push(var.second);
             }
 
             putchar(10);
@@ -182,6 +233,7 @@ NFA *_buildNFA(RegTree *root) {
     switch (root -> data()) {
         case '.':
             left -> uion(right);
+            left -> display();
             break;
 
         case '|':
@@ -189,10 +241,19 @@ NFA *_buildNFA(RegTree *root) {
             p = new NFANode();
             left -> uion(new NFA(0, p));
             right -> uion(new NFA(0, p));
+            left -> display();
+            right -> display();
+            printf("left -> tail %p\n", static_cast<void *>(left -> tail()));
+            printf("right -> tail %p\n", static_cast<void *>(right -> tail()));
             NFA *ret;
             ret = new NFA(0, new NFANode());
             ret -> uion(left);
+            fflush(stdout);
+            printf("ret -> tail %p\n", static_cast<void *>(ret -> tail()));
+            fflush(stdout);
             ret -> head() -> add(0, right -> head());
+            // printf("ret -> tail %p\n", static_cast<void *>(ret -> head() -> children()[1].second -> next() -> next()));
+            ret -> display();
             return ret;
             break;
 
