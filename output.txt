@@ -3,127 +3,104 @@ data = b
 op = |
 data = *
 op = *
-data = a
-op = .
-data = b
-op = .
-data = b
-op = .
 ------------------------
 data = a
 op = |
 data = b
 op = *
 data = *
-op = .
-data = a
-op = .
-data = b
-op = .
-data = b
 ------------------------
 -----------uion--------------
-cur = 00fb5330
-change 00fb5378 to 00fb54b0
-tail = 00fb5408
+cur = 00fa11e0
+change 00fa1140 to 00fa0f30
+tail = 00fa0f08
 -----------uion end----------
 -----------uion--------------
-cur = 00fb5498
-change 00fb53c0 to 00fb5480
-tail = 00fb5408
+cur = 00fa0ee0
+change 00fa1240 to 00fa0f68
+tail = 00fa0f08
 -----------uion end----------
 -----------uion--------------
-cur = 00fb5300
-change 00fb52e8 to 00fb5330
-tail = 00fb5408
+cur = 00fa62f0
+change 00fa04b0 to 00fa11e0
+tail = 00fa0f08
 -----------uion end----------
 ---
 num = 2
-cur = 00fb5300
-|e| next: 00fb5330
-|e| next: 00fb5498
+cur = 00fa62f0
+|e| next: 00fa11e0
+|e| next: 00fa0ee0
 
 ---
 num = 1
-cur = 00fb5330
-a next: 00fb54b0
+cur = 00fa11e0
+a next: 00fa0f30
 
 ---
 num = 1
-cur = 00fb5498
-b next: 00fb5480
+cur = 00fa0ee0
+b next: 00fa0f68
 
 ---
 num = 1
-cur = 00fb54b0
-|e| next: 00fb5408
+cur = 00fa0f30
+|e| next: 00fa0f08
 
 ---
 num = 1
-cur = 00fb5480
-|e| next: 00fb5408
+cur = 00fa0f68
+|e| next: 00fa0f08
 
 ---
 end.
 -------display end-------
+case star.
+0
+2
 -----------uion--------------
-secode 1 = 00fb54b0
-change 00fb5408 to 00fb5468
-secode 1 = 00fb5480
-change 00fb5408 to 00fb5468
-tail = 00fb5450
+cur = 00fa63c8
+change 00fa63b0 to 00fa62f0
+tail = 00fa6458
 -----------uion end----------
------------uion--------------
-secode 1 = 00fb5468
-change 00fb5450 to 00fb5360
-tail = 00fb5348
------------uion end----------
------------uion--------------
-secode 1 = 00fb5360
-change 00fb5348 to 00fb53a8
-tail = 00fb5390
------------uion end----------
+2
 ---
 num = 2
-cur = 00fb5300
-|e| next: 00fb5330
-|e| next: 00fb5498
+cur = 00fa63c8
+|e| next: 00fa62f0
+|e| next: 00fa6458
 
 ---
-num = 1
-cur = 00fb5330
-a next: 00fb54b0
-
----
-num = 1
-cur = 00fb5498
-b next: 00fb5480
-
----
-num = 1
-cur = 00fb54b0
-|e| next: 00fb5468
-
----
-num = 1
-cur = 00fb5480
-|e| next: 00fb5468
-
----
-num = 1
-cur = 00fb5468
-a next: 00fb5360
-
----
-num = 1
-cur = 00fb5360
-b next: 00fb53a8
-
----
-num = 1
-cur = 00fb53a8
-b next: 00fb5390
+num = 2
+cur = 00fa62f0
+|e| next: 00fa11e0
+|e| next: 00fa0ee0
 
 ---
 end.
+---
+num = 1
+cur = 00fa11e0
+a next: 00fa0f30
+
+---
+num = 1
+cur = 00fa0ee0
+b next: 00fa0f68
+
+---
+num = 1
+cur = 00fa0f30
+|e| next: 00fa0f08
+
+---
+num = 1
+cur = 00fa0f68
+|e| next: 00fa0f08
+
+---
+num = 2
+cur = 00fa0f08
+|e| next: 00fa62f0
+|e| next: 00fa6458
+
 -------display end-------

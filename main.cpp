@@ -87,9 +87,11 @@ class NFA {
             }
 
             for (auto &var : cur ->children()) {
-                qnfa.push(var.second);
 
-                if (sdel.find(var.second) == sdel.end()) {
+                if (sdel.find(var.second) != sdel.end()) {
+                    continue;
+                } else {
+                    qnfa.push(var.second);
                     sdel.insert(var.second);
                 }
             }
@@ -156,6 +158,10 @@ class NFA {
         return _tail;
     }
 
+    void tail(NFANode *const tail) {
+        _tail = tail;
+    }
+
     void display() {
         std::queue<NFANode *> qnfa;
         std::set<NFANode *> svisit;
@@ -176,16 +182,18 @@ class NFA {
 
             printf("num = %d\n", cur -> children().size());
             printf("cur = %p\n", static_cast<void *>(cur));
+            fflush(stdout);
 
             for (auto &var : cur ->children()) {
 
-                    if (var.first) {
-                        printf("%c ", var.first);
-                    } else {
-                        printf("|e| ");
-                    }
+                if (var.first) {
+                    printf("%c ", var.first);
+                } else {
+                    printf("|e| ");
+                }
 
-                    printf("next: %p\n", static_cast<void *>(var.second));
+                printf("next: %p\n", static_cast<void *>(var.second));
+                fflush(stdout);
 
                 if (svisit.find(var.second) != svisit.end()) {
                     continue;
@@ -199,6 +207,7 @@ class NFA {
         }
 
         printf("-------display end-------\n");
+        fflush(stdout);
     }
 
   private:
@@ -231,13 +240,44 @@ NFA *_buildNFA(RegTree *root) {
     }
 
     switch (root -> data()) {
+        case '*':
+            printf("case star.\n");
+            NFANode *head, *tail;
+            NFA *ret;
+            NFANode *p;
+
+            head = left -> head();
+            tail = left -> tail();
+
+            NFANode *temp;
+            temp = tail;
+            printf("%d\n", temp -> children().size());
+
+            tail -> add(0, head);
+            p = new NFANode();
+            tail -> add(0, p);
+            left -> tail(p);
+
+            printf("%d\n", temp -> children().size());
+
+
+            ret = new NFA(0, new NFANode());
+            ret -> uion(left);
+            ret -> head() -> add(0, left -> tail());
+
+            // NFANode *p;
+            // p = new NFANode();
+            printf("%d\n", temp -> children().size());
+            return ret;
+            fflush(stdout);
+            break;
+
         case '.':
             left -> uion(right);
             // left -> display();
             break;
 
         case '|':
-            NFANode *p;
             p = new NFANode();
             left -> uion(new NFA(0, p));
             right -> uion(new NFA(0, p));
@@ -245,7 +285,6 @@ NFA *_buildNFA(RegTree *root) {
             // right -> display();
             // printf("left -> tail %p\n", static_cast<void *>(left -> tail()));
             // printf("right -> tail %p\n", static_cast<void *>(right -> tail()));
-            NFA *ret;
             ret = new NFA(0, new NFANode());
             ret -> uion(left);
             // printf("ret -> tail %p\n", static_cast<void *>(ret -> tail()));
@@ -283,6 +322,7 @@ int main() {
     freopen("output.txt", "w", stdout);
     NFA *nfa = inputNFA();
     nfa -> display();
+    fflush(stdout);
     delete nfa;
     return 0;
 }
