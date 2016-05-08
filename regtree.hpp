@@ -210,6 +210,10 @@ class RegTree {
     RegTree *_rson;
 };
 
+void print_error(const char *message) {
+    printf("error**: \n");
+}
+
 RegTree *buildRegTree(const string &reg) {
 #ifdef DEBUG
     printf("reg = %s\n", reg.data());
@@ -224,6 +228,11 @@ RegTree *buildRegTree(const string &reg) {
 #ifdef DEBUG
         printf("cur = %c\n", cur);
 #endif
+
+        if (cur == '*' && it == reg.rend() - 1) {
+            print_error("empty content for star operator.");
+            return NULL;
+        }
 
         if (cur == '|') {
 
