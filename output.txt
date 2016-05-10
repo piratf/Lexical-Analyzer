@@ -46,231 +46,101 @@ data = a
 op = .
 data = t
 ------------------------
-case cat.
------------uion--------------
-tail = 00f753c0
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f75348
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f75438
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f769f0
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f76a38
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f76be8
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f76a50
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f76948
------------uion end----------
-case cat.
------------uion--------------
-tail = 00f76af8
------------uion end----------
------------uion--------------
-tail = 00f76b40
------------uion end----------
------------uion--------------
-tail = 00f76b40
------------uion end----------
------------uion--------------
-tail = 00f76b40
------------uion end----------
------------uion--------------
-tail = 00f76a80
------------uion end----------
------------uion--------------
-tail = 00f76a80
------------uion end----------
------------uion--------------
-tail = 00f76a80
------------uion end----------
 ---
 num = 2
-cur = 00f769d8
-|e| next: 00f753a8
-|e| next: 00f76a68
+cur = 00e26ba0
+|e| next: 00e253f0
+|e| next: 00e26a20
 
 ---
 num = 1
-cur = 00f753a8
-v next: 00f753d8
+cur = 00e253f0
+v next: 00e25450
 
 ---
 num = 2
-cur = 00f76a68
-|e| next: 00f76a20
-|e| next: 00f76a98
+cur = 00e26a20
+|e| next: 00e26c18
+|e| next: 00e26ca8
 
 ---
 num = 1
-cur = 00f753d8
-o next: 00f753f0
+cur = 00e25450
+o next: 00e25468
 
 ---
 num = 1
-cur = 00f76a20
-i next: 00f76978
+cur = 00e26c18
+i next: 00e26c60
 
 ---
 num = 1
-cur = 00f76a98
-f next: 00f76ab0
+cur = 00e26ca8
+f next: 00e26c00
 
 ---
 num = 1
-cur = 00f753f0
-i next: 00f75450
+cur = 00e25468
+i next: 00e25360
 
 ---
 num = 1
-cur = 00f76978
-n next: 00f76930
+cur = 00e26c60
+n next: 00e26c78
 
 ---
 num = 1
-cur = 00f76ab0
-l next: 00f76ac8
+cur = 00e26c00
+l next: 00e26a80
 
 ---
 num = 1
-cur = 00f75450
-d next: 00f76ae0
+cur = 00e25360
+d next: 00e26bd0
 
 ---
 num = 1
-cur = 00f76930
-t next: 00f76900
+cur = 00e26c78
+t next: 00e26ac8
 
 ---
 num = 1
-cur = 00f76ac8
-o next: 00f76b10
+cur = 00e26a80
+o next: 00e26a50
 
 ---
 num = 1
-cur = 00f76ae0
-|e| next: 00f76a80
+cur = 00e26bd0
+|e| next: 00e26b88
 
 ---
 num = 1
-cur = 00f76900
-|e| next: 00f76960
+cur = 00e26ac8
+|e| next: 00e26ae0
 
 ---
 num = 1
-cur = 00f76b10
-a next: 00f76b28
+cur = 00e26a50
+a next: 00e26b28
 
 ---
 end.
 ---
 num = 1
-cur = 00f76960
-|e| next: 00f76a80
+cur = 00e26ae0
+|e| next: 00e26b88
 
 ---
 num = 1
-cur = 00f76b28
-t next: 00f76b58
+cur = 00e26b28
+t next: 00e26948
 
 ---
 num = 1
-cur = 00f76b58
-|e| next: 00f76960
+cur = 00e26948
+|e| next: 00e26ae0
 
-tail = 00f76a80
+tail = 00e26b88
 -------display end-------
 input = float
-eplison node: 00f769d8
-end ---
-end ---
-end ---
-end ---
-end ---
-eplison node: 00f76a20
-end ---
-eplison node: 00f76a68
-end ---
-eplison node: 00f76a98
-end ---
-eplison.size() = 5
-i = 0
-calculate node: 00f753a8
-f
-end ---
-i = 1
-calculate node: 00f769d8
-f
-end ---
-i = 2
-calculate node: 00f76a20
-f
-end ---
-i = 3
-calculate node: 00f76a68
-f
-end ---
-i = 4
-calculate node: 00f76a98
-f
-var.first: f
-end ---
-cur.size() = 1
-eplison node: 00f76ab0
-end ---
-eplison.size() = 1
-i = 0
-calculate node: 00f76ab0
-l
-var.first: l
-end ---
-cur.size() = 1
-eplison node: 00f76ac8
-end ---
-eplison.size() = 1
-i = 0
-calculate node: 00f76ac8
-o
-var.first: o
-end ---
-cur.size() = 1
-eplison node: 00f76b10
-end ---
-eplison.size() = 1
-i = 0
-calculate node: 00f76b10
-a
-var.first: a
-end ---
-cur.size() = 1
-eplison node: 00f76b28
-end ---
-eplison.size() = 1
-i = 0
-calculate node: 00f76b28
-t
-var.first: t
-end ---
-cur.size() = 1
-eplison node: 00f76b58
-end ---
-end ---
-end ---
-eplison.size() = 3
 yes.
