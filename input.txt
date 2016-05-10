@@ -1,1 +1,1 @@
-void|int|float
+(a|b)*abb

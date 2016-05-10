@@ -1,6 +1,8 @@
+#ifndef NFA_H_
+#define NFA_H_
+
 #include "regtree.hpp"
 #include <cstdio>
-#include <fstream>
 #include <vector>
 #include <queue>
 #include <set>
@@ -209,7 +211,7 @@ class NFA {
 #endif
     }
 
-    void calculate(char ch, std::set<NFANode *> &input) {
+    void getRouteClosure(char ch, std::set<NFANode *> &input) {
         std::set<NFANode *> ret;
 #ifdef DEBUG
         int i = 0;
@@ -236,7 +238,7 @@ class NFA {
 #endif
 
         while (*pch) {
-            calculate(*pch, cur);
+            getRouteClosure(*pch, cur);
 #ifdef DEBUG
             printf("cur.size() = %d\n", cur.size());
 #endif
@@ -252,6 +254,44 @@ class NFA {
         } else {
             return false;
         }
+    }
+
+
+    std::set<char> getCharacters(int &cnt) {
+        std::queue<NFANode *> qnfa;
+        std::set<NFANode *> svisit;
+        std::set<char> sret;
+        qnfa.push(_head);
+        svisit.insert(_head);
+
+        NFANode *cur = NULL;
+
+        while (!qnfa.empty()) {
+            cur = qnfa.front();
+            qnfa.pop();
+
+            if (cur == _tail) {
+                continue;
+            }
+
+            for (auto &var : cur ->children()) {
+
+                if (sret.find(var.first) == sret.end()) {
+                    printf("%c\n", var.first);
+                    sret.insert(var.first);
+                }
+
+                if (svisit.find(var.second) != svisit.end()) {
+                    continue;
+                } else {
+                    qnfa.push(var.second);
+                    svisit.insert(var.second);
+                }
+            }
+        }
+
+        cnt = svisit.size();
+        return sret;
     }
 
     void display() {
@@ -395,3 +435,5 @@ NFA *buildNFA(RegTree *root) {
     NFA *nfa = _buildNFA(root);
     return nfa;
 }
+
+#endif
