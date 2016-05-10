@@ -1,106 +1,276 @@
+data = v
+data = o
+op = .
+data = i
+op = .
+data = d
+op = .
+data = i
+data = n
+op = .
+data = t
+op = .
+data = f
+data = l
+op = .
+data = o
+op = .
 data = a
-data = b
+op = .
+data = t
+op = .
 op = |
-data = *
-op = *
+op = |
 ------------------------
+data = v
+op = .
+data = o
+op = .
+data = i
+op = .
+data = d
+op = |
+data = i
+op = .
+data = n
+op = .
+data = t
+op = |
+data = f
+op = .
+data = l
+op = .
+data = o
+op = .
 data = a
-op = |
-data = b
-op = *
-data = *
+op = .
+data = t
 ------------------------
+case cat.
 -----------uion--------------
-cur = 00fa11e0
-change 00fa1140 to 00fa0f30
-tail = 00fa0f08
+tail = 00f753c0
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f75348
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f75438
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f769f0
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f76a38
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f76be8
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f76a50
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f76948
+-----------uion end----------
+case cat.
+-----------uion--------------
+tail = 00f76af8
 -----------uion end----------
 -----------uion--------------
-cur = 00fa0ee0
-change 00fa1240 to 00fa0f68
-tail = 00fa0f08
+tail = 00f76b40
 -----------uion end----------
 -----------uion--------------
-cur = 00fa62f0
-change 00fa04b0 to 00fa11e0
-tail = 00fa0f08
+tail = 00f76b40
+-----------uion end----------
+-----------uion--------------
+tail = 00f76b40
+-----------uion end----------
+-----------uion--------------
+tail = 00f76a80
+-----------uion end----------
+-----------uion--------------
+tail = 00f76a80
+-----------uion end----------
+-----------uion--------------
+tail = 00f76a80
 -----------uion end----------
 ---
 num = 2
-cur = 00fa62f0
-|e| next: 00fa11e0
-|e| next: 00fa0ee0
+cur = 00f769d8
+|e| next: 00f753a8
+|e| next: 00f76a68
 
 ---
 num = 1
-cur = 00fa11e0
-a next: 00fa0f30
+cur = 00f753a8
+v next: 00f753d8
+
+---
+num = 2
+cur = 00f76a68
+|e| next: 00f76a20
+|e| next: 00f76a98
 
 ---
 num = 1
-cur = 00fa0ee0
-b next: 00fa0f68
+cur = 00f753d8
+o next: 00f753f0
 
 ---
 num = 1
-cur = 00fa0f30
-|e| next: 00fa0f08
+cur = 00f76a20
+i next: 00f76978
 
 ---
 num = 1
-cur = 00fa0f68
-|e| next: 00fa0f08
+cur = 00f76a98
+f next: 00f76ab0
+
+---
+num = 1
+cur = 00f753f0
+i next: 00f75450
+
+---
+num = 1
+cur = 00f76978
+n next: 00f76930
+
+---
+num = 1
+cur = 00f76ab0
+l next: 00f76ac8
+
+---
+num = 1
+cur = 00f75450
+d next: 00f76ae0
+
+---
+num = 1
+cur = 00f76930
+t next: 00f76900
+
+---
+num = 1
+cur = 00f76ac8
+o next: 00f76b10
+
+---
+num = 1
+cur = 00f76ae0
+|e| next: 00f76a80
+
+---
+num = 1
+cur = 00f76900
+|e| next: 00f76960
+
+---
+num = 1
+cur = 00f76b10
+a next: 00f76b28
 
 ---
 end.
+---
+num = 1
+cur = 00f76960
+|e| next: 00f76a80
+
+---
+num = 1
+cur = 00f76b28
+t next: 00f76b58
+
+---
+num = 1
+cur = 00f76b58
+|e| next: 00f76960
+
+tail = 00f76a80
 -------display end-------
-case star.
-0
-2
------------uion--------------
-cur = 00fa63c8
-change 00fa63b0 to 00fa62f0
-tail = 00fa6458
------------uion end----------
-2
----
-num = 2
-cur = 00fa63c8
-|e| next: 00fa62f0
-|e| next: 00fa6458
-
----
-num = 2
-cur = 00fa62f0
-|e| next: 00fa11e0
-|e| next: 00fa0ee0
-
----
-end.
----
-num = 1
-cur = 00fa11e0
-a next: 00fa0f30
-
----
-num = 1
-cur = 00fa0ee0
-b next: 00fa0f68
-
----
-num = 1
-cur = 00fa0f30
-|e| next: 00fa0f08
-
----
-num = 1
-cur = 00fa0f68
-|e| next: 00fa0f08
-
----
-num = 2
-cur = 00fa0f08
-|e| next: 00fa62f0
-|e| next: 00fa6458
-
--------display end-------
+input = float
+eplison node: 00f769d8
+end ---
+end ---
+end ---
+end ---
+end ---
+eplison node: 00f76a20
+end ---
+eplison node: 00f76a68
+end ---
+eplison node: 00f76a98
+end ---
+eplison.size() = 5
+i = 0
+calculate node: 00f753a8
+f
+end ---
+i = 1
+calculate node: 00f769d8
+f
+end ---
+i = 2
+calculate node: 00f76a20
+f
+end ---
+i = 3
+calculate node: 00f76a68
+f
+end ---
+i = 4
+calculate node: 00f76a98
+f
+var.first: f
+end ---
+cur.size() = 1
+eplison node: 00f76ab0
+end ---
+eplison.size() = 1
+i = 0
+calculate node: 00f76ab0
+l
+var.first: l
+end ---
+cur.size() = 1
+eplison node: 00f76ac8
+end ---
+eplison.size() = 1
+i = 0
+calculate node: 00f76ac8
+o
+var.first: o
+end ---
+cur.size() = 1
+eplison node: 00f76b10
+end ---
+eplison.size() = 1
+i = 0
+calculate node: 00f76b10
+a
+var.first: a
+end ---
+cur.size() = 1
+eplison node: 00f76b28
+end ---
+eplison.size() = 1
+i = 0
+calculate node: 00f76b28
+t
+var.first: t
+end ---
+cur.size() = 1
+eplison node: 00f76b58
+end ---
+end ---
+end ---
+eplison.size() = 3
+yes.

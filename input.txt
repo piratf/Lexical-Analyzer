@@ -1,1 +1,1 @@
-(a|b)*
+void|int|float
