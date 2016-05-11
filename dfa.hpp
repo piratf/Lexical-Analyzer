@@ -1,10 +1,10 @@
 #ifndef DFA_H_
 #define DFA_H_
 
-#include "regtree.hpp"
 #include "nfa.hpp"
 #include <cstdio>
 #include <vector>
+#include <string>
 #include <queue>
 #include <set>
 #include <map>
@@ -73,7 +73,6 @@ class DFA {
 
         std::set<std::set<unsigned int> > sdivide;
         std::set<std::set<unsigned int> > stemp;
-        printf("%d %d\n", sstart.size(), send.size());
         stemp.insert(sstart);
         stemp.insert(send);
         char titleID = 0;
@@ -82,57 +81,52 @@ class DFA {
             sdivide.swap(stemp);
             stemp.clear();
 
-            for (auto &s : sdivide) {
-                for (unsigned int state : s) {
-                    printf("%d ", state);
-                }
-
-                putchar(10);
-            }
-
             for (std::set<unsigned int> divide : sdivide) {
 
                 if (divide.size() == 1) {
+                    stemp.insert(divide);
                     continue;
                 }
 
-                printf("divide size() %d\n", divide.size());
-
                 std::set<unsigned int> subset;
+                bool unchanged = true;
 
                 // 遍历每一个可能的输入字符
                 for (auto &var : _title) {
                     titleID = var.second;
-                    printf("id = %d\n", titleID);
-
                     subset.clear();
 
                     // 遍历当前所有状态
                     for (unsigned int state : divide) {
-                        printf("state %d\n", state);
-                        printf("data = %d\n", _vecData[state][titleID]);
-
                         subset.insert(_vecData[state][titleID]);
                     }
 
-                    bool flag = false;
+                    bool flag = true;
 
                     for (auto &divide : sdivide) {
-                        if (!std::includes(divide.begin(), divide.end(), subset. begin(), subset.end())) {
-                            flag = true;
+                        if (std::includes(divide.begin(), divide.end(), subset. begin(), subset.end())) {
+                            flag = false;
+                            break;
                         }
                     }
 
-                    // 如果不属于同一个组
+                    // 如果该 title char 对应的结果集不属于同一个组
                     if (flag) {
+                        unchanged = false;
                         unsigned int id = static_cast<unsigned int>(-1);
 
                         for (auto &divide : sdivide) {
                             std::set<unsigned int> su;
                             std::set<unsigned int> si;
 
-                            std::set_union(divide.begin(), divide.end(), subset.begin(), subset.end(), std::back_inserter(su));
-                            std::set_intersection(su.begin(), su.end(), subset.begin(), subset.end(), std::back_inserter(si));
+                            std::set_intersection(
+                                divide.begin(), divide.end(),
+                                subset.begin(), subset.end(),
+                                std::inserter(su, su.begin()));
+                            std::set_intersection(
+                                su.begin(), su.end(),
+                                subset.begin(), subset.end(),
+                                std::inserter(si, si.begin()));
 
                             if (si.size() == 1) {
                                 id = *si.begin();
@@ -145,11 +139,12 @@ class DFA {
                         }
 
                         subset.clear();
+
                         // 遍历当前所有状态
-                        for (unsigned int state : divide) {
-                            if (_vecData[state][titleID] == id) {
-                                divide.erase(state);
-                                subset.insert(state);
+                        for (auto it = divide.begin(); it != divide.end(); ++it) {
+                            if (_vecData[*it][titleID] == id) {
+                                subset.insert(*it);
+                                it = divide.erase(it);
                             }
                         }
 
@@ -158,10 +153,21 @@ class DFA {
                         break;
                     }
                 }
+                if (unchanged) {
+                    stemp.insert(divide);
+                }
             }
         }
 
-        printf("%d\n", stemp.size());
+        puts("after minimize");
+        for (auto &s : sdivide) {
+            for (unsigned int var : s) {
+                printf("%d ", var);
+            }
+            putchar(10);
+        }
+
+        puts("=========================");
     }
 
     ~DFA() = default;

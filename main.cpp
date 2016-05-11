@@ -43,7 +43,7 @@ int main() {
 
     DFA *dfa = buildDFA(nfa);
     dfa -> display();
-    // dfa -> minimize();
+    dfa -> minimize();
     fflush(stdout);
     delete nfa;
     delete dfa;
