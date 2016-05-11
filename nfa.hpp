@@ -277,7 +277,6 @@ class NFA {
             for (auto &var : cur ->children()) {
 
                 if (_schar.find(var.first) == _schar.end()) {
-                    printf("%c\n", var.first);
                     _schar.insert(var.first);
                 }
 
