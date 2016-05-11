@@ -44,6 +44,7 @@ int main() {
     DFA *dfa = buildDFA(nfa);
     dfa -> display();
     dfa -> minimize();
+    dfa -> display();
     fflush(stdout);
     delete nfa;
     delete dfa;

@@ -153,6 +153,7 @@ class DFA {
                         break;
                     }
                 }
+
                 if (unchanged) {
                     stemp.insert(divide);
                 }
@@ -160,14 +161,84 @@ class DFA {
         }
 
         puts("after minimize");
+
         for (auto &s : sdivide) {
             for (unsigned int var : s) {
                 printf("%d ", var);
             }
+
             putchar(10);
         }
 
         puts("=========================");
+
+        // modify data matrix
+        for (auto &s : sdivide) {
+            if (s.size() > 1) {
+                auto it = s.begin();
+                unsigned int tag = *it;
+                ++it;
+
+                for (; it != s.end(); ++it) {
+                    // update end state
+                    unsigned int flag[2] = {};
+
+                    for (auto endit = _sendState.begin();
+                            endit != _sendState.end(); ++endit) {
+                        if (*endit == *it) {
+                            flag[0] = 1;
+                            continue;
+                        }
+
+                        if (*endit > *it) {
+                            flag[1] = *endit;
+                            continue;
+                        }
+
+                    }
+
+                    if (flag[0]) {
+                        _sendState.erase(*it);
+                        _sendState.insert(tag);
+                    }
+
+                    if (flag[1]) {
+                        _sendState.erase(flag[1]);
+                        _sendState.insert(flag[1] - 1);
+                    }
+
+                    for (auto &row : _vecData) {
+                        for (unsigned int &var : row) {
+                            if (var == *it) {
+                                var = tag;
+                            } else if (var > *it) {
+                                --var;
+                            }
+                        }
+                    }
+
+                    _vecData.erase(_vecData.begin() + *it);
+                }
+            }
+        }
+
+        printf("start to remove died node\n");
+        std::vector<unsigned int> vecDied;
+        bool diedFlag = true;
+        for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
+            unsigned int index = it - _vecData.begin();
+            diedFlag = true;
+            for (auto &var : *it) {
+                if (var != index) {
+                    diedFlag = false;
+                    break;
+                }
+            }
+
+            if (diedFlag) {
+                it = _vecData.erase(it);
+            }
+        }
     }
 
     ~DFA() = default;
