@@ -277,12 +277,14 @@ RegTree *buildRegTree(const string &reg) {
             continue;
         }
 
-        if (*it == '(') {
-            printf("error**: missing symmetric (");
-            return NULL;
-        }
+        // if (*it == '(' && *(it + 1) != '|') {
+        //     printf("error**: missing symmetric (");
+        //     return NULL;
+        // }
 
-        if (*it == ')') {
+        if (*it == ')' && *(it + 1) != '|' && it != reg.rend() - 1) {
+            printf("11111\n");
+            fflush(stdout);
 
             size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);
 

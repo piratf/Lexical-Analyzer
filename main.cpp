@@ -16,6 +16,7 @@ NFA *inputNFA() {
     RegTree *root = buildRegTree(reg);
     root -> backOrderDisplay();
     root -> middleOrderDisplay();
+    fflush(stdout);
     // return NULL;
     return buildNFA(root);
 }
