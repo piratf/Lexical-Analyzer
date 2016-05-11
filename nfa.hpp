@@ -256,11 +256,11 @@ class NFA {
         }
     }
 
-
-    std::set<char> getCharacters(int &cnt) {
+    void update() {
         std::queue<NFANode *> qnfa;
         std::set<NFANode *> svisit;
-        std::set<char> sret;
+        _schar.clear();
+
         qnfa.push(_head);
         svisit.insert(_head);
 
@@ -276,9 +276,9 @@ class NFA {
 
             for (auto &var : cur ->children()) {
 
-                if (sret.find(var.first) == sret.end()) {
+                if (_schar.find(var.first) == _schar.end()) {
                     printf("%c\n", var.first);
-                    sret.insert(var.first);
+                    _schar.insert(var.first);
                 }
 
                 if (svisit.find(var.second) != svisit.end()) {
@@ -290,8 +290,16 @@ class NFA {
             }
         }
 
-        cnt = svisit.size();
-        return sret;
+        _nodeCount = svisit.size();
+        _schar.erase(0);
+    }
+
+    std::set<char> schar() {
+        return _schar;
+    }
+
+    unsigned int nodeCount() {
+        return _nodeCount;
     }
 
     void display() {
@@ -346,6 +354,8 @@ class NFA {
   private:
     NFANode *_head;
     NFANode *_tail;
+    unsigned int _nodeCount;
+    std::set<char> _schar;
 };
 
 NFA *_buildNFA(RegTree *root) {
