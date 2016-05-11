@@ -1,30 +1,118 @@
+data = a
+data = b
+data = c
+data = d
+op = |
+op = |
+op = |
+------------------------
+data = a
+op = |
+data = b
+op = |
+data = c
+op = |
+data = d
+------------------------
+---
+num = 2
+cur = 00ee62f0
+|e| next: 00ee1218
+|e| next: 00ee63b0
+
+---
+num = 1
+cur = 00ee1218
+a next: 00ee6368
+
+---
+num = 2
+cur = 00ee63b0
+|e| next: 00ee0f58
+|e| next: 00ee6308
+
+---
+num = 1
+cur = 00ee6368
+|e| next: 00ee64a0
+
+---
+num = 1
+cur = 00ee0f58
+b next: 00ee6470
+
+---
+num = 2
+cur = 00ee6308
+|e| next: 00ee6380
+|e| next: 00ee63e0
+
+---
+end.
+---
+num = 1
+cur = 00ee6470
+|e| next: 00ee6350
+
+---
+num = 1
+cur = 00ee6380
+c next: 00ee6458
+
+---
+num = 1
+cur = 00ee63e0
+d next: 00ee63f8
+
+---
+num = 1
+cur = 00ee6350
+|e| next: 00ee64a0
+
+---
+num = 1
+cur = 00ee6458
+|e| next: 00ee6428
+
+---
+num = 1
+cur = 00ee63f8
+|e| next: 00ee6428
+
+---
+num = 1
+cur = 00ee6428
+|e| next: 00ee6350
+
+tail = 00ee64a0
+-------display end-------
 --------- start display ------------
 the title chars are: 
-a b 
+a b c d 
 the data matrix is:
-1 2 
-1 3 
-1 2 
-1 4 
-1 2 
+1 2 3 4 
+5 5 5 5 
+5 5 5 5 
+5 5 5 5 
+5 5 5 5 
+5 5 5 5 
 the end state set:
-4 
+1 2 3 4 5 
 ----------- end display ------------
 after minimize
-0 2 
-1 
-3 
-4 
+0 
+1 2 3 4 5 
 =========================
+it = 2
+it = 3
+it = 4
+it = 5
 start to remove died node
 --------- start display ------------
 the title chars are: 
-a b 
+a b c d 
 the data matrix is:
-1 0 
-1 2 
-1 3 
-1 0 
+0 0 0 0 
 the end state set:
-3 
+0 
 ----------- end display ------------

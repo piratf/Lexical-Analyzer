@@ -14,8 +14,8 @@ NFA *inputNFA() {
     input >> reg;
     input.close();
     RegTree *root = buildRegTree(reg);
-    // root -> backOrderDisplay();
-    // root -> middleOrderDisplay();
+    root -> backOrderDisplay();
+    root -> middleOrderDisplay();
     // return NULL;
     return buildNFA(root);
 }
@@ -38,15 +38,15 @@ bool test(NFA *nfa) {
 int main() {
     freopen("output.txt", "w", stdout);
     NFA *nfa = inputNFA();
-    // nfa -> display();
+    nfa -> display();
     // test(nfa);
 
     DFA *dfa = buildDFA(nfa);
     dfa -> display();
     dfa -> minimize();
     dfa -> display();
-    fflush(stdout);
-    delete nfa;
-    delete dfa;
+    // fflush(stdout);
+    // delete nfa;
+    // delete dfa;
     return 0;
 }

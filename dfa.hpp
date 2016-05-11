@@ -172,62 +172,74 @@ class DFA {
 
         puts("=========================");
 
+        fflush(stdout);
+
         // modify data matrix
         for (auto &s : sdivide) {
             if (s.size() > 1) {
+                unsigned int maxOfSet = *s.rbegin();
                 auto it = s.begin();
                 unsigned int tag = *it;
+
+                // update end state
+                std::vector<unsigned int> modify;
+                std::vector<unsigned int> vecRemove;
+
+                for (auto endit = _sendState.begin();
+                        endit != _sendState.end(); ++endit) {
+                    if (s.find(*endit) != s.end()) {
+                        vecRemove.push_back(*endit);
+                        continue;
+                    }
+
+                    if (*endit > maxOfSet) {
+                        modify.push_back(*endit);
+                        continue;
+                    }
+
+                }
+
+
+                for (auto &var : modify) {
+                    _sendState.erase(var);
+                    _sendState.insert(tag);
+                }
+
+                for (auto &var : modify) {
+                    _sendState.erase(var);
+                    _sendState.insert(var - 1);
+                }
+
+                for (auto &row : _vecData) {
+                    for (unsigned int &var : row) {
+                        if (s.find(var) != s.end()) {
+                            var = tag;
+                        } else if (var > maxOfSet) {
+                            --var;
+                        }
+                    }
+                }
+
                 ++it;
 
                 for (; it != s.end(); ++it) {
-                    // update end state
-                    unsigned int flag[2] = {};
-
-                    for (auto endit = _sendState.begin();
-                            endit != _sendState.end(); ++endit) {
-                        if (*endit == *it) {
-                            flag[0] = 1;
-                            continue;
-                        }
-
-                        if (*endit > *it) {
-                            flag[1] = *endit;
-                            continue;
-                        }
-
-                    }
-
-                    if (flag[0]) {
-                        _sendState.erase(*it);
-                        _sendState.insert(tag);
-                    }
-
-                    if (flag[1]) {
-                        _sendState.erase(flag[1]);
-                        _sendState.insert(flag[1] - 1);
-                    }
-
-                    for (auto &row : _vecData) {
-                        for (unsigned int &var : row) {
-                            if (var == *it) {
-                                var = tag;
-                            } else if (var > *it) {
-                                --var;
-                            }
-                        }
-                    }
-
+                    printf("it = %d\n", *it);
                     _vecData.erase(_vecData.begin() + *it);
+                    _sendState.erase(*it);
                 }
             }
         }
 
         printf("start to remove died node\n");
+        fflush(stdout);
+
         std::vector<unsigned int> vecDied;
         bool diedFlag = true;
+
         for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
             unsigned int index = it - _vecData.begin();
             diedFlag = true;
+
             for (auto &var : *it) {
                 if (var != index) {
                     diedFlag = false;
@@ -236,8 +248,27 @@ class DFA {
             }
 
             if (diedFlag) {
-                it = _vecData.erase(it);
+                vecDied.push_back(index);
             }
+        }
+
+        for (auto &died : vecDied) {
+
+            for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
+                for (unsigned int &var : *it) {
+                    if (var == died) {
+
+                        if (_sendState.find(died) != _sendState.end()) {
+                            _sendState.erase(died);
+                            _sendState.insert(it - _vecData.begin());
+                        }
+
+                        var = it - _vecData.begin();
+                    }
+                }
+            }
+
+            _vecData.erase(_vecData.begin() + died);
         }
     }
 
@@ -307,7 +338,6 @@ DFA *buildDFA(NFA *nfa) {
             nfa -> getEplisonClosure(su);
 
             if (sdstates.find(su) == sdstates.end()) {
-
                 ++cnt;
                 sdstates[su] = cnt;
                 qunflag.push(su);
@@ -320,6 +350,15 @@ DFA *buildDFA(NFA *nfa) {
             }
 
             vecData[curID][titleMap[ch]] = sdstates[su];
+        }
+    }
+
+
+    // minimize end state
+
+    for (auto &endstate : sendState) {
+        for (unsigned int &var : vecData[endstate]) {
+            sendState.insert(var);
         }
     }
 
