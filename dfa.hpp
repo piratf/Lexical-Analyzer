@@ -30,6 +30,26 @@ class DFA {
 
     }
 
+    unsigned int move(unsigned int state, char title) {
+        return _vecData[state][_title[title]];
+    }
+
+    bool calculate(const char *str) {
+        unsigned int s = 0;
+
+        const char *p = str;
+        while (*p) {
+            s = move(s, *p);
+            ++p;
+        }
+
+        if (_sendState.find(s) != _sendState.end()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     void display() {
         puts("--------- start display ------------");
         printf("the title chars are: \n");
@@ -42,7 +62,10 @@ class DFA {
 
         printf("the data matrix is:\n");
 
+        int rowid = 0;
         for (auto &row : _vecData) {
+
+            printf("%d: ", rowid++);
             for (unsigned int var : row) {
                 printf("%d ", var);
             }

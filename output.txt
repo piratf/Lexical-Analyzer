@@ -1,465 +1,170 @@
-data = /
-data = ;
-data = '
-data = '
-data = "
-data = "
-data = {
-data = }
-data = =
-data = >
-data = <
-data = !
-data = &
-data = [
-data = ]
-data = %
-data = .
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
-op = |
+keyword=int|void|float
+tag = keyword
+reg = int|void|float
+data = i
+data = n
+op = .
+data = t
+op = .
+data = v
+data = o
+op = .
+data = i
+op = .
+data = d
+op = .
+data = f
+data = l
+op = .
+data = o
+op = .
+data = a
+op = .
+data = t
+op = .
 op = |
 op = |
 ------------------------
-data = /
+data = i
+op = .
+data = n
+op = .
+data = t
 op = |
-data = ;
+data = v
+op = .
+data = o
+op = .
+data = i
+op = .
+data = d
 op = |
-data = '
-op = |
-data = '
-op = |
-data = "
-op = |
-data = "
-op = |
-data = {
-op = |
-data = }
-op = |
-data = =
-op = |
-data = >
-op = |
-data = <
-op = |
-data = !
-op = |
-data = &
-op = |
-data = [
-op = |
-data = ]
-op = |
-data = %
-op = |
-data = .
+data = f
+op = .
+data = l
+op = .
+data = o
+op = .
+data = a
+op = .
+data = t
 ------------------------
 ---
 num = 2
-cur = 000396e8
-|e| next: 00035bb0
-|e| next: 00039898
+cur = 00f17360
+|e| next: 00f16890
+|e| next: 00f17378
 
 ---
 num = 1
-cur = 00035bb0
-/ next: 00039940
+cur = 00f16890
+i next: 00f167e8
 
 ---
 num = 2
-cur = 00039898
-|e| next: 00035a00
-|e| next: 00039718
+cur = 00f17378
+|e| next: 00f16818
+|e| next: 00f17480
 
 ---
 num = 1
-cur = 00039940
-|e| next: 00039928
+cur = 00f167e8
+n next: 00f166f8
 
 ---
 num = 1
-cur = 00035a00
-; next: 000398e0
+cur = 00f16818
+v next: 00f16758
 
 ---
-num = 2
-cur = 00039718
-|e| next: 00035b38
-|e| next: 00039820
+num = 1
+cur = 00f17480
+f next: 00f173c0
+
+---
+num = 1
+cur = 00f166f8
+t next: 00f17330
+
+---
+num = 1
+cur = 00f16758
+o next: 00f17588
+
+---
+num = 1
+cur = 00f173c0
+l next: 00f175a0
+
+---
+num = 1
+cur = 00f17330
+|e| next: 00f17468
+
+---
+num = 1
+cur = 00f17588
+i next: 00f17420
+
+---
+num = 1
+cur = 00f175a0
+o next: 00f17528
 
 ---
 end.
 ---
 num = 1
-cur = 000398e0
-|e| next: 00039838
+cur = 00f17420
+d next: 00f174c8
 
 ---
 num = 1
-cur = 00035b38
-' next: 00039850
-
----
-num = 2
-cur = 00039820
-|e| next: 00035aa8
-|e| next: 00038298
+cur = 00f17528
+a next: 00f17600
 
 ---
 num = 1
-cur = 00039838
-|e| next: 00039928
+cur = 00f174c8
+|e| next: 00f17558
 
 ---
 num = 1
-cur = 00039850
-|e| next: 000398f8
+cur = 00f17600
+t next: 00f17450
 
 ---
 num = 1
-cur = 00035aa8
-' next: 00039808
-
----
-num = 2
-cur = 00038298
-|e| next: 00035ac0
-|e| next: 000381a8
+cur = 00f17558
+|e| next: 00f17468
 
 ---
 num = 1
-cur = 000398f8
-|e| next: 00039838
+cur = 00f17450
+|e| next: 00f17558
 
----
-num = 1
-cur = 00039808
-|e| next: 00039730
-
----
-num = 1
-cur = 00035ac0
-" next: 00038208
-
----
-num = 2
-cur = 000381a8
-|e| next: 00035b08
-|e| next: 00038130
-
----
-num = 1
-cur = 00039730
-|e| next: 000398f8
-
----
-num = 1
-cur = 00038208
-|e| next: 000397f0
-
----
-num = 1
-cur = 00035b08
-" next: 00038178
-
----
-num = 2
-cur = 00038130
-|e| next: 00035b50
-|e| next: 00038070
-
----
-num = 1
-cur = 000397f0
-|e| next: 00039730
-
----
-num = 1
-cur = 00038178
-|e| next: 00038238
-
----
-num = 1
-cur = 00035b50
-{ next: 00038100
-
----
-num = 2
-cur = 00038070
-|e| next: 00035c88
-|e| next: 000380b8
-
----
-num = 1
-cur = 00038238
-|e| next: 000397f0
-
----
-num = 1
-cur = 00038100
-|e| next: 00038220
-
----
-num = 1
-cur = 00035c88
-} next: 00038250
-
----
-num = 2
-cur = 000380b8
-|e| next: 00035cb8
-|e| next: 00038388
-
----
-num = 1
-cur = 00038220
-|e| next: 00038238
-
----
-num = 1
-cur = 00038250
-|e| next: 000382e0
-
----
-num = 1
-cur = 00035cb8
-= next: 00038088
-
----
-num = 2
-cur = 00038388
-|e| next: 00035bf8
-|e| next: 000383a0
-
----
-num = 1
-cur = 000382e0
-|e| next: 00038220
-
----
-num = 1
-cur = 00038088
-|e| next: 00038340
-
----
-num = 1
-cur = 00035bf8
-> next: 00038418
-
----
-num = 2
-cur = 000383a0
-|e| next: 00035c28
-|e| next: 00037080
-
----
-num = 1
-cur = 00038340
-|e| next: 000382e0
-
----
-num = 1
-cur = 00038418
-|e| next: 00038058
-
----
-num = 1
-cur = 00035c28
-< next: 00037068
-
----
-num = 2
-cur = 00037080
-|e| next: 00035c58
-|e| next: 00036f60
-
----
-num = 1
-cur = 00038058
-|e| next: 00038340
-
----
-num = 1
-cur = 00037068
-|e| next: 00038358
-
----
-num = 1
-cur = 00035c58
-! next: 000370c8
-
----
-num = 2
-cur = 00036f60
-|e| next: 00036d68
-|e| next: 00036df8
-
----
-num = 1
-cur = 00038358
-|e| next: 00038058
-
----
-num = 1
-cur = 000370c8
-|e| next: 000383d0
-
----
-num = 1
-cur = 00036d68
-& next: 00036e28
-
----
-num = 2
-cur = 00036df8
-|e| next: 00037038
-|e| next: 00036eb8
-
----
-num = 1
-cur = 000383d0
-|e| next: 00038358
-
----
-num = 1
-cur = 00036e28
-|e| next: 00037110
-
----
-num = 1
-cur = 00037038
-[ next: 00036ed0
-
----
-num = 2
-cur = 00036eb8
-|e| next: 00037050
-|e| next: 00036e88
-
----
-num = 1
-cur = 00037110
-|e| next: 000383d0
-
----
-num = 1
-cur = 00036ed0
-|e| next: 00036ea0
-
----
-num = 1
-cur = 00037050
-] next: 00036ff0
-
----
-num = 2
-cur = 00036e88
-|e| next: 00036ee8
-|e| next: 00036fc0
-
----
-num = 1
-cur = 00036ea0
-|e| next: 00037110
-
----
-num = 1
-cur = 00036ff0
-|e| next: 00036f30
-
----
-num = 1
-cur = 00036ee8
-% next: 00036fa8
-
----
-num = 1
-cur = 00036fc0
-. next: 00036f00
-
----
-num = 1
-cur = 00036f30
-|e| next: 00036ea0
-
----
-num = 1
-cur = 00036fa8
-|e| next: 00037008
-
----
-num = 1
-cur = 00036f00
-|e| next: 00037008
-
----
-num = 1
-cur = 00037008
-|e| next: 00036f30
-
-tail = 00039928
+tail = 00f17468
 -------display end-------
 --------- start display ------------
 the title chars are: 
-! " % & ' . / ; < = > [ ] { } 
+a d f i l n o t v 
 the data matrix is:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
-16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 
+0: 1 1 2 3 1 1 1 1 4 
+1: 1 1 1 1 1 1 1 1 1 
+2: 1 1 1 1 5 1 1 1 1 
+3: 1 1 1 1 1 6 1 1 1 
+4: 1 1 1 1 1 1 7 1 1 
+5: 1 1 1 1 1 1 8 1 1 
+6: 1 1 1 1 1 1 1 9 1 
+7: 1 1 1 10 1 1 1 1 1 
+8: 11 1 1 1 1 1 1 1 1 
+9: 1 1 1 1 1 1 1 1 1 
+10: 1 12 1 1 1 1 1 1 1 
+11: 1 1 1 1 1 1 1 13 1 
+12: 1 1 1 1 1 1 1 1 1 
+13: 1 1 1 1 1 1 1 1 1 
 the end state set:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
+1 9 12 13 
 ----------- end display ------------
-after minimize
-0 
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
-=========================
-it = 2
-it = 3
-it = 4
-it = 5
-it = 6
-it = 7
-it = 8
-it = 9
-it = 10
-it = 11
-it = 12
-it = 13
-it = 14
-it = 15
-it = 16
-start to remove died node
---------- start display ------------
-the title chars are: 
-! " % & ' . / ; < = > [ ] { } 
-the data matrix is:
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-the end state set:
-0 
------------ end display ------------
+input = float
+yes.
