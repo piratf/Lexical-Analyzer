@@ -147,7 +147,7 @@ class LexicalAnalyzer {
                 tag = var -> tag();
             }
         }
-
+        
         return tag;
     }
 

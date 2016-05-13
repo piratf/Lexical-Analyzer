@@ -170,6 +170,7 @@ class DFA {
                                 stemp.insert(temp);
                             }
                         }
+
                         endOfMinimize = false;
                         break;
                     }
@@ -255,43 +256,68 @@ class DFA {
         printf("start to remove died node\n");
         fflush(stdout);
 
-        std::vector<unsigned int> vecDied;
-        bool diedFlag = true;
+        // std::vector<unsigned int> vecDied;
+        // bool diedFlag = true;
 
-        for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
-            unsigned int index = it - _vecData.begin();
-            diedFlag = true;
+        // for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
+        //     unsigned int index = it - _vecData.begin();
+        //     diedFlag = true;
 
-            for (auto &var : *it) {
-                if (var != index) {
-                    diedFlag = false;
-                    break;
-                }
-            }
+        //     for (auto &var : *it) {
+        //         if (var != index) {
+        //             diedFlag = false;
+        //             break;
+        //         }
+        //     }
 
-            if (diedFlag) {
-                vecDied.push_back(index);
-            }
-        }
+        //     if (diedFlag) {
+        //         printf("died: %d\n", index);
+        //         vecDied.push_back(index);
+        //     }
+        // }
 
-        for (auto &died : vecDied) {
+        // while (!vecDied.empty()) {
+        //     for (auto &died : vecDied) {
+        //         _vecData.erase(_vecData.begin() + died);
 
-            for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
-                for (unsigned int &var : *it) {
-                    if (var == died) {
+        //         for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
+        //             for (unsigned int &var : *it) {
+        //                 if (var == died) {
 
-                        if (_sendState.find(died) != _sendState.end()) {
-                            _sendState.erase(died);
-                            _sendState.insert(it - _vecData.begin());
-                        }
+        //                     if (_sendState.find(died) != _sendState.end()) {
+        //                         _sendState.erase(died);
+        //                         _sendState.insert(it - _vecData.begin());
+        //                     }
 
-                        var = it - _vecData.begin();
-                    }
-                }
-            }
+        //                     var = it - _vecData.begin();
+        //                 } else if (var > died) {
+        //                     --var;
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            _vecData.erase(_vecData.begin() + died);
-        }
+        //     display();
+
+        //     vecDied.clear();
+
+        //     for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
+        //         unsigned int index = it - _vecData.begin();
+        //         diedFlag = true;
+
+        //         for (auto &var : *it) {
+        //             if (var != index) {
+        //                 diedFlag = false;
+        //                 break;
+        //             }
+        //         }
+
+        //         if (diedFlag) {
+        //             printf("died: %d\n", index);
+        //             vecDied.push_back(index);
+        //         }
+        //     }
+        // }
     }
 
     std::string tag() {

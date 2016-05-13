@@ -225,6 +225,9 @@ RegTree *buildRegTree(const string &reg) {
 
     for (auto it = reg.rbegin(); it != reg.rend(); ++it) {
         char cur = *it;
+        if (cur == '\\') {
+            continue;
+        }
 #ifdef DEBUG
         printf("cur = %c\n", cur);
 #endif
@@ -234,7 +237,7 @@ RegTree *buildRegTree(const string &reg) {
             return NULL;
         }
 
-        if (cur == '|') {
+        if (cur == '|' && *(it + 1) == '\\') {
 
 #ifdef DEBUG
             printf("||||||||\n");
@@ -282,7 +285,8 @@ RegTree *buildRegTree(const string &reg) {
         //     return NULL;
         // }
 
-        if (*it == ')' && *(it + 1) != '|' && it != reg.rend() - 1) {
+        if (*it == ')' && *(it + 1) == '\\') {
+            ++it;
             fflush(stdout);
 
             size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);

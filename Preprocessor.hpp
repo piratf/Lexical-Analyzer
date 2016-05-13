@@ -6,7 +6,12 @@
 
 class Preprocessor {
   public:
-    Preprocessor() = default;
+    Preprocessor() {
+        _set_op.insert('|');
+        _set_op.insert(')');
+        _set_op.insert('*');
+    }
+
     ~Preprocessor() = default;
 
     void trim(std::string &reg) {
@@ -32,11 +37,11 @@ class Preprocessor {
     }
 
     bool standalone(const std::string &str, const std::string::iterator &it) {
-        return ((it - 1 == str.begin()) || (*(it - 1) == '|'))
-               && ((it + 1 == str.end()) || (*(it + 1) == '|'));
+        return (((it - 1 == str.begin()) || (*(it - 1) == '|'))
+                && ((it + 1 == str.end()) || (*(it + 1) == '|'))) || ((*(it - 1) == '(') && (*(it + 1) == ')'));
     }
 
-    std::map<std::string, std::string>& regs() {
+    std::map<std::string, std::string> &regs() {
         return _regs;
     }
 
@@ -48,37 +53,48 @@ class Preprocessor {
 
         std::string strContent;
 
+
         for (auto it = reg.begin(); it != reg.end(); ++it) {
 
+
+
+            // 处理 [ ] 括号中的语法糖
             if (*it == '[' && !standalone(reg, it)) {
                 size_t right = reg.find(']', it - reg.begin());
 
+                // 如果中括号不成对
                 if (right == std::string::npos) {
-                    error_shoot("error reg.");
+                    error_shoot("error reg. missing ] ");
                 }
 
+                // 构造子字符串 得到括号中的内容
                 std::string subreg(it + 1, reg.begin() + right);
                 printf("subreg = %s\n", subreg.data());
 
+                // 处理连续字符缩写语法糖
                 if (subreg.size() == 3 && subreg[1] == '-') {
                     char startchar = subreg[0], endchar = subreg[2];
                     subreg.clear();
 
                     for (char i = startchar; i < endchar; ++i) {
                         subreg.push_back(i);
+                        subreg.push_back('\\');
                         subreg.push_back('|');
                     }
 
                     subreg.push_back(endchar);
                     strContent.append(subreg);
                 } else if (_regs.find(subreg) != _regs.end()) {
+                    // 处理子 reg 语法糖
                     strContent.append(_regs[subreg]);
-                } else {
-                    strContent.append(subreg);
                 }
 
                 it = reg.begin() + right;
                 continue;
+            }
+
+            if (_set_op.find(*it) != _set_op.end() && !standalone(reg, it)) {
+                strContent.push_back('\\');
             }
 
             strContent.push_back(*it);
@@ -105,6 +121,7 @@ class Preprocessor {
 
   private:
     std::map<std::string, std::string> _regs;
+    std::set<char> _set_op;
 };
 
 #endif

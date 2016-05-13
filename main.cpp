@@ -115,38 +115,16 @@ DFA *buildDFA(std::string &tag, std::string &reg) {
     return dfa;
 }
 
-void preprocess() {
-    Preprocessor ppr;
-    ifstream input("input.txt");
-    char *str = new char[N];
 
-    while (!input.eof()) {
-        input.getline(str, N);
 
-        if (strlen(str)) {
-            std::string reg(str);
-            ppr.update(reg);
-        }
-    }
-    input.close();
+bool test(LexicalAnalyzer *la) {
+    ifstream input("test.txt");
+    string code;
+    input >> code;
+    printf("input = %s\n", code.data());
 
-    ppr.display();
-
-    std::string literal("literal");
-    std::string id("id");
-    std::string strchar("char");
-    std::string test("test");
-
-    LexicalAnalyzer *la = new LexicalAnalyzer();
-    auto &regs = ppr.regs();
-    std::string reg = regs[test];
-    printf("%s %s\n", test.data(), reg.data());
-    DFA *dfa = buildDFA(test, reg);
-    dfa -> display();
-    dfa -> minimize();
-    dfa -> display();
-    la -> add(dfa);
-
+    printf("%s\n", la -> calculate(code.data()).data());
+    return true;
 }
 
 bool test(NFA *nfa) {
@@ -179,21 +157,57 @@ bool test(DFA *dfa) {
     }
 }
 
+void preprocess() {
+    Preprocessor ppr;
+    ifstream input("input.txt");
+    char *str = new char[N];
+
+    while (!input.eof()) {
+        input.getline(str, N);
+
+        if (strlen(str)) {
+            std::string reg(str);
+            ppr.update(reg);
+        }
+    }
+
+    input.close();
+
+    ppr.display();
+
+    std::string literal("literal");
+    std::string id("id");
+    std::string strchar("char");
+    std::string strtest("test");
+
+    LexicalAnalyzer *la = new LexicalAnalyzer();
+    auto &regs = ppr.regs();
+    std::string reg = regs[strtest];
+    printf("%s %s\n", strtest.data(), reg.data());
+    DFA *dfa = buildDFA(strtest, reg);
+    dfa -> display();
+    // dfa -> minimize();
+    fflush(stdout);
+    la -> add(dfa);
+
+    test(dfa);
+}
+
 int main() {
     freopen("output.txt", "w", stdout);
     // NFA *nfa = inputNFA();
     // nfa -> display();
     // test(nfa);
 
-    DFA *dfa = inputDFA();
-    dfa -> display();
-    dfa -> minimize();
-    test(dfa);
+    // DFA *dfa = inputDFA();
+    // dfa -> display();
+    // dfa -> minimize();
+    // test(dfa);
     // dfa -> display();
     // fflush(stdout);
     // delete nfa;
     // delete dfa;
 
-    // preprocess();
+    preprocess();
     return 0;
 }
