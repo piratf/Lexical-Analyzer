@@ -1,170 +1,25 @@
-keyword=int|void|float
-tag = keyword
-reg = int|void|float
-data = i
-data = n
-op = .
-data = t
-op = .
-data = v
-data = o
-op = .
-data = i
-op = .
-data = d
-op = .
-data = f
-data = l
-op = .
-data = o
-op = .
-data = a
-op = .
-data = t
-op = .
-op = |
-op = |
-------------------------
-data = i
-op = .
-data = n
-op = .
-data = t
-op = |
-data = v
-op = .
-data = o
-op = .
-data = i
-op = .
-data = d
-op = |
-data = f
-op = .
-data = l
-op = .
-data = o
-op = .
-data = a
-op = .
-data = t
-------------------------
----
-num = 2
-cur = 00f17360
-|e| next: 00f16890
-|e| next: 00f17378
-
----
-num = 1
-cur = 00f16890
-i next: 00f167e8
-
----
-num = 2
-cur = 00f17378
-|e| next: 00f16818
-|e| next: 00f17480
-
----
-num = 1
-cur = 00f167e8
-n next: 00f166f8
-
----
-num = 1
-cur = 00f16818
-v next: 00f16758
-
----
-num = 1
-cur = 00f17480
-f next: 00f173c0
-
----
-num = 1
-cur = 00f166f8
-t next: 00f17330
-
----
-num = 1
-cur = 00f16758
-o next: 00f17588
-
----
-num = 1
-cur = 00f173c0
-l next: 00f175a0
-
----
-num = 1
-cur = 00f17330
-|e| next: 00f17468
-
----
-num = 1
-cur = 00f17588
-i next: 00f17420
-
----
-num = 1
-cur = 00f175a0
-o next: 00f17528
-
----
-end.
----
-num = 1
-cur = 00f17420
-d next: 00f174c8
-
----
-num = 1
-cur = 00f17528
-a next: 00f17600
-
----
-num = 1
-cur = 00f174c8
-|e| next: 00f17558
-
----
-num = 1
-cur = 00f17600
-t next: 00f17450
-
----
-num = 1
-cur = 00f17558
-|e| next: 00f17468
-
----
-num = 1
-cur = 00f17450
-|e| next: 00f17558
-
-tail = 00f17468
--------display end-------
+test=(a|b)*abb
+tag = test
+reg = (a|b)*abb
 --------- start display ------------
+my tag is: test
 the title chars are: 
-a d f i l n o t v 
+a b 
 the data matrix is:
-0: 1 1 2 3 1 1 1 1 4 
-1: 1 1 1 1 1 1 1 1 1 
-2: 1 1 1 1 5 1 1 1 1 
-3: 1 1 1 1 1 6 1 1 1 
-4: 1 1 1 1 1 1 7 1 1 
-5: 1 1 1 1 1 1 8 1 1 
-6: 1 1 1 1 1 1 1 9 1 
-7: 1 1 1 10 1 1 1 1 1 
-8: 11 1 1 1 1 1 1 1 1 
-9: 1 1 1 1 1 1 1 1 1 
-10: 1 12 1 1 1 1 1 1 1 
-11: 1 1 1 1 1 1 1 13 1 
-12: 1 1 1 1 1 1 1 1 1 
-13: 1 1 1 1 1 1 1 1 1 
+0: 1 2 
+1: 1 3 
+2: 1 2 
+3: 1 4 
+4: 1 2 
 the end state set:
-1 9 12 13 
+4 
 ----------- end display ------------
-input = float
+after minimize
+0 2 
+1 
+3 
+4 
+=========================
+start to remove died node
+input = ababababb
 yes.

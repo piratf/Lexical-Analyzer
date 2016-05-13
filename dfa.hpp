@@ -12,7 +12,7 @@
 
 class DFA {
   public:
-    DFA() = default;
+    // DFA() = default;
 
     DFA(const std::map<char, unsigned int> &title,
         const std::vector<std::vector<unsigned int> > &vecData,
@@ -38,6 +38,7 @@ class DFA {
         unsigned int s = 0;
 
         const char *p = str;
+
         while (*p) {
             s = move(s, *p);
             ++p;
@@ -52,6 +53,7 @@ class DFA {
 
     void display() {
         puts("--------- start display ------------");
+        printf("my tag is: %s\n", _tag.data());
         printf("the title chars are: \n");
 
         for (auto &var : _title) {
@@ -63,9 +65,11 @@ class DFA {
         printf("the data matrix is:\n");
 
         int rowid = 0;
+
         for (auto &row : _vecData) {
 
             printf("%d: ", rowid++);
+
             for (unsigned int var : row) {
                 printf("%d ", var);
             }
@@ -104,6 +108,19 @@ class DFA {
             sdivide.swap(stemp);
             stemp.clear();
 
+            // printf("sdivide\n");
+
+            // for (auto &d : sdivide) {
+            //     for (unsigned int data : d) {
+            //         printf("%d ", data);
+            //     }
+
+            //     putchar(10);
+            // }
+
+            bool endOfMinimize = true;
+
+            // 遍历当前划分中的每一个集合
             for (std::set<unsigned int> divide : sdivide) {
 
                 if (divide.size() == 1) {
@@ -112,72 +129,54 @@ class DFA {
                 }
 
                 std::set<unsigned int> subset;
-                bool unchanged = true;
 
-                // 遍历每一个可能的输入字符
+                // 遍历 _title 中每一个可能的输入字符
                 for (auto &var : _title) {
                     titleID = var.second;
                     subset.clear();
 
-                    // 遍历当前所有状态
+                    // 遍历当前所有状态，填充 subset 集合
                     for (unsigned int state : divide) {
                         subset.insert(_vecData[state][titleID]);
                     }
 
-                    bool flag = true;
+                    bool needChange = true;
 
-                    for (auto &divide : sdivide) {
-                        if (std::includes(divide.begin(), divide.end(), subset. begin(), subset.end())) {
-                            flag = false;
+                    // 判断结果是不是在同一个划分内
+                    for (auto d : sdivide) {
+                        if (std::includes(d.begin(), d.end(), subset.begin(), subset.end())) {
+                            needChange = false;
                             break;
                         }
                     }
 
-                    // 如果该 title char 对应的结果集不属于同一个组
-                    if (flag) {
-                        unchanged = false;
-                        unsigned int id = static_cast<unsigned int>(-1);
+                    // 如果不是
+                    if (needChange) {
+                        // 获得和所有 divide 的交集
+                        for (auto d : sdivide) {
+                            std::set<unsigned int> st;
+                            std::set_intersection(subset.begin(), subset.end(), d.begin(), d.end(), std::inserter(st, st.begin()));
 
-                        for (auto &divide : sdivide) {
-                            std::set<unsigned int> su;
-                            std::set<unsigned int> si;
+                            // 得到一个不为空的交集，添加所有单步结果在此交集内的元素到新的划分中
+                            if (!st.empty()) {
+                                std::set<unsigned int> temp;
 
-                            std::set_intersection(
-                                divide.begin(), divide.end(),
-                                subset.begin(), subset.end(),
-                                std::inserter(su, su.begin()));
-                            std::set_intersection(
-                                su.begin(), su.end(),
-                                subset.begin(), subset.end(),
-                                std::inserter(si, si.begin()));
+                                for (unsigned int state : divide) {
+                                    if (st.find(_vecData[state][titleID]) != st.end()) {
+                                        temp.insert(state);
+                                    }
+                                }
 
-                            if (si.size() == 1) {
-                                id = *si.begin();
-                                break;
+                                stemp.insert(temp);
                             }
                         }
-
-                        if (id == static_cast<unsigned int>(-1)) {
-                            printf("error: cannot minimize.\n");
-                        }
-
-                        subset.clear();
-
-                        // 遍历当前所有状态
-                        for (auto it = divide.begin(); it != divide.end(); ++it) {
-                            if (_vecData[*it][titleID] == id) {
-                                subset.insert(*it);
-                                it = divide.erase(it);
-                            }
-                        }
-
-                        stemp.insert(divide);
-                        stemp.insert(subset);
+                        endOfMinimize = false;
                         break;
                     }
+
                 }
 
-                if (unchanged) {
+                if (endOfMinimize) {
                     stemp.insert(divide);
                 }
             }
@@ -246,7 +245,7 @@ class DFA {
                 ++it;
 
                 for (; it != s.end(); ++it) {
-                    printf("it = %d\n", *it);
+                    // printf("it = %d\n", *it);
                     _vecData.erase(_vecData.begin() + *it);
                     _sendState.erase(*it);
                 }
@@ -295,12 +294,21 @@ class DFA {
         }
     }
 
+    std::string tag() {
+        return _tag;
+    }
+
+    void tag(const std::string &tag) {
+        _tag = tag;
+    }
+
     ~DFA() = default;
 
   private:
     std::map<char, unsigned int> _title;
     std::vector<std::vector<unsigned int> > _vecData;
     std::set<unsigned int> _sendState;
+    std::string _tag = "default tag of dfa.";
 };
 
 DFA *buildDFA(NFA *nfa) {
@@ -379,11 +387,11 @@ DFA *buildDFA(NFA *nfa) {
 
     // minimize end state
 
-    for (auto &endstate : sendState) {
-        for (unsigned int &var : vecData[endstate]) {
-            sendState.insert(var);
-        }
-    }
+    // for (auto &endstate : sendState) {
+    //     for (unsigned int &var : vecData[endstate]) {
+    //         sendState.insert(var);
+    //     }
+    // }
 
     DFA *dfa = new DFA(std::move(titleMap), std::move(vecData), std::move(sendState));
 

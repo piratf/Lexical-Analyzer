@@ -1,12 +1,13 @@
-#include "regtree.hpp"
-#include "nfa.hpp"
-#include "dfa.hpp"
+#include "LexicalAnalyzer.hpp"
+#include "Preprocessor.hpp"
 #include <cstdio>
 #include <fstream>
 #include <vector>
 #include <queue>
 #include <set>
 #include <map>
+
+// static const int N = 1024;
 
 void trim(std::string &reg) {
     for (auto it = reg.begin(); it != reg.end(); ++it) {
@@ -18,6 +19,7 @@ void trim(std::string &reg) {
 
 std::string split(std::string &reg) {
     auto it = reg.begin();
+
     for (; it != reg.end(); ++it) {
         if (*it == '=') {
             break;
@@ -30,10 +32,9 @@ std::string split(std::string &reg) {
 }
 
 NFA *inputNFA() {
-    ifstream input("input.txt");
-    const int N = 1024;
+    ifstream input("raw.txt");
     char *str = new char[N];
-    input.getline(str, 1000);
+    input.getline(str, N);
     std::string reg(str);
     trim(reg);
     printf("%s\n", reg.data());
@@ -46,8 +47,106 @@ NFA *inputNFA() {
     root -> backOrderDisplay();
     root -> middleOrderDisplay();
     fflush(stdout);
+    input.close();
     // return NULL;
     return buildNFA(root);
+}
+
+DFA *inputDFA() {
+    ifstream input("raw.txt");
+    char *str = new char[N];
+    input.getline(str, N);
+    std::string reg(str);
+    trim(reg);
+    printf("%s\n", reg.data());
+    std::string tag = split(reg);
+    printf("tag = %s\n", tag.data());
+    printf("reg = %s\n", reg.data());
+
+    input.close();
+    RegTree *root = buildRegTree(reg);
+    // root -> backOrderDisplay();
+    // fflush(stdout);
+    // return NULL;
+    NFA *nfa = buildNFA(root);
+    DFA *dfa = buildDFA(nfa);
+    dfa ->tag(tag);
+    input.close();
+    return dfa;
+}
+
+LexicalAnalyzer *inputLA() {
+    ifstream input("input.txt");
+    char *str = new char[N];
+    LexicalAnalyzer *la = new LexicalAnalyzer();
+    la -> init();
+
+    while (!input.eof()) {
+        input.getline(str, N);
+        std::string reg(str);
+        trim(reg);
+        printf("%s\n", reg.data());
+        std::string tag = split(reg);
+        printf("tag = %s\n", tag.data());
+        printf("reg = %s\n", reg.data());
+        fflush(stdout);
+        RegTree *root = buildRegTree(reg);
+        root -> backOrderDisplay();
+        root -> middleOrderDisplay();
+        fflush(stdout);
+        NFA *nfa = buildNFA(root);
+        DFA *dfa = buildDFA(nfa);
+        dfa -> tag(tag);
+        la -> add(dfa);
+    }
+
+    input.close();
+    return la;
+}
+
+DFA *buildDFA(std::string &tag, std::string &reg) {
+    RegTree *root = buildRegTree(reg);
+    root -> backOrderDisplay();
+    root -> middleOrderDisplay();
+    fflush(stdout);
+    NFA *nfa = buildNFA(root);
+    DFA *dfa = buildDFA(nfa);
+    dfa -> tag(tag);
+    return dfa;
+}
+
+void preprocess() {
+    Preprocessor ppr;
+    ifstream input("input.txt");
+    char *str = new char[N];
+
+    while (!input.eof()) {
+        input.getline(str, N);
+
+        if (strlen(str)) {
+            std::string reg(str);
+            ppr.update(reg);
+        }
+    }
+    input.close();
+
+    ppr.display();
+
+    std::string literal("literal");
+    std::string id("id");
+    std::string strchar("char");
+    std::string test("test");
+
+    LexicalAnalyzer *la = new LexicalAnalyzer();
+    auto &regs = ppr.regs();
+    std::string reg = regs[test];
+    printf("%s %s\n", test.data(), reg.data());
+    DFA *dfa = buildDFA(test, reg);
+    dfa -> display();
+    dfa -> minimize();
+    dfa -> display();
+    la -> add(dfa);
+
 }
 
 bool test(NFA *nfa) {
@@ -82,17 +181,19 @@ bool test(DFA *dfa) {
 
 int main() {
     freopen("output.txt", "w", stdout);
-    NFA *nfa = inputNFA();
-    nfa -> display();
+    // NFA *nfa = inputNFA();
+    // nfa -> display();
     // test(nfa);
 
-    DFA *dfa = buildDFA(nfa);
+    DFA *dfa = inputDFA();
     dfa -> display();
-    // dfa -> minimize();
+    dfa -> minimize();
     test(dfa);
     // dfa -> display();
     // fflush(stdout);
     // delete nfa;
     // delete dfa;
+
+    // preprocess();
     return 0;
 }

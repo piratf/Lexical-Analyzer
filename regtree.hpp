@@ -9,7 +9,7 @@
 using std::ifstream;
 using std::string;
 
-const int N = 1024;
+static const int N = 1024;
 
 enum Operator {
     EMPTY = 0,
@@ -283,7 +283,6 @@ RegTree *buildRegTree(const string &reg) {
         // }
 
         if (*it == ')' && *(it + 1) != '|' && it != reg.rend() - 1) {
-            printf("11111\n");
             fflush(stdout);
 
             size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);
