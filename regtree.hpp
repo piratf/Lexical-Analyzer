@@ -215,124 +215,70 @@ void print_error(const char *message) {
 }
 
 RegTree *buildRegTree(const string &reg) {
-#ifdef DEBUG
-    printf("reg = %s\n", reg.data());
-#endif
     RegTree *root = new RegTree();
-    RegTree *parent = NULL;
     RegTree *gp = NULL;
+    RegTree *parent = NULL;
     RegTree *p = root;
 
     for (auto it = reg.rbegin(); it != reg.rend(); ++it) {
         char cur = *it;
-        if (cur == '\\') {
-            continue;
-        }
-#ifdef DEBUG
-        printf("cur = %c\n", cur);
-#endif
 
-        if (cur == '*' && it == reg.rend() - 1) {
-            print_error("empty content for star operator.");
-            return NULL;
+        if (cur == '\\' || cur == '(') {
+            continue;
         }
 
         if (cur == '|' && *(it + 1) == '\\') {
+            it += 2;
+            size_t t = reg.rfind('|', reg.rend() - (it));
 
-#ifdef DEBUG
-            printf("||||||||\n");
-#endif
-
-            if (!p -> leaf() && !p -> lson() && !p -> rson()) {
-                char data = parent -> rson() -> data();
-                delete parent;
-                parent = new RegTree(data);
-            }
-
-            size_t t = reg.rfind('|', reg.rend() - (it + 2));
-
-            if (t == string::npos) {
-#ifdef DEBUG
-                printf("this is the last |\n");
-#endif
-                p = root;
-                root = new RegTree('|');
-                root -> rson(p);
-                root -> lson(buildRegTree(reg.substr(0, reg.rend() - (it + 1))));
-#ifdef DEBUG
-                printf("t == string::npos: \n");
-                printf("the reg = %s\n", reg.data());
-                root -> backOrderDisplay();
-#endif
-                return root;
-            } else {
-#ifdef DEBUG
-                printf("this is not the last |\n");
-#endif
-                t += 1;
-                p = root;
-                root = new RegTree('|');
-                root -> rson(p);
-                root -> lson(buildRegTree(reg.substr(t, reg.rend() - (it + 1) - t)));
-                it = reg.rend() - t - 1;
-            }
-
-            continue;
-        }
-
-        // if (*it == '(' && *(it + 1) != '|') {
-        //     printf("error**: missing symmetric (");
-        //     return NULL;
-        // }
-
-        if (*it == ')' && *(it + 1) == '\\') {
-            ++it;
-            fflush(stdout);
-
-            size_t t = reg.rfind('(', reg.rend() - (it + 1) - 1);
-
-            if (t == string::npos) {
-                printf("error**: missing symmetric (");
-                return NULL;
-            } else {
-                t += 1;
-                // string temp = reg.substr(t, reg.rend() - (it + 1) - t);
-
-                p -> rson(buildRegTree(reg.substr(t, reg.rend() - (it + 1) - t)));
-                it = reg.rend() - t;
-            }
+            std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            it += substr.size() - 1;
+            // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
+            p -> rson(buildRegTree(substr));
+            parent -> data(OP_OR);
+        } else if (cur == ')' && *(it + 1) == '\\') {
+            it += 2;
+            size_t t = reg.rfind('(', reg.rend() - (it));
+            std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            it += substr.size();
+            // 另右支为子表达式树，符号为默认
+            p -> rson(buildRegTree(substr));
+            p -> data(OP_CAT);
+        } else if (cur == '*' && *(it + 1) == '\\') {
+            it += 3;
+            size_t t = reg.rfind('(', reg.rend() - (it));
+            std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            it += substr.size();
+            // 需要在右支上建立新的 星号运算树
+            RegTree *star = new RegTree(OP_STAR);
+            star -> rson(new RegTree('*'));
+            star -> lson(buildRegTree(substr));
+            p -> rson(star);
+            p -> data(OP_CAT);
         } else {
+            // 内容放到右节点
             p -> rson(new RegTree(cur));
-        }
-
-        p -> lson(new RegTree());
-        gp = parent;
-        parent = p;
-
-        if (cur == '*') {
-            p -> data(OP_STAR);
-        } else {
+            // 设置运算符
             p -> data(OP_CAT);
         }
 
+        // 左节点向下拓展
+        p -> lson(new RegTree(0));
+        gp = parent;
+        parent = p;
         p = p -> lson();
     }
 
-    if (!p -> leaf() && !p -> lson() && !p -> rson()) {
+    // 运行到 reg 结尾时，需要将 parent 的 rson 挂到 gp 的 lson 上
+    if (!p -> data()) {
         RegTree *r = parent -> rson();
 
-        if (gp) {
-#ifdef DEBUG
-            printf("modify gp.\n");
-#endif
-            delete gp -> lson();
-            gp -> lson(r);
-        } else {
-#ifdef DEBUG
-            printf("modify root.\n");
-#endif
+        if (!gp) {
             delete root;
             root = r;
+        } else {
+            delete gp -> lson();
+            gp -> lson(r);
         }
     }
 
