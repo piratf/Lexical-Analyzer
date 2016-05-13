@@ -145,6 +145,7 @@ class LexicalAnalyzer {
         for (auto *var : _vecRM) {
             if (var -> calculate(input)) {
                 tag = var -> tag();
+                break;
             }
         }
         

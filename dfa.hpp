@@ -424,4 +424,15 @@ DFA *buildDFA(NFA *nfa) {
     return dfa;
 }
 
+DFA *buildDFA(const std::basic_string<char> &tag, std::basic_string<char> &reg) {
+    RegTree *root = buildRegTree(reg);
+    // root -> backOrderDisplay();
+    // root -> middleOrderDisplay();
+    fflush(stdout);
+    NFA *nfa = buildNFA(root);
+    DFA *dfa = buildDFA(nfa);
+    dfa -> tag(tag);
+    return dfa;
+}
+
 #endif

@@ -1,6 +1,8 @@
 #ifndef PREPROCESSOR_H_
 #define PREPROCESSOR_H_
 
+#include "dfa.hpp"
+#include "LexicalAnalyzer.hpp"
 #include <string>
 #include <map>
 
@@ -47,16 +49,21 @@ class Preprocessor {
 
     void update(std::string &reg) {
         trim(reg);
+
         std::string tag = split(reg);
+
+        if (tag[0] == ':') {
+            tag = tag.substr(1);
+        } else {
+            _toDFA_tags.insert(tag);
+        }
+
         printf("tag = %s\n", tag.data());
         printf("reg = %s\n", reg.data());
 
         std::string strContent;
 
-
         for (auto it = reg.begin(); it != reg.end(); ++it) {
-
-
 
             // 处理 [ ] 括号中的语法糖
             if (*it == '[' && !standalone(reg, it)) {
@@ -112,7 +119,23 @@ class Preprocessor {
             printf("reg = %s\n", var.second.data());
         }
 
+        puts("----- to dfa -----");
+        for (const std::basic_string<char> &var : _toDFA_tags) {
+            printf("%s ", var.data()); 
+        }
+        putchar(10);
+
         puts("-------- end display -------------------");
+    }
+
+    LexicalAnalyzer *buildLA() {
+        LexicalAnalyzer *la = new LexicalAnalyzer();
+
+        for (auto &tag : _toDFA_tags) {
+            la -> add(buildDFA(tag, _regs[tag]));
+        }
+
+        return la;
     }
 
     void error_shoot(const char *message) {
@@ -120,7 +143,10 @@ class Preprocessor {
     }
 
   private:
+    // tag : reg
     std::map<std::string, std::string> _regs;
+    // tag need to be build to dfa
+    std::set<std::string> _toDFA_tags;
     std::set<char> _set_op;
 };
 

@@ -104,17 +104,6 @@ LexicalAnalyzer *inputLA() {
     return la;
 }
 
-DFA *buildDFA(std::string &tag, std::string &reg) {
-    RegTree *root = buildRegTree(reg);
-    // root -> backOrderDisplay();
-    // root -> middleOrderDisplay();
-    fflush(stdout);
-    NFA *nfa = buildNFA(root);
-    DFA *dfa = buildDFA(nfa);
-    dfa -> tag(tag);
-    return dfa;
-}
-
 bool test(LexicalAnalyzer *la) {
     ifstream input("test.txt");
     string code;
@@ -172,22 +161,26 @@ void preprocess() {
     input.close();
 
     ppr.display();
-
-    std::string literal("literal");
-    std::string id("id");
-    std::string strchar("char");
-    std::string strtest("test");
-
-    LexicalAnalyzer *la = new LexicalAnalyzer();
-    auto &regs = ppr.regs();
-    std::string reg = regs[literal];
-    printf("%s %s\n", literal.data(), reg.data());
-    // RegTree *root = buildRegTree(reg);
-    DFA *dfa = buildDFA(literal, reg);
-    // dfa -> display();
-    // dfa -> minimize();
     fflush(stdout);
-    la -> add(dfa);
+
+    LexicalAnalyzer *la = ppr.buildLA();
+
+    // std::string literal("literal");
+    // std::string id("id");
+    // std::string strchar("char");
+    // std::string strtest("test");
+
+    // LexicalAnalyzer *la = new LexicalAnalyzer();
+    // auto &regs = ppr.regs();
+    // std::string reg = regs[strtest];
+    // printf("%s %s\n", literal.data(), reg.data());
+    // RegTree *root = buildRegTree(reg);
+    // root -> backOrderDisplay(); 
+    // DFA *dfa = buildDFA(strtest, reg);
+    // dfa -> display();    
+    // // dfa -> minimize();
+    // fflush(stdout);
+    // la -> add(dfa);
 
     test(la);
 }

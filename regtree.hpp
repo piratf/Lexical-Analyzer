@@ -234,8 +234,11 @@ RegTree *buildRegTree(const string &reg) {
             std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
             it += substr.size() - 1;
             // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
-            p -> rson(buildRegTree(substr));
-            parent -> data(OP_OR);
+            RegTree *r = buildRegTree(substr);
+            RegTree *n = root;
+            root = new RegTree('|');
+            root -> rson(r);
+            root -> lson(n);
         } else if (cur == ')' && *(it + 1) == '\\') {
             it += 2;
             size_t t = reg.rfind('(', reg.rend() - (it));
@@ -263,10 +266,12 @@ RegTree *buildRegTree(const string &reg) {
         }
 
         // 左节点向下拓展
-        p -> lson(new RegTree(0));
-        gp = parent;
-        parent = p;
-        p = p -> lson();
+        if (p -> data()) {
+            p -> lson(new RegTree(0));
+            gp = parent;
+            parent = p;
+            p = p -> lson();
+        }
     }
 
     // 运行到 reg 结尾时，需要将 parent 的 rson 挂到 gp 的 lson 上
