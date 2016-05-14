@@ -170,7 +170,6 @@ void preprocess() {
     // std::string strchar("char");
     // std::string strtest("test");
 
-    // LexicalAnalyzer *la = new LexicalAnalyzer();
     // auto &regs = ppr.regs();
     // std::string reg = regs[strtest];
     // printf("%s %s\n", literal.data(), reg.data());

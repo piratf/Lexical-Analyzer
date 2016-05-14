@@ -59,9 +59,6 @@ class RegTree {
     }
 
     RegTree *rson( RegTree *const &data) {
-#ifdef DEBUG
-        printf("modify rson with lvalue\n");
-#endif
         _leaf = false;
         _rson = data;
         return _rson;
@@ -239,10 +236,14 @@ RegTree *buildRegTree(const string &reg) {
             root = new RegTree('|');
             root -> rson(r);
             root -> lson(n);
+            if (!gp) {
+                gp = root;
+            }
         } else if (cur == ')' && *(it + 1) == '\\') {
             it += 2;
             size_t t = reg.rfind('(', reg.rend() - (it));
             std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            printf("substr: %s\n", substr.data());
             it += substr.size();
             // 另右支为子表达式树，符号为默认
             p -> rson(buildRegTree(substr));
@@ -287,10 +288,6 @@ RegTree *buildRegTree(const string &reg) {
         }
     }
 
-#ifdef DEBUG
-    printf("before return: \n");
-    root -> backOrderDisplay();
-#endif
     return root;
 }
 
