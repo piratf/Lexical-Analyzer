@@ -106,8 +106,9 @@ LexicalAnalyzer *inputLA() {
 
 bool test(LexicalAnalyzer *la) {
     ifstream input("test.txt");
-    string code;
-    input >> code;
+    char str[N] = {};
+    input.getline(str, N);
+    string code(str);
     printf("input = %s\n", code.data());
 
     printf("%s\n", la -> calculate(code.data()).data());

@@ -63,5 +63,5 @@ reg = //\( \|A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W
 ----- to dfa -----
 character comment id keyword literal longcomment operator test 
 -------- end display -------------------
-input = //
+input = // float y,c,d;
 comment
