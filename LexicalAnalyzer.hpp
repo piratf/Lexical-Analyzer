@@ -11,6 +11,15 @@ static const int M = N + 7;
 
 std::set<char> g_terminal_set;
 
+void trim(char *temp) {
+    int i = strlen(temp);
+
+    while (temp[i - 1] == ' ') {
+        temp[i - 1] = temp[i];
+        --i;
+    }
+}
+
 class LexicalAnalyzer {
   public:
     LexicalAnalyzer() {
@@ -44,6 +53,7 @@ class LexicalAnalyzer {
 
         char *head = buf, *tail = buf;
         printf("%s\n", buf);
+        fflush(stdout);
         std::string tag;
         char *output = new char[M];
         memset(output, 0, sizeof(char) * M);
@@ -52,6 +62,7 @@ class LexicalAnalyzer {
         while (*tail) {
 
             ++tail;
+
 #ifdef DEBUG
             printf("tail = %c\n", *tail);
             fflush(stdout);
@@ -60,14 +71,34 @@ class LexicalAnalyzer {
 #endif
 
             memset(temp, 0, sizeof(char) * M);
-            strncpy(temp, head, tail -  head);
-            temp[strlen(temp)] = 0;
+            int i = 0;
+
+            if (tag == "comment") {
+                strncpy(temp, head, tail -  head);
+                temp[tail - head] = 0;
+            } else {
+
+                for (char *p = head; p != tail; ++p) {
+                    if (*p != '\n') {
+                        temp[i] = *p;
+                    } else {
+                        temp[i] = ' ';
+                    }
+
+                    ++i;
+                }
+
+                temp[i] = 0;
+            }
 
 #ifdef DEBUG
             printf("n = %d\n", tail - head);
             printf("temp = %s\n", temp);
             fflush(stdout);
 #endif
+
+            // trim space in temp
+            trim(temp);
 
             std::string cur = calculate(temp);
 
@@ -83,6 +114,7 @@ class LexicalAnalyzer {
                     printf(" -----------> ");
 #endif
                     printf("( %s : %-s ) \n\tline %d\n", tag.data(), output, line_num);
+                    fflush(stdout);
 
                     head = tail - (strlen(temp) - strlen(output));
 
@@ -96,7 +128,6 @@ class LexicalAnalyzer {
 
                         ++head;
                     }
-
 
 #ifdef DEBUG
                     printf("head = %c\n", *head);
@@ -148,7 +179,7 @@ class LexicalAnalyzer {
                 break;
             }
         }
-        
+
         return tag;
     }
 

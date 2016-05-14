@@ -94,9 +94,6 @@ class NFA {
     }
 
     void uion(NFA *other) {
-#ifdef DEBUG
-        printf("-----------uion--------------\n");
-#endif
         std::queue<NFANode *> qnfa;
         std::set<NFANode *>svisit;
         svisit.insert(_head);
@@ -147,11 +144,6 @@ class NFA {
 
         // _tail = other -> head();
         _tail = other -> tail();
-
-#ifdef DEBUG
-        printf("tail = %p\n", static_cast<void *>(_tail));
-        printf("-----------uion end----------\n");
-#endif
     }
 
     NFANode *head() {
@@ -169,9 +161,6 @@ class NFA {
     void getEplisonClosure(std::set<NFANode *> &input) {
 
         for (auto &node : input) {
-#ifdef DEBUG
-            printf("eplison node: %p\n", static_cast<void *>(node));
-#endif
             getEplisonClosure(node, input);
         }
 
@@ -186,42 +175,23 @@ class NFA {
             }
         }
 
-#ifdef DEBUG
-        printf("end ---\n");
-#endif
     }
 
     void getRouteClosure(NFANode *head, char ch, std::set<NFANode *> &ret) {
         // ret.erase(head);
-#ifdef DEBUG
-        printf("%c\n", ch);
-#endif
 
         for (auto &var : head -> children()) {
             if (var.first == ch && ret.find(var.second) == ret.end()) {
-#ifdef DEBUG
-                printf("var.first: %c\n", var.first);
-#endif
                 ret.insert(var.second);
             }
         }
 
-#ifdef DEBUG
-        printf("end ---\n");
-#endif
     }
 
     void getRouteClosure(char ch, std::set<NFANode *> &input) {
         std::set<NFANode *> ret;
-#ifdef DEBUG
-        int i = 0;
-#endif
 
         for (auto &node : input) {
-#ifdef DEBUG
-            printf("i = %d\n", i++);
-            printf("calculate node: %p\n", static_cast<void *>(node));
-#endif
             getRouteClosure(node, ch, ret);
         }
 
@@ -233,19 +203,10 @@ class NFA {
         std::set<NFANode *> cur;
         cur.insert(_head);
         getEplisonClosure(cur);
-#ifdef DEBUG
-        printf("eplison.size() = %d\n", cur.size());
-#endif
 
         while (*pch) {
             getRouteClosure(*pch, cur);
-#ifdef DEBUG
-            printf("cur.size() = %d\n", cur.size());
-#endif
             getEplisonClosure(cur);
-#ifdef DEBUG
-            printf("eplison.size() = %d\n", cur.size());
-#endif
             ++pch;
         }
 

@@ -40,7 +40,9 @@ class DFA {
         const char *p = str;
 
         while (*p) {
+            printf("p = %c\n", *p);
             s = move(s, *p);
+            printf("s = %d\n", s);
             ++p;
         }
 

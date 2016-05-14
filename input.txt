@@ -7,4 +7,4 @@ literal = "([char]|[number])*"
 character = '([char]|[number]|[operator])'
 comment = //([char]|[number]|[operator])*
 longcomment = /\*([char]|[number]|[operator])*\*/
-test = //( |[char]|[number]|[operator])*
+test = ([char]|[number]|[operator])*

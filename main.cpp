@@ -134,6 +134,7 @@ bool test(DFA *dfa) {
     ifstream input("test.txt");
     string code;
     input >> code;
+    code = "//m123\n123";
     printf("input = %s\n", code.data());
 
     if (dfa -> calculate(code.data())) {
@@ -164,17 +165,19 @@ void preprocess() {
     ppr.display();
     fflush(stdout);
 
-    LexicalAnalyzer *la = ppr.buildLA();
-    test(la);
+    // LexicalAnalyzer *la = ppr.buildLA();
+    // la -> parse("code.txt");
+    // test(la);
 
     // std::string literal("literal");
     // std::string id("id");
     // std::string strchar("char");
     // 
-    // std::string strtest("test");
+    std::string strtest("test");
 
-    // auto &regs = ppr.regs();
-    // std::string reg = regs[strtest];
+    auto &regs = ppr.regs();
+    std::string reg = regs[strtest];
+
     // printf("reg = %s\n", reg.data());
     // fflush(stdout);
     // RegTree *root = buildRegTree(reg);
@@ -182,10 +185,13 @@ void preprocess() {
     // root -> middleOrderDisplay(); 
     // fflush(stdout);
 
-    // DFA *dfa = buildDFA(strtest, reg);
-    // dfa -> display();    
-    // // dfa -> minimize();
-    // fflush(stdout);
+    DFA *dfa = buildDFA(strtest, reg);
+    dfa -> display();    
+    // dfa -> minimize();
+    fflush(stdout);
+
+    test(dfa);
+
     // la -> add(dfa);
 
 }

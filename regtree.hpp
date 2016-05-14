@@ -1,9 +1,6 @@
 #ifndef REGTREE_H_
 #define REGTREE_H_
 
-#ifdef DEBUG
-    #include <cstdio>
-#endif
 #include <string>
 
 using std::ifstream;
@@ -98,16 +95,10 @@ class RegTree {
             printf("data = %c\n", root -> _ope);
         } else {
             if (root -> _lson) {
-#ifdef DEBUG
-                printf("to left\n");
-#endif
                 _backOrderDisplay(root -> _lson);
             }
 
             if (root -> _rson) {
-#ifdef DEBUG
-                printf("to right\n");
-#endif
                 _backOrderDisplay(root -> _rson);
             }
 
@@ -137,16 +128,10 @@ class RegTree {
             printf("op = %c\n", root -> _ope);
 
             if (root -> _lson) {
-#ifdef DEBUG
-                printf("to left\n");
-#endif
                 _preOrderDisplay(root -> _lson);
             }
 
             if (root -> _rson) {
-#ifdef DEBUG
-                printf("to right\n");
-#endif
                 _preOrderDisplay(root -> _rson);
             }
         }
@@ -172,18 +157,12 @@ class RegTree {
             printf("data = %c\n", root -> _ope);
         } else {
             if (root -> _lson) {
-#ifdef DEBUG
-                printf("to left\n");
-#endif
                 _middleOrderDisplay(root -> _lson);
             }
 
             printf("op = %c\n", root -> _ope);
 
             if (root -> _rson) {
-#ifdef DEBUG
-                printf("to right\n");
-#endif
                 _middleOrderDisplay(root -> _rson);
             }
         }
