@@ -1,8 +1,8 @@
 void main()
 { int x,a,b;
 // float y,c,d;
- /*     x = a + b;
-      y = c / d; */
+      x = a + b;
+      y = c / d;
       string str = "111";
       if(x>y)
         x = 10;

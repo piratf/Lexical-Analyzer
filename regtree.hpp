@@ -206,15 +206,12 @@ RegTree *buildRegTree(const string &reg) {
         }
 
         if (cur == '|' && *(it + 1) == '\\') {
-            it += 2;
-            size_t t = reg.rfind('|', reg.rend() - (it));
-
-            // printf("it = %c\n", *it);
             fflush(stdout);
-            std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            std::string substr = reg.substr(0, reg.rend() - it - 1);
             // printf("substr = %s\n", substr.data());
             fflush(stdout);
-            it += substr.size() - 1;
+            it = reg.rend() - 1;
+            // printf("it = %c\n", *it);
             // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
             RegTree *r = buildRegTree(substr);
             RegTree *n = root;
@@ -228,7 +225,7 @@ RegTree *buildRegTree(const string &reg) {
         } else if (cur == ')' && *(it + 1) == '\\') {
             it += 2;
             size_t t = reg.rfind("\\(", reg.rend() - (it));
-            std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
             it += substr.size();
             // 另右支为子表达式树，符号为默认
             p -> rson(buildRegTree(substr));
@@ -236,7 +233,7 @@ RegTree *buildRegTree(const string &reg) {
         } else if (cur == '*' && *(it + 1) == '\\') {
             it += 3;
             size_t t = reg.rfind("\\(", reg.rend() - (it));
-            std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
             it += substr.size();
             // 需要在右支上建立新的 星号运算树
             RegTree *star = new RegTree(OP_STAR);

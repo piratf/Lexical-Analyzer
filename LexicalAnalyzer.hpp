@@ -157,8 +157,31 @@ class LexicalAnalyzer {
 
         }
 
+        if (!tag.empty()) {
+#ifdef DEBUG
+            printf(" -----------> ");
+#endif
+            printf("( %s : %-s ) \n\tline %d\n", tag.data(), output, line_num);
+            fflush(stdout);
+
+            head = tail - (strlen(temp) - strlen(output));
+
+            while (
+                g_terminal_set.find(*head)
+                != g_terminal_set.end()) {
+
+                if (*head == '\n') {
+                    ++line_num;
+                }
+
+                ++head;
+            }
+        }
+
         if (tail - head) {
             err_shot("Unreachable sequences!");
+        } else {
+            printf("Analysis success!\n");
         }
 
 #ifdef DEBUG

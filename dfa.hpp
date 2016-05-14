@@ -31,6 +31,9 @@ class DFA {
     }
 
     unsigned int move(unsigned int state, char title) {
+        if (_title.find(title) == _title.end()) {
+            return -1;
+        }
         return _vecData[state][_title[title]];
     }
 
@@ -40,9 +43,10 @@ class DFA {
         const char *p = str;
 
         while (*p) {
-            printf("p = %c\n", *p);
             s = move(s, *p);
-            printf("s = %d\n", s);
+            if (s == static_cast<unsigned int>(-1)) {
+                return false;
+            }
             ++p;
         }
 
