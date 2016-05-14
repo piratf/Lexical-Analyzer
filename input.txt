@@ -2,8 +2,8 @@
 :char = [A-Z]|[a-z]
 id = ([char]|_)([char]|[number]|_)*
 keyword = int|void|float|#include
-operator = (|,|)|<|>|[|]|;|{|}
+operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/
 literal = "([char]|[number])*"
-comment = //([char]|[number])*
+comment = //([char]|[number]|[operator])*
 longcomment = /\*([char]|[number]|[operator])*\*/
 test = "([char])*"

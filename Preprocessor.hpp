@@ -11,6 +11,7 @@ class Preprocessor {
     Preprocessor() {
         _set_op.insert('|');
         _set_op.insert(')');
+        _set_op.insert('(');
         _set_op.insert('*');
     }
 
