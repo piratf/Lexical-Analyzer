@@ -170,7 +170,7 @@ void preprocess() {
     // std::string id("id");
     // std::string strchar("char");
     // 
-    // std::string strtest("longcomment");
+    // std::string strtest("test");
 
     // auto &regs = ppr.regs();
     // std::string reg = regs[strtest];
@@ -178,6 +178,7 @@ void preprocess() {
     // fflush(stdout);
     // RegTree *root = buildRegTree(reg);
     // root -> backOrderDisplay(); 
+    // root -> middleOrderDisplay(); 
     // fflush(stdout);
 
     // DFA *dfa = buildDFA(strtest, reg);

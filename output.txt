@@ -18,6 +18,11 @@ tag = literal
 reg = "([char]|[number])*"
 subreg = char
 subreg = number
+tag = character
+reg = '([char]|[number]|[operator])'
+subreg = char
+subreg = number
+subreg = operator
 tag = comment
 reg = //([char]|[number]|[operator])*
 subreg = char
@@ -29,12 +34,16 @@ subreg = char
 subreg = number
 subreg = operator
 tag = test
-reg = "([char])*"
+reg = //( |[char]|[number]|[operator])*
 subreg = char
+subreg = number
+subreg = operator
 -------- preprosessor display ----------
-size = 9
+size = 10
 tag = char
 reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z
+tag = character
+reg = '\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\)'
 tag = comment
 reg = //\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\)\*
 tag = id
@@ -50,9 +59,9 @@ reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
 tag = operator
 reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/
 tag = test
-reg = "\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\)\*"
+reg = //\( \|A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\)\*
 ----- to dfa -----
-comment id keyword literal longcomment operator test 
+character comment id keyword literal longcomment operator test 
 -------- end display -------------------
-input = //*123123123123*/
+input = //
 comment

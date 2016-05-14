@@ -21,7 +21,12 @@ class Preprocessor {
         for (auto it = reg.begin(); it != reg.end(); ++it) {
             if (*it == ' ') {
                 it = reg.erase(it);
+            } else {
+                break;
             }
+        }
+        while (reg.back() == ' ') {
+            reg.pop_back();
         }
     }
 
@@ -49,9 +54,10 @@ class Preprocessor {
     }
 
     void update(std::string &reg) {
-        trim(reg);
 
         std::string tag = split(reg);
+        trim(tag);
+        trim(reg);
 
         if (tag[0] == ':') {
             tag = tag.substr(1);
