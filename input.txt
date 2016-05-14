@@ -1,11 +1,8 @@
 :number = [0-9]
 :char = [A-Z]|[a-z]
 id = ([char]|_)([char]|[number]|_)*
-keyword = int|void|float|#include|if|else|return
+keyword = int|void|float|#include|if|else|return|string
 operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
-literal = "([char]|[number])*"
-character = '([char]|[number]|[operator])'
+literal = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 comment = //( |[char]|[number]|[operator])*
-longcomment = /\*( |[char]|[number]|[operator])*\*/
-unfinishedcomment = /\*( |[char]|[number]|[operator])*
-test = "([char]|[number])*"|([number])*
+test = ([char]|_)([char]|[number]|_)*

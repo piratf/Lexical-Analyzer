@@ -186,8 +186,8 @@ void preprocess() {
     // fflush(stdout);
 
     // DFA *dfa = buildDFA(strtest, reg);
-    // dfa -> display();    
     // dfa -> minimize();
+    // dfa -> display();    
     // fflush(stdout);
 
     // test(dfa);

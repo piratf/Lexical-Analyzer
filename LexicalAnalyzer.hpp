@@ -91,6 +91,41 @@ class LexicalAnalyzer {
                 temp[i] = 0;
             }
 
+            char *commenttail = tail;
+            char comtemp[N] = {};
+
+            if (temp[0] == '/' && temp[1] == '*') {
+
+                while (!(*commenttail == '*' && *(commenttail + 1) == '/') || !(*commenttail)) {
+                    if (*commenttail == '\n') {
+                        ++line_num;
+                    }
+                    ++commenttail;
+                }
+
+                strncpy(comtemp, head, commenttail -  head + 2);
+                result_print("comment", comtemp);
+                head = commenttail + 2;
+
+                while (
+                    g_terminal_set.find(*head)
+                    != g_terminal_set.end()) {
+
+                    if (*head == '\n') {
+                        ++line_num;
+                    }
+
+                    ++head;
+                }
+
+#ifdef DEBUG
+                printf("head = %c\n", *head);
+#endif
+                tail = head;
+                tag.clear();
+                continue;
+            }
+
 #ifdef DEBUG
             printf("n = %d\n", tail - head);
             printf("temp = %s\n", temp);
@@ -113,7 +148,7 @@ class LexicalAnalyzer {
 #ifdef DEBUG
                     printf(" -----------> ");
 #endif
-                    printf("( %s : %-s ) \n\tline %d\n", tag.data(), output, line_num);
+                    result_print(tag.data(), output);
                     fflush(stdout);
 
                     head = tail - (strlen(temp) - strlen(output));
@@ -191,6 +226,10 @@ class LexicalAnalyzer {
         // }
 
         ifile.close();
+    }
+
+    void result_print(const char *tag, const char *content) {
+        printf("( %s : %-s ) \n\tline %d\n", tag, content, line_num);
     }
 
     std::string calculate(const char *input) {

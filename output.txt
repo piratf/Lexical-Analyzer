@@ -11,70 +11,53 @@ subreg = char
 subreg = char
 subreg = number
 tag = keyword
-reg = int|void|float|#include|if|else|return
+reg = int|void|float|#include|if|else|return|string
 tag = operator
 reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
 tag = literal
-reg = "([char]|[number])*"
+reg = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 subreg = char
 subreg = number
-tag = character
-reg = '([char]|[number]|[operator])'
 subreg = char
 subreg = number
 subreg = operator
+subreg = number
 tag = comment
 reg = //( |[char]|[number]|[operator])*
 subreg = char
 subreg = number
 subreg = operator
-tag = longcomment
-reg = /\*( |[char]|[number]|[operator])*\*/
-subreg = char
-subreg = number
-subreg = operator
-tag = unfinishedcomment
-reg = /\*( |[char]|[number]|[operator])*
-subreg = char
-subreg = number
-subreg = operator
 tag = test
-reg = "([char]|[number])*"|([number])*
+reg = ([char]|_)([char]|[number]|_)*
 subreg = char
-subreg = number
+subreg = char
 subreg = number
 -------- preprosessor display ----------
-size = 11
+size = 8
 tag = char
 reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z
-tag = character
-reg = '\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)'
 tag = comment
 reg = //\( \|A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)\*
 tag = id
 reg = \(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|_\)\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|_\)\*
 tag = keyword
-reg = int\|void\|float\|#include\|if\|else\|return
+reg = int\|void\|float\|#include\|if\|else\|return\|string
 tag = literal
-reg = "\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*"
-tag = longcomment
-reg = /*\( \|A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)\**/
+reg = "\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*"\|'\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)'\|\(0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*
 tag = number
 reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
 tag = operator
 reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=
 tag = test
-reg = "\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*"\|\(0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*
-tag = unfinishedcomment
-reg = /*\( \|A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)\*
+reg = \(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|_\)\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|_\)\*
 ----- to dfa -----
-character comment id keyword literal longcomment operator test unfinishedcomment 
+comment id keyword literal operator test 
 -------- end display -------------------
 void main()
 { int x,a,b;
 // float y,c,d;
-      x = a + b;
-      y = c / d;
+ /*     x = a + b;
+      y = c / d; */
       string str = "111";
       if(x>y)
         x = 10;
@@ -108,29 +91,8 @@ void main()
 	line 1
 ( comment : // float y,c,d; ) 
 	line 2
-( id : x ) 
-	line 3
-( operator : = ) 
-	line 3
-( id : a ) 
-	line 3
-( operator : + ) 
-	line 3
-( id : b ) 
-	line 3
-( operator : ; ) 
-	line 3
-( id : y ) 
-	line 4
-( operator : = ) 
-	line 4
-( id : c ) 
-	line 4
-( operator : / ) 
-	line 4
-( id : d ) 
-	line 4
-( operator : ; ) 
+( comment : /*     x = a + b;
+      y = c / d; */ ) 
 	line 4
 ( id : string ) 
 	line 5
@@ -158,7 +120,7 @@ void main()
 	line 7
 ( operator : = ) 
 	line 7
-( test : 10 ) 
+( literal : 10 ) 
 	line 7
 ( operator : ; ) 
 	line 7
@@ -168,9 +130,10 @@ void main()
 	line 9
 ( operator : = ) 
 	line 9
-( test : 100 ) 
+( literal : 100 ) 
 	line 9
 ( operator : ; ) 
 	line 9
 ( operator : } ) 
 	line 10
+Analysis success!
