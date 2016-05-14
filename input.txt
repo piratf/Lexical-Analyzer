@@ -1,5 +1,6 @@
 :number = [0-9]
 :char = [A-Z]|[a-z]
 id = ([char]|_)([char]|[number]|_)*
-keyword = int|void|float
-test = ([char]|_)([char]|[number]|_)*
+keyword = int|void|float|#include
+literal = "([char]|[number])*"
+test = "([char])*"
