@@ -219,8 +219,10 @@ RegTree *buildRegTree(const string &reg) {
 
     for (auto it = reg.rbegin(); it != reg.rend(); ++it) {
         char cur = *it;
+        printf("cur = %c\n", cur);
+        fflush(stdout);
 
-        if (cur == '\\' || cur == '(') {
+        if (cur == '\\') {
             continue;
         }
 
@@ -228,7 +230,11 @@ RegTree *buildRegTree(const string &reg) {
             it += 2;
             size_t t = reg.rfind('|', reg.rend() - (it));
 
+            printf("it = %c\n", *it);
+            fflush(stdout);
             std::string substr = reg.substr(t + 1, reg.rend() - it - t - 1);
+            printf("substr = %s\n", substr.data());
+            fflush(stdout);
             it += substr.size() - 1;
             // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
             RegTree *r = buildRegTree(substr);
@@ -236,6 +242,7 @@ RegTree *buildRegTree(const string &reg) {
             root = new RegTree('|');
             root -> rson(r);
             root -> lson(n);
+
             if (!gp) {
                 gp = root;
             }

@@ -163,25 +163,29 @@ void preprocess() {
     ppr.display();
     fflush(stdout);
 
-    LexicalAnalyzer *la = ppr.buildLA();
+    // LexicalAnalyzer *la = ppr.buildLA();
+    // test(la);
 
     // std::string literal("literal");
     // std::string id("id");
     // std::string strchar("char");
-    // std::string strtest("test");
+    // 
+    std::string strtest("longcomment");
 
-    // auto &regs = ppr.regs();
-    // std::string reg = regs[strtest];
-    // printf("%s %s\n", literal.data(), reg.data());
-    // RegTree *root = buildRegTree(reg);
-    // root -> backOrderDisplay(); 
+    auto &regs = ppr.regs();
+    std::string reg = regs[strtest];
+    printf("reg = %s\n", reg.data());
+    fflush(stdout);
+    RegTree *root = buildRegTree(reg);
+    root -> backOrderDisplay(); 
+    fflush(stdout);
+
     // DFA *dfa = buildDFA(strtest, reg);
     // dfa -> display();    
     // // dfa -> minimize();
     // fflush(stdout);
     // la -> add(dfa);
 
-    test(la);
 }
 
 int main() {

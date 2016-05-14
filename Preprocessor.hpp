@@ -65,6 +65,12 @@ class Preprocessor {
 
         for (auto it = reg.begin(); it != reg.end(); ++it) {
 
+            if (*it == '\\') {
+                ++it;
+                strContent.push_back(*it);
+                continue;
+            }
+
             // 处理 [ ] 括号中的语法糖
             if (*it == '[' && !standalone(reg, it)) {
                 size_t right = reg.find(']', it - reg.begin());
