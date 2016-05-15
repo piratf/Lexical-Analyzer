@@ -34,6 +34,7 @@ class DFA {
         if (_title.find(title) == _title.end()) {
             return -1;
         }
+
         return _vecData[state][_title[title]];
     }
 
@@ -44,9 +45,15 @@ class DFA {
 
         while (*p) {
             s = move(s, *p);
+
             if (s == static_cast<unsigned int>(-1)) {
                 return false;
             }
+
+            if (_died[s]) {
+                break;
+            }
+
             ++p;
         }
 
@@ -189,141 +196,100 @@ class DFA {
             }
         }
 
-        puts("after minimize");
+        // puts("after minimize");
 
-        for (auto &s : sdivide) {
-            for (unsigned int var : s) {
-                printf("%d ", var);
-            }
-
-            putchar(10);
-        }
-
-        puts("=========================");
-
-        fflush(stdout);
-
-        // modify data matrix
-        for (auto &s : sdivide) {
-            if (s.size() > 1) {
-                unsigned int maxOfSet = *s.rbegin();
-                auto it = s.begin();
-                unsigned int tag = *it;
-
-                // update end state
-                std::vector<unsigned int> modify;
-                std::vector<unsigned int> vecRemove;
-
-                for (auto endit = _sendState.begin();
-                        endit != _sendState.end(); ++endit) {
-                    if (s.find(*endit) != s.end()) {
-                        vecRemove.push_back(*endit);
-                        continue;
-                    }
-
-                    if (*endit > maxOfSet) {
-                        modify.push_back(*endit);
-                        continue;
-                    }
-
-                }
-
-
-                for (auto &var : modify) {
-                    _sendState.erase(var);
-                    _sendState.insert(tag);
-                }
-
-                for (auto &var : modify) {
-                    _sendState.erase(var);
-                    _sendState.insert(var - 1);
-                }
-
-                for (auto &row : _vecData) {
-                    for (unsigned int &var : row) {
-                        if (s.find(var) != s.end()) {
-                            var = tag;
-                        } else if (var > maxOfSet) {
-                            --var;
-                        }
-                    }
-                }
-
-                ++it;
-
-                for (; it != s.end(); ++it) {
-                    // printf("it = %d\n", *it);
-                    _vecData.erase(_vecData.begin() + *it);
-                    _sendState.erase(*it);
-                }
-            }
-        }
-
-        printf("start to remove died node\n");
-        fflush(stdout);
-
-        // std::vector<unsigned int> vecDied;
-        // bool diedFlag = true;
-
-        // for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
-        //     unsigned int index = it - _vecData.begin();
-        //     diedFlag = true;
-
-        //     for (auto &var : *it) {
-        //         if (var != index) {
-        //             diedFlag = false;
-        //             break;
-        //         }
+        // for (auto &s : sdivide) {
+        //     for (unsigned int var : s) {
+        //         printf("%d ", var);
         //     }
 
-        //     if (diedFlag) {
-        //         printf("died: %d\n", index);
-        //         vecDied.push_back(index);
-        //     }
+        //     putchar(10);
         // }
 
-        // while (!vecDied.empty()) {
-        //     for (auto &died : vecDied) {
-        //         _vecData.erase(_vecData.begin() + died);
+        // puts("=========================");
 
-        //         for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
-        //             for (unsigned int &var : *it) {
-        //                 if (var == died) {
+        // fflush(stdout);
 
-        //                     if (_sendState.find(died) != _sendState.end()) {
-        //                         _sendState.erase(died);
-        //                         _sendState.insert(it - _vecData.begin());
-        //                     }
+        // modify data matrix
+        // for (auto &s : sdivide) {
+        //     if (s.size() > 1) {
+        //         unsigned int maxOfSet = *s.rbegin();
+        //         auto it = s.begin();
+        //         unsigned int tag = *it;
 
-        //                     var = it - _vecData.begin();
-        //                 } else if (var > died) {
+        //         // update end state
+        //         std::vector<unsigned int> modify;
+        //         std::vector<unsigned int> vecRemove;
+
+        //         for (auto endit = _sendState.begin();
+        //                 endit != _sendState.end(); ++endit) {
+        //             if (s.find(*endit) != s.end()) {
+        //                 vecRemove.push_back(*endit);
+        //                 continue;
+        //             }
+
+        //             if (*endit > maxOfSet) {
+        //                 modify.push_back(*endit);
+        //                 continue;
+        //             }
+
+        //         }
+
+
+        //         for (auto &var : modify) {
+        //             _sendState.erase(var);
+        //             _sendState.insert(tag);
+        //         }
+
+        //         for (auto &var : modify) {
+        //             _sendState.erase(var);
+        //             _sendState.insert(var - 1);
+        //         }
+
+        //         for (auto &row : _vecData) {
+        //             for (unsigned int &var : row) {
+        //                 if (s.find(var) != s.end()) {
+        //                     var = tag;
+        //                 } else if (var > maxOfSet) {
         //                     --var;
         //                 }
         //             }
         //         }
-        //     }
 
-        //     display();
+        //         ++it;
 
-        //     vecDied.clear();
-
-        //     for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
-        //         unsigned int index = it - _vecData.begin();
-        //         diedFlag = true;
-
-        //         for (auto &var : *it) {
-        //             if (var != index) {
-        //                 diedFlag = false;
-        //                 break;
-        //             }
-        //         }
-
-        //         if (diedFlag) {
-        //             printf("died: %d\n", index);
-        //             vecDied.push_back(index);
+        //         for (; it != s.end(); ++it) {
+        //             // printf("it = %d\n", *it);
+        //             _vecData.erase(_vecData.begin() + *it);
+        //             _sendState.erase(*it);
         //         }
         //     }
         // }
+
+        printf("start to remove died node\n");
+        fflush(stdout);
+
+        // 记录死亡的节点
+        _died = std::vector<bool>(_vecData.size());
+        bool diedFlag = true;
+
+        for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
+            unsigned int index = it - _vecData.begin();
+            diedFlag = true;
+
+            for (auto &var : *it) {
+                if (var != index) {
+                    diedFlag = false;
+                    break;
+                }
+            }
+
+            if (diedFlag) {
+                printf("died: %d\n", index);
+                _died[index] = true;
+            }
+        }
+
     }
 
     std::string tag() {
@@ -339,6 +305,7 @@ class DFA {
   private:
     std::map<char, unsigned int> _title;
     std::vector<std::vector<unsigned int> > _vecData;
+    std::vector<bool> _died;
     std::set<unsigned int> _sendState;
     std::string _tag = "default tag of dfa.";
 };
@@ -425,9 +392,7 @@ DFA *buildDFA(NFA *nfa) {
     //     }
     // }
 
-    DFA *dfa = new DFA(std::move(titleMap), std::move(vecData), std::move(sendState));
-
-    return dfa;
+    return new DFA(std::move(titleMap), std::move(vecData), std::move(sendState));
 }
 
 DFA *buildDFA(const std::basic_string<char> &tag, std::basic_string<char> &reg) {
@@ -438,6 +403,7 @@ DFA *buildDFA(const std::basic_string<char> &tag, std::basic_string<char> &reg) 
     NFA *nfa = buildNFA(root);
     DFA *dfa = buildDFA(nfa);
     dfa -> tag(tag);
+    dfa -> minimize();
     return dfa;
 }
 
