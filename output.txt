@@ -1,0 +1,141 @@
+tag = number
+reg = [0-9]
+subreg = 0-9
+tag = char
+reg = [A-Z]|[a-z]
+subreg = A-Z
+subreg = a-z
+tag = id
+reg = ([char]|_)([char]|[number]|_)*
+subreg = char
+subreg = char
+subreg = number
+tag = keyword
+reg = int|void|float|#include|if|else|return|string
+tag = operator
+reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
+tag = literal
+reg = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
+subreg = char
+subreg = number
+subreg = char
+subreg = number
+subreg = operator
+subreg = number
+tag = comment
+reg = //( |[char]|[number]|[operator])*
+subreg = char
+subreg = number
+subreg = operator
+tag = test
+reg = ([char]|_)([char]|[number]|_)*
+subreg = char
+subreg = char
+subreg = number
+-------- preprosessor display ----------
+size = 8
+tag = char
+reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z
+tag = comment
+reg = //\( \|A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)\*
+tag = id
+reg = \(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|_\)\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|_\)\*
+tag = keyword
+reg = int\|void\|float\|#include\|if\|else\|return\|string
+tag = literal
+reg = "\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*"\|'\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|(\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\)'\|\(0\|1\|2\|3\|4\|5\|6\|7\|8\|9\)\*
+tag = number
+reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
+tag = operator
+reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=
+tag = test
+reg = \(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|_\)\(A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z\|0\|1\|2\|3\|4\|5\|6\|7\|8\|9\|_\)\*
+----- to dfa -----
+comment id keyword literal operator test 
+-------- end display -------------------
+la build time: 9.270000
+void main()
+{ int x,a,b;
+// float y,c,d;
+ /*     x = a + b;
+      y = c / d; */
+      string str = "111";
+      if(x>y)
+        x = 10;
+      else
+        y=100;
+}
+
+(         id : void ) 
+	line 0
+(         id : main ) 
+	line 0
+(   operator : ( ) 
+	line 0
+(   operator : ) ) 
+	line 0
+(   operator : { ) 
+	line 1
+(         id : int ) 
+	line 1
+(         id : x ) 
+	line 1
+(   operator : , ) 
+	line 1
+(         id : a ) 
+	line 1
+(   operator : , ) 
+	line 1
+(         id : b ) 
+	line 1
+(   operator : ; ) 
+	line 1
+(    comment : // float y,c,d; ) 
+	line 2
+(    comment : /*     x = a + b;
+      y = c / d; */ ) 
+	line 4
+(         id : string ) 
+	line 5
+(         id : str ) 
+	line 5
+(   operator : = ) 
+	line 5
+(    literal : "111" ) 
+	line 5
+(   operator : ; ) 
+	line 5
+(         id : if ) 
+	line 6
+(   operator : ( ) 
+	line 6
+(         id : x ) 
+	line 6
+(   operator : > ) 
+	line 6
+(         id : y ) 
+	line 6
+(   operator : ) ) 
+	line 6
+(         id : x ) 
+	line 7
+(   operator : = ) 
+	line 7
+(    literal : 10 ) 
+	line 7
+(   operator : ; ) 
+	line 7
+(         id : else ) 
+	line 8
+(         id : y ) 
+	line 9
+(   operator : = ) 
+	line 9
+(    literal : 100 ) 
+	line 9
+(   operator : ; ) 
+	line 9
+(   operator : } ) 
+	line 10
+Analysis success!
+parse time: 0.001000

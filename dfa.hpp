@@ -266,8 +266,8 @@ class DFA {
         //     }
         // }
 
-        printf("start to remove died node\n");
-        fflush(stdout);
+        // printf("start to remove died node\n");
+        // fflush(stdout);
 
         // 记录死亡的节点
         _died = std::vector<bool>(_vecData.size());
@@ -285,7 +285,7 @@ class DFA {
             }
 
             if (diedFlag) {
-                printf("died: %d\n", index);
+                // printf("died: %d\n", index);
                 _died[index] = true;
             }
         }
@@ -399,7 +399,7 @@ DFA *buildDFA(const std::basic_string<char> &tag, std::basic_string<char> &reg) 
     RegTree *root = buildRegTree(reg);
     // root -> backOrderDisplay();
     // root -> middleOrderDisplay();
-    fflush(stdout);
+    // fflush(stdout);
     NFA *nfa = buildNFA(root);
     DFA *dfa = buildDFA(nfa);
     dfa -> tag(tag);

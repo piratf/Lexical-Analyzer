@@ -6,6 +6,7 @@
 #include <queue>
 #include <set>
 #include <map>
+#include <ctime>
 
 // static const int N = 1024;
 
@@ -165,18 +166,28 @@ void preprocess() {
     ppr.display();
     fflush(stdout);
 
+    clock_t begin_time = clock();
+
     LexicalAnalyzer *la = ppr.buildLA();
+
+    clock_t end_time = clock();
+    printf("la build time: %lf\n", static_cast<double>(end_time - begin_time) / CLOCKS_PER_SEC);
+    begin_time = end_time;
+
     la -> parse("code.txt");
+
+    printf("parse time: %lf\n", static_cast<double>(clock() - begin_time) / CLOCKS_PER_SEC);
+
     // test(la);
 
     // std::string literal("literal");
     // std::string id("id");
     // std::string strchar("char");
     // 
-    std::string strtest("test");
+    // std::string strtest("test");
 
-    auto &regs = ppr.regs();
-    std::string reg = regs[strtest];
+    // auto &regs = ppr.regs();
+    // std::string reg = regs[strtest];
 
     // printf("reg = %s\n", reg.data());
     // fflush(stdout);

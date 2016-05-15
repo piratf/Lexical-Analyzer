@@ -25,6 +25,7 @@ class Preprocessor {
                 break;
             }
         }
+
         while (reg.back() == ' ') {
             reg.pop_back();
         }
@@ -133,9 +134,11 @@ class Preprocessor {
         }
 
         puts("----- to dfa -----");
+
         for (const std::basic_string<char> &var : _toDFA_tags) {
-            printf("%s ", var.data()); 
+            printf("%s ", var.data());
         }
+
         putchar(10);
 
         puts("-------- end display -------------------");
@@ -144,11 +147,102 @@ class Preprocessor {
     LexicalAnalyzer *buildLA() {
         LexicalAnalyzer *la = new LexicalAnalyzer();
 
+        for (auto &var : _regs) {
+            _regTrees[var.first] = buildRegTree(var.second);
+        }
+
         for (auto &tag : _toDFA_tags) {
-            la -> add(buildDFA(tag, _regs[tag]));
+            NFA *nfa = buildNFA(_regTrees[tag]);
+            DFA *dfa = buildDFA(nfa);
+            dfa -> tag(tag);
+            dfa -> minimize();
+            la -> add(dfa);
         }
 
         return la;
+    }
+
+    RegTree *buildRegTree(const string &reg) {
+        RegTree *root = new RegTree();
+        RegTree *gp = NULL;
+        RegTree *parent = NULL;
+        RegTree *p = root;
+
+        for (auto it = reg.rbegin(); it != reg.rend(); ++it) {
+            char cur = *it;
+            // printf("cur = %c\n", cur);
+            fflush(stdout);
+
+            if (cur == '\\') {
+                continue;
+            }
+
+            if (cur == '|' && *(it + 1) == '\\') {
+                fflush(stdout);
+                std::string substr = reg.substr(0, reg.rend() - it - 1);
+                // printf("substr = %s\n", substr.data());
+                fflush(stdout);
+                it = reg.rend() - 1;
+                // printf("it = %c\n", *it);
+                // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
+                RegTree *r = buildRegTree(substr);
+                RegTree *n = root;
+                root = new RegTree('|');
+                root -> rson(r);
+                root -> lson(n);
+
+                if (!gp) {
+                    gp = root;
+                }
+            } else if (cur == ')' && *(it + 1) == '\\') {
+                it += 2;
+                size_t t = reg.rfind("\\(", reg.rend() - (it));
+                std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
+                it += substr.size();
+                // 另右支为子表达式树，符号为默认
+                p -> rson(buildRegTree(substr));
+                p -> data(OP_CAT);
+            } else if (cur == '*' && *(it + 1) == '\\') {
+                it += 3;
+                size_t t = reg.rfind("\\(", reg.rend() - (it));
+                std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
+                it += substr.size();
+                // 需要在右支上建立新的 星号运算树
+                RegTree *star = new RegTree(OP_STAR);
+                star -> rson(new RegTree('*'));
+                star -> lson(buildRegTree(substr));
+                p -> rson(star);
+                p -> data(OP_CAT);
+            } else {
+                // 内容放到右节点
+                p -> rson(new RegTree(cur));
+                // 设置运算符
+                p -> data(OP_CAT);
+            }
+
+            // 左节点向下拓展
+            if (p -> data()) {
+                p -> lson(new RegTree(0));
+                gp = parent;
+                parent = p;
+                p = p -> lson();
+            }
+        }
+
+        // 运行到 reg 结尾时，需要将 parent 的 rson 挂到 gp 的 lson 上
+        if (!p -> data()) {
+            RegTree *r = parent -> rson();
+
+            if (!gp) {
+                delete root;
+                root = r;
+            } else {
+                delete gp -> lson();
+                gp -> lson(r);
+            }
+        }
+
+        return root;
     }
 
     void error_shoot(const char *message) {
@@ -161,6 +255,7 @@ class Preprocessor {
     // tag need to be build to dfa
     std::set<std::string> _toDFA_tags;
     std::set<char> _set_op;
+    std::map<std::string, RegTree *> _regTrees;
 };
 
 #endif
