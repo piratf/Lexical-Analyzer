@@ -39,9 +39,11 @@ class LexicalAnalyzer {
     }
 
     void parse(const char *filePath) {
+        puts("============================");
+        printf("=> start parse.\n");
         std::ifstream ifile(filePath);
 
-        line_num = 0;
+        line_num = 1;
         char *buf = new char[M];
         char *temp = new char[M];
         std::vector<std::string> vecTagList;
@@ -227,7 +229,7 @@ class LexicalAnalyzer {
     }
 
     void inline result_print(const char *tag, const char *content) {
-        printf("( %10.10s : %-s ) \n\tline %d\n", tag, content, line_num);
+        printf("line %d: ( %10.10s : %-s )\n", line_num, tag, content);
     }
 
     std::string calculate(const char *input) {

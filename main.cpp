@@ -7,6 +7,7 @@
 #include <set>
 #include <map>
 #include <ctime>
+#include <windows.h>
 
 // static const int N = 1024;
 
@@ -30,79 +31,6 @@ std::string split(std::string &reg) {
     std::string tag = reg.substr(0, it - reg.begin());
     reg.erase(reg.begin(), it + 1);
     return tag;
-}
-
-NFA *inputNFA() {
-    ifstream input("raw.txt");
-    char *str = new char[N];
-    input.getline(str, N);
-    std::string reg(str);
-    trim(reg);
-    printf("%s\n", reg.data());
-    std::string tag = split(reg);
-    printf("tag = %s\n", tag.data());
-    printf("reg = %s\n", reg.data());
-
-    input.close();
-    RegTree *root = buildRegTree(reg);
-    root -> backOrderDisplay();
-    root -> middleOrderDisplay();
-    fflush(stdout);
-    input.close();
-    // return NULL;
-    return buildNFA(root);
-}
-
-DFA *inputDFA() {
-    ifstream input("raw.txt");
-    char *str = new char[N];
-    input.getline(str, N);
-    std::string reg(str);
-    trim(reg);
-    printf("%s\n", reg.data());
-    std::string tag = split(reg);
-    printf("tag = %s\n", tag.data());
-    printf("reg = %s\n", reg.data());
-
-    input.close();
-    RegTree *root = buildRegTree(reg);
-    // root -> backOrderDisplay();
-    // fflush(stdout);
-    // return NULL;
-    NFA *nfa = buildNFA(root);
-    DFA *dfa = buildDFA(nfa);
-    dfa ->tag(tag);
-    input.close();
-    return dfa;
-}
-
-LexicalAnalyzer *inputLA() {
-    ifstream input("input.txt");
-    char *str = new char[N];
-    LexicalAnalyzer *la = new LexicalAnalyzer();
-    la -> init();
-
-    while (!input.eof()) {
-        input.getline(str, N);
-        std::string reg(str);
-        trim(reg);
-        printf("%s\n", reg.data());
-        std::string tag = split(reg);
-        printf("tag = %s\n", tag.data());
-        printf("reg = %s\n", reg.data());
-        fflush(stdout);
-        RegTree *root = buildRegTree(reg);
-        root -> backOrderDisplay();
-        root -> middleOrderDisplay();
-        fflush(stdout);
-        NFA *nfa = buildNFA(root);
-        DFA *dfa = buildDFA(nfa);
-        dfa -> tag(tag);
-        la -> add(dfa);
-    }
-
-    input.close();
-    return la;
 }
 
 bool test(LexicalAnalyzer *la) {
@@ -148,6 +76,14 @@ bool test(DFA *dfa) {
 }
 
 void preprocess() {
+
+    LARGE_INTEGER frequency;        // ticks per second
+    LARGE_INTEGER t1, t2;           // ticks
+
+    double elapsedTime;
+    QueryPerformanceFrequency(&frequency);
+
+    QueryPerformanceCounter(&t1);
     Preprocessor ppr;
     ifstream input("input.txt");
     char *str = new char[N];
@@ -155,35 +91,38 @@ void preprocess() {
     while (!input.eof()) {
         input.getline(str, N);
 
-        if (strlen(str)) {
+        if (str[0] != '\n') {
             std::string reg(str);
             ppr.update(reg);
         }
     }
 
     input.close();
+    QueryPerformanceCounter(&t2);
+    elapsedTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
 
     ppr.display();
-    fflush(stdout);
+    // fflush(stdout);
+    printf("preprocess time = %lf\n", elapsedTime);
 
-    clock_t begin_time = clock();
-
+    QueryPerformanceCounter(&t1);
     LexicalAnalyzer *la = ppr.buildLA();
+    QueryPerformanceCounter(&t2);
+    elapsedTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
+    printf("la build time = %lf\n", elapsedTime);
 
-    clock_t end_time = clock();
-    printf("la build time: %lf\n", static_cast<double>(end_time - begin_time) / CLOCKS_PER_SEC);
-    begin_time = end_time;
-
+    QueryPerformanceCounter(&t1);
     la -> parse("code.txt");
-
-    printf("parse time: %lf\n", static_cast<double>(clock() - begin_time) / CLOCKS_PER_SEC);
+    QueryPerformanceCounter(&t2);
+    elapsedTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
+    printf("parse time = %lf\n", elapsedTime);
 
     // test(la);
 
     // std::string literal("literal");
     // std::string id("id");
     // std::string strchar("char");
-    // 
+    //
     // std::string strtest("test");
 
     // auto &regs = ppr.regs();
@@ -192,13 +131,13 @@ void preprocess() {
     // printf("reg = %s\n", reg.data());
     // fflush(stdout);
     // RegTree *root = buildRegTree(reg);
-    // root -> backOrderDisplay(); 
-    // root -> middleOrderDisplay(); 
+    // root -> backOrderDisplay();
+    // root -> middleOrderDisplay();
     // fflush(stdout);
 
     // DFA *dfa = buildDFA(strtest, reg);
     // dfa -> minimize();
-    // dfa -> display();    
+    // dfa -> display();
     // fflush(stdout);
 
     // test(dfa);

@@ -395,16 +395,4 @@ DFA *buildDFA(NFA *nfa) {
     return new DFA(std::move(titleMap), std::move(vecData), std::move(sendState));
 }
 
-DFA *buildDFA(const std::basic_string<char> &tag, std::basic_string<char> &reg) {
-    RegTree *root = buildRegTree(reg);
-    // root -> backOrderDisplay();
-    // root -> middleOrderDisplay();
-    // fflush(stdout);
-    NFA *nfa = buildNFA(root);
-    DFA *dfa = buildDFA(nfa);
-    dfa -> tag(tag);
-    dfa -> minimize();
-    return dfa;
-}
-
 #endif

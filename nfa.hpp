@@ -29,6 +29,10 @@ class NFANode {
         return _vecNext;
     }
 
+    const std::vector<pair<char, NFANode *>> &children() const {
+        return const_cast<const std::vector<pair<char, NFANode *>>&>(_vecNext);
+    }
+
     bool end() {
         return _end;
     }
@@ -128,9 +132,7 @@ class NFA {
                     }
                 }
 
-                if (var.second == _tail) {
-                    // printf("secode = tail = %p\n", static_cast<void *>(var.second));
-                } else {
+                if (var.second != _tail) {
                     if (svisit.find(var.second) != svisit.end()) {
                         continue;
                     } else {
@@ -166,8 +168,8 @@ class NFA {
 
     }
 
+    // 得到空闭包
     void getEplisonClosure(NFANode *head, std::set<NFANode *> &ret) {
-        // ret.erase(head);
         for (auto &var : head -> children()) {
             if (!var.first && ret.find(var.second) == ret.end()) {
                 ret.insert(var.second);
@@ -177,9 +179,8 @@ class NFA {
 
     }
 
-    void getRouteClosure(NFANode *head, char ch, std::set<NFANode *> &ret) {
-        // ret.erase(head);
-
+    // 得到对指定字符的闭包
+    void _getRouteClosure(const NFANode *head, char ch, std::set<NFANode *> &ret) {
         for (auto &var : head -> children()) {
             if (var.first == ch && ret.find(var.second) == ret.end()) {
                 ret.insert(var.second);
@@ -188,11 +189,12 @@ class NFA {
 
     }
 
+    // 得到对指定字符的闭包
     void getRouteClosure(char ch, std::set<NFANode *> &input) {
         std::set<NFANode *> ret;
 
-        for (auto &node : input) {
-            getRouteClosure(node, ch, ret);
+        for (const NFANode * const &node : input) {
+            _getRouteClosure(node, ch, ret);
         }
 
         input.swap(ret);
@@ -329,9 +331,7 @@ NFA *_buildNFA(RegTree *root) {
 
     if (root -> leaf()) {
         tag = root -> data();
-        NFANode *next = new NFANode();
-        NFA *nfa = new NFA(tag, next);
-        return nfa;
+        return new NFA(tag, new NFANode());
     }
 
     if (root -> lson()) {
@@ -342,13 +342,12 @@ NFA *_buildNFA(RegTree *root) {
         right = _buildNFA(root -> rson());
     }
 
+    NFANode *head, *tail, *p;
+    NFA *ret;
+
     switch (root -> data()) {
         case '*':
             // printf("case star.\n");
-            NFANode *head, *tail;
-            NFA *ret;
-            NFANode *p;
-
             head = left -> head();
             tail = left -> tail();
 
@@ -362,15 +361,15 @@ NFA *_buildNFA(RegTree *root) {
             // printf("%d\n", tail -> children().size());
 
 
-            ret = new NFA(0, new NFANode());
-            ret -> uion(left);
+            ret = new NFA(0, left -> head());
+            // ret -> uion(left);
             ret -> head() -> add(0, left -> tail());
             ret -> tail(left -> tail());
             // NFANode *p;
             // p = new NFANode();
             // printf("%d\n", tail -> children().size());
+            // fflush(stdout);
             return ret;
-            fflush(stdout);
             break;
 
         case '.':
@@ -387,8 +386,9 @@ NFA *_buildNFA(RegTree *root) {
             // right -> display();
             // printf("left -> tail %p\n", static_cast<void *>(left -> tail()));
             // printf("right -> tail %p\n", static_cast<void *>(right -> tail()));
-            ret = new NFA(0, new NFANode());
-            ret -> uion(left);
+            ret = new NFA(0, left -> head());
+            ret -> tail(left -> tail());
+            // ret -> uion(left);
             // printf("ret -> tail %p\n", static_cast<void *>(ret -> tail()));
             ret -> head() -> add(0, right -> head());
             return ret;
