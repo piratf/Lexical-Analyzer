@@ -31,8 +31,8 @@ reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
 ----- to dfa -----
 comment id keyword literal operator 
 -------- end display -------------------
-preprocess: 977 micro seconds
-build LexicalAnalyzer: 3988172 micro seconds
+5866 micro seconds
+5787414 micro seconds
 ============================
 => start parse.
 void main()
@@ -59,22 +59,13 @@ line 2: (         id : a )
 line 2: (   operator : , )
 line 2: (         id : b )
 line 2: (   operator : ; )
-line 3: (    comment : / )
-line 3: (    comment : / )
-line 3: (         id : float )
-line 3: (         id : y )
-line 3: (   operator : , )
-line 3: (         id : c )
-line 3: (   operator : , )
-line 3: (         id : d )
-line 3: (   operator : ; )
+line 3: (    comment : // float y,c,d; )
 line 5: (    comment : /*     x = a + b;
       y = c / d; */ )
 line 6: (         id : string )
 line 6: (         id : str )
 line 6: (   operator : = )
-line 6: (    literal : "111 )
-line 6: (    literal : " )
+line 6: (    literal : "111" )
 line 6: (   operator : ; )
 line 7: (         id : if )
 line 7: (   operator : ( )
@@ -93,4 +84,4 @@ line 10: (    literal : 100 )
 line 10: (   operator : ; )
 line 11: (   operator : } )
 Analysis success!
-parse code: 966 micro seconds
+978 micro seconds

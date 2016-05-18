@@ -62,10 +62,14 @@ void preprocess() {
     char *str = new char[N];
 
     while (!input.eof()) {
-        input.getline(str, N);
+        input.getline(str, N, '\n');
 
         if (str[0]) {
-            std::string reg(str);
+            std::string reg(str, strlen(str));
+            if (*reg.rbegin() == 13) {
+                reg.pop_back();
+            }
+            // printf("rrrr = %c\n", *reg.rbegin());
             ppr.update(reg);
         }
     }
@@ -74,18 +78,18 @@ void preprocess() {
 
     ppr.display();
     auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "preprocess: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
     // fflush(stdout);
 
     begin = std::chrono::high_resolution_clock::now();
     LexicalAnalyzer *la = ppr.buildLA();
     end = std::chrono::high_resolution_clock::now();
-    std::cout << "build LexicalAnalyzer: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
     begin = std::chrono::high_resolution_clock::now();
     la -> parse("code.txt");
     end = std::chrono::high_resolution_clock::now();
-    std::cout << "parse code: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
     // test(la);
 

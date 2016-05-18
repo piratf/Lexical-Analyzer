@@ -120,6 +120,11 @@ class Preprocessor {
         }
 
         _vecRegs.push_back(make_pair(tag, strContent));
+        _regs[tag] = strContent;
+    }
+
+    std::map<std::string, std::string> & regs() {
+        return _regs;
     }
 
     void display() {
@@ -166,10 +171,13 @@ class Preprocessor {
         RegTree *parent = NULL;
         RegTree *p = root;
 
+        // printf("reg = %s\n", reg.data());
+        // printf("rbegin = %c\n", *reg.rbegin());
+
         for (auto it = reg.rbegin(); it != reg.rend(); ++it) {
             char cur = *it;
             // printf("cur = %c\n", cur);
-            fflush(stdout);
+            // fflush(stdout);
 
             if (cur == '\\') {
                 continue;
@@ -182,13 +190,12 @@ class Preprocessor {
                 std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
                 // printf("substr = %s\n", substr.data());
                 // fflush(stdout);
-                parent = p;
                 // _regTrees[substr] -> middleOrderDisplay();
                 p -> rson(_regTrees[substr]);
-                p -> data(0);
+                p -> data(OP_CAT);
                 it += substr.size() + 1;
             } else if (cur == '|' && *(it + 1) == '\\') {
-                fflush(stdout);
+                // fflush(stdout);
                 std::string substr = reg.substr(0, reg.rend() - it - 1);
                 // printf("substr = %s\n", substr.data());
                 // fflush(stdout);
@@ -200,7 +207,6 @@ class Preprocessor {
                 root = new RegTree('|');
                 root -> rson(r);
                 root -> lson(n);
-
                 if (!gp) {
                     gp = root;
                 }
@@ -225,10 +231,9 @@ class Preprocessor {
                 p -> data(OP_CAT);
             } else {
                 // 内容放到右节点
-                parent = p;
                 p -> rson(new RegTree(cur));
                 // 设置运算符
-                p -> data(0);
+                p -> data(OP_CAT);
             }
 
             // 左节点向下拓展
@@ -243,7 +248,6 @@ class Preprocessor {
         // 运行到 reg 结尾时，需要将 parent 的 rson 挂到 gp 的 lson 上
         if (!p -> data()) {
             RegTree *r = parent -> rson();
-
             if (!gp) {
                 delete root;
                 root = r;
@@ -263,6 +267,7 @@ class Preprocessor {
   private:
     // vec tag : reg
     std::vector<std::pair<std::string, std::string> > _vecRegs;
+    std::map<std::string, std::string> _regs;
     // tag need to be build to dfa
     std::set<std::string> _toDFA_tags;
     std::set<char> _set_op;
