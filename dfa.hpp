@@ -3,6 +3,7 @@
 
 #include "nfa.hpp"
 #include <cstdio>
+#include <memory.h>
 #include <vector>
 #include <string>
 #include <queue>
@@ -10,32 +11,27 @@
 #include <map>
 #include <algorithm>
 
+const size_t CHAR_CNT = 259;
+
 class DFA {
   public:
     // DFA() = default;
 
-    DFA(const std::map<char, unsigned int> &title,
-        const std::vector<std::vector<unsigned int> > &vecData,
-        const std::set<unsigned int> &sendState)
-        : _title(title), _vecData(vecData), _sendState(sendState) {
-
-    }
-
-    DFA(std::map<char, unsigned int> &&title,
+    DFA(int *titleHash,
         std::vector<std::vector<unsigned int> > &&vecData,
         std::set<unsigned int> &&sendState)
-        : _title(std::move(title)),
+        : _titleHash(titleHash),
           _vecData(std::move(vecData)),
           _sendState(std::move(sendState)) {
 
     }
 
     unsigned int move(unsigned int state, char title) {
-        if (_title.find(title) == _title.end()) {
+        if (_titleHash[static_cast<size_t>(title)] == -1) {
             return -1;
         }
 
-        return _vecData[state][_title[title]];
+        return _vecData[state][_titleHash[static_cast<size_t>(title)]];
     }
 
     bool calculate(const char *str) {
@@ -69,8 +65,10 @@ class DFA {
         printf("my tag is: %s\n", _tag.data());
         printf("the title chars are: \n");
 
-        for (auto &var : _title) {
-            printf("%c ", var.first);
+        for (size_t i = 0; i < CHAR_CNT; ++i) {
+            if (~_titleHash[i]) {
+                printf("%c ", i);
+            }
         }
 
         putchar(10);
@@ -144,8 +142,8 @@ class DFA {
                 std::set<unsigned int> subset;
 
                 // 遍历 _title 中每一个可能的输入字符
-                for (auto &var : _title) {
-                    titleID = var.second;
+                for (unsigned int i = 0; i < _vecData.size(); ++i) {
+                    titleID = i;
                     subset.clear();
 
                     // 遍历当前所有状态，填充 subset 集合
@@ -303,7 +301,7 @@ class DFA {
     ~DFA() = default;
 
   private:
-    std::map<char, unsigned int> _title;
+    int *_titleHash;
     std::vector<std::vector<unsigned int> > _vecData;
     std::vector<bool> _died;
     std::set<unsigned int> _sendState;
@@ -316,7 +314,8 @@ DFA *buildDFA(NFA *nfa) {
     std::set<char> schar = nfa -> schar();
     unsigned int chCnt = schar.size();
     // 存放 dfa char 和对应的 index
-    std::map<char, unsigned int> titleMap;
+    int *titleHash = new int[CHAR_CNT];
+    memset(titleHash, -1, sizeof(int) * CHAR_CNT);
     // 存放 dfa data
     std::vector<std::vector<unsigned int> > vecData;
 
@@ -325,7 +324,7 @@ DFA *buildDFA(NFA *nfa) {
     int cnt = 0;
 
     for (char var : schar) {
-        titleMap[var] = cnt;
+        titleHash[static_cast<size_t>(var)] = cnt;
         ++cnt;
     }
 
@@ -379,7 +378,7 @@ DFA *buildDFA(NFA *nfa) {
                 }
             }
 
-            vecData[curID][titleMap[ch]] = sdstates[su];
+            vecData[curID][titleHash[static_cast<size_t>(ch)]] = sdstates[su];
         }
     }
 
@@ -392,7 +391,7 @@ DFA *buildDFA(NFA *nfa) {
     //     }
     // }
 
-    return new DFA(std::move(titleMap), std::move(vecData), std::move(sendState));
+    return new DFA(titleHash, std::move(vecData), std::move(sendState));
 }
 
 #endif

@@ -20,14 +20,6 @@ class Preprocessor {
     ~Preprocessor() = default;
 
     void inline trim(std::string &reg) {
-        for (auto it = reg.begin(); it != reg.end(); ++it) {
-            if (*it == ' ') {
-                it = reg.erase(it);
-            } else {
-                break;
-            }
-        }
-
         while (reg.back() == ' ') {
             reg.pop_back();
         }
@@ -42,8 +34,21 @@ class Preprocessor {
             }
         }
 
-        std::string reg(std::move(tag.substr(it - tag.begin() + 1, tag.end() - it)));
-        tag.erase(it, tag.end());
+        auto it2 = it + 1;
+
+        while (*it2 == ' ') {
+            ++it2;
+        }
+        // printf("reg2 = %s\n", tag.substr(it2 - tag.begin(), tag.end() - it2).data());
+
+        std::string reg(std::move(tag.substr(it2 - tag.begin(), tag.end() - it2).data()));
+        it2 = it - 1;
+
+        while (*it2 == ' ') {
+            --it2;
+        }
+
+        tag.erase(it2 + 1, tag.end());
         return std::move(reg);
     }
 

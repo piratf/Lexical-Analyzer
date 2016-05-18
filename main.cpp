@@ -11,28 +11,6 @@
 
 // static const int N = 1024;
 
-void trim(std::string &reg) {
-    for (auto it = reg.begin(); it != reg.end(); ++it) {
-        if (*it == ' ') {
-            it = reg.erase(it);
-        }
-    }
-}
-
-std::string split(std::string &reg) {
-    auto it = reg.begin();
-
-    for (; it != reg.end(); ++it) {
-        if (*it == '=') {
-            break;
-        }
-    }
-
-    std::string tag = reg.substr(0, it - reg.begin());
-    reg.erase(reg.begin(), it + 1);
-    return tag;
-}
-
 bool test(LexicalAnalyzer *la) {
     ifstream input("test.txt");
     char str[N] = {};

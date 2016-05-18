@@ -35,8 +35,8 @@ reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 ----- to dfa -----
 comment id keyword literal operator test 
 -------- end display -------------------
-preprocess time = 0.536584
-la build time = 8282.790434
+preprocess time = 0.572715
+la build time = 8243.126703
 ============================
 => start parse.
 void main()
@@ -88,4 +88,4 @@ line 10: (    literal : 100 )
 line 10: (   operator : ; )
 line 11: (   operator : } )
 Analysis success!
-parse time = 0.938098
+parse time = 2.760937
