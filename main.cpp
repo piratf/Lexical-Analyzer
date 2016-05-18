@@ -6,8 +6,9 @@
 #include <queue>
 #include <set>
 #include <map>
-#include <ctime>
-#include <windows.h>
+#include <chrono>
+#include <iostream>
+using namespace std;
 
 // static const int N = 1024;
 
@@ -42,7 +43,7 @@ bool test(DFA *dfa) {
     string code;
     input >> code;
     // code = "// 123";
-    printf("input = %s\n", code.data());
+    cout << "input = " << code << endl;
 
     if (dfa -> calculate(code.data())) {
         printf("yes.\n");
@@ -55,13 +56,7 @@ bool test(DFA *dfa) {
 
 void preprocess() {
 
-    LARGE_INTEGER frequency;        // ticks per second
-    LARGE_INTEGER t1, t2;           // ticks
-
-    double elapsedTime;
-    QueryPerformanceFrequency(&frequency);
-
-    QueryPerformanceCounter(&t1);
+    auto begin = std::chrono::high_resolution_clock::now();
     Preprocessor ppr;
     ifstream input("input.txt");
     char *str = new char[N];
@@ -69,31 +64,28 @@ void preprocess() {
     while (!input.eof()) {
         input.getline(str, N);
 
-        if (str[0] != '\n') {
+        if (str[0]) {
             std::string reg(str);
             ppr.update(reg);
         }
     }
 
     input.close();
-    QueryPerformanceCounter(&t2);
-    elapsedTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
 
     ppr.display();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << "preprocess: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
     // fflush(stdout);
-    printf("preprocess time = %lf\n", elapsedTime);
 
-    QueryPerformanceCounter(&t1);
+    begin = std::chrono::high_resolution_clock::now();
     LexicalAnalyzer *la = ppr.buildLA();
-    QueryPerformanceCounter(&t2);
-    elapsedTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
-    printf("la build time = %lf\n", elapsedTime);
+    end = std::chrono::high_resolution_clock::now();
+    std::cout << "build LexicalAnalyzer: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
-    QueryPerformanceCounter(&t1);
+    begin = std::chrono::high_resolution_clock::now();
     la -> parse("code.txt");
-    QueryPerformanceCounter(&t2);
-    elapsedTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
-    printf("parse time = %lf\n", elapsedTime);
+    end = std::chrono::high_resolution_clock::now();
+    std::cout << "parse code: " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
     // test(la);
 
@@ -108,12 +100,14 @@ void preprocess() {
 
     // printf("reg = %s\n", reg.data());
     // fflush(stdout);
-    // RegTree *root = buildRegTree(reg);
+    // RegTree *root = ppr.buildRegTree(reg);
     // root -> backOrderDisplay();
+    // fflush(stdout);
     // root -> middleOrderDisplay();
+    // NFA *nfa = buildNFA(root);
+    // DFA *dfa = buildDFA(nfa);
     // fflush(stdout);
 
-    // DFA *dfa = buildDFA(strtest, reg);
     // dfa -> minimize();
     // dfa -> display();
     // fflush(stdout);

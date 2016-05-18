@@ -5,4 +5,3 @@ keyword = int|void|float|#include|if|else|return|string
 operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
 literal = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 comment = //( |[char]|[number]|[operator])*
-test = ([char]|_)([char]|[number]|_)*

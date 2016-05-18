@@ -182,9 +182,11 @@ class Preprocessor {
                 std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
                 // printf("substr = %s\n", substr.data());
                 // fflush(stdout);
+                parent = p;
+                // _regTrees[substr] -> middleOrderDisplay();
                 p -> rson(_regTrees[substr]);
-                p -> data(OP_CAT);
-                it = reg.rend() - t - 1;
+                p -> data(0);
+                it += substr.size() + 1;
             } else if (cur == '|' && *(it + 1) == '\\') {
                 fflush(stdout);
                 std::string substr = reg.substr(0, reg.rend() - it - 1);
@@ -223,9 +225,10 @@ class Preprocessor {
                 p -> data(OP_CAT);
             } else {
                 // 内容放到右节点
+                parent = p;
                 p -> rson(new RegTree(cur));
                 // 设置运算符
-                p -> data(OP_CAT);
+                p -> data(0);
             }
 
             // 左节点向下拓展

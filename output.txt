@@ -12,10 +12,8 @@ tag = literal
 reg = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 tag = comment
 reg = //( |[char]|[number]|[operator])*
-tag = test
-reg = ([char]|_)([char]|[number]|_)*
 -------- preprosessor display ----------
-size = 8
+size = 7
 tag = number
 reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
 tag = char
@@ -30,13 +28,11 @@ tag = literal
 reg = "\(\[char\]\|\[number\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*
 tag = comment
 reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
-tag = test
-reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 ----- to dfa -----
-comment id keyword literal operator test 
+comment id keyword literal operator 
 -------- end display -------------------
-preprocess time = 0.572715
-la build time = 8243.126703
+preprocess: 977 micro seconds
+build LexicalAnalyzer: 3988172 micro seconds
 ============================
 => start parse.
 void main()
@@ -63,13 +59,22 @@ line 2: (         id : a )
 line 2: (   operator : , )
 line 2: (         id : b )
 line 2: (   operator : ; )
-line 3: (    comment : // float y,c,d; )
+line 3: (    comment : / )
+line 3: (    comment : / )
+line 3: (         id : float )
+line 3: (         id : y )
+line 3: (   operator : , )
+line 3: (         id : c )
+line 3: (   operator : , )
+line 3: (         id : d )
+line 3: (   operator : ; )
 line 5: (    comment : /*     x = a + b;
       y = c / d; */ )
 line 6: (         id : string )
 line 6: (         id : str )
 line 6: (   operator : = )
-line 6: (    literal : "111" )
+line 6: (    literal : "111 )
+line 6: (    literal : " )
 line 6: (   operator : ; )
 line 7: (         id : if )
 line 7: (   operator : ( )
@@ -88,4 +93,4 @@ line 10: (    literal : 100 )
 line 10: (   operator : ; )
 line 11: (   operator : } )
 Analysis success!
-parse time = 2.760937
+parse code: 966 micro seconds

@@ -40,7 +40,10 @@ class DFA {
         const char *p = str;
 
         while (*p) {
+            // printf("*p = %c\n", *p);
             s = move(s, *p);
+            // printf("s = %d\n", s);
+            // fflush(stdout);
 
             if (s == static_cast<unsigned int>(-1)) {
                 return false;
