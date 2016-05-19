@@ -31,8 +31,8 @@ reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
 ----- to dfa -----
 comment id keyword literal operator 
 -------- end display -------------------
-5866 micro seconds
-5787414 micro seconds
+531 micro seconds
+7104278 micro seconds
 ============================
 => start parse.
 void main()
@@ -58,30 +58,29 @@ line 2: (   operator : , )
 line 2: (         id : a )
 line 2: (   operator : , )
 line 2: (         id : b )
-line 2: (   operator : ; )
-line 3: (    comment : // float y,c,d; )
-line 5: (    comment : /*     x = a + b;
+line 2: (    comment : ; / )
+line 2: (    comment : / float y,c,d; )
+line 4: (    comment : /*     x = a + b;
       y = c / d; */ )
-line 6: (         id : string )
-line 6: (         id : str )
-line 6: (   operator : = )
-line 6: (    literal : "111" )
-line 6: (   operator : ; )
-line 7: (         id : if )
-line 7: (   operator : ( )
+line 5: (         id : string )
+line 5: (         id : str )
+line 5: (   operator : = )
+line 5: (    literal : "111" )
+line 5: (   operator : ; )
+line 6: (         id : if )
+line 6: (   operator : ( )
+line 6: (         id : x )
+line 6: (   operator : > )
+line 6: (         id : y )
+line 6: (   operator : ) )
 line 7: (         id : x )
-line 7: (   operator : > )
-line 7: (         id : y )
-line 7: (   operator : ) )
-line 8: (         id : x )
-line 8: (   operator : = )
-line 8: (    literal : 10 )
-line 8: (   operator : ; )
-line 9: (         id : else )
-line 10: (         id : y )
-line 10: (   operator : = )
-line 10: (    literal : 100 )
-line 10: (   operator : ; )
-line 11: (   operator : } )
+line 7: (   operator : = )
+line 7: (         id : 10 )
+line 7: (   operator : ; )
+line 8: (         id : else )
+line 9: (         id : y )
+line 9: (    literal : =100 )
+line 9: (   operator : ; )
+line 10: (   operator : } )
 Analysis success!
-978 micro seconds
+1439 micro seconds

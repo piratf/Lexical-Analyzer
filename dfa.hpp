@@ -30,6 +30,9 @@ class DFA {
         if (_titleHash[static_cast<size_t>(title)] == -1) {
             return -1;
         }
+        if (state >= _vecData.size() || state < 0) {
+            return state;
+        }
 
         return _vecData[state][_titleHash[static_cast<size_t>(title)]];
     }
@@ -48,11 +51,7 @@ class DFA {
             if (s == static_cast<unsigned int>(-1)) {
                 return false;
             }
-
-            if (_died[s]) {
-                break;
-            }
-
+            
             ++p;
         }
 
@@ -66,11 +65,14 @@ class DFA {
     void display() {
         puts("--------- start display ------------");
         printf("my tag is: %s\n", _tag.data());
-        printf("the title chars are: \n");
+        puts("the title chars are: ");
+        putchar(' ');
+        putchar(' ');
+        putchar(' ');
 
         for (size_t i = 0; i < CHAR_CNT; ++i) {
             if (~_titleHash[i]) {
-                printf("%c ", i);
+                printf("%2c ", i);
             }
         }
 
@@ -82,10 +84,10 @@ class DFA {
 
         for (auto &row : _vecData) {
 
-            printf("%d: ", rowid++);
+            printf("%-2d: ", rowid++);
 
             for (unsigned int var : row) {
-                printf("%d ", var);
+                printf("%-2d ", var);
             }
 
             putchar(10);
@@ -94,7 +96,7 @@ class DFA {
         printf("the end state set:\n");
 
         for (unsigned int var : _sendState) {
-            printf("%d ", var);
+            printf("%-2d ", var);
         }
 
         putchar(10);
@@ -104,7 +106,7 @@ class DFA {
 
     void minimize() {
         std::set<unsigned int> sstart;
-        std::set<unsigned int> send = _sendState;
+        decltype(sstart) send(_sendState.begin(), _sendState.end());
 
         for (unsigned int i = 0; i < _vecData.size(); ++i) {
             if (send.find(i) == send.end()) {
@@ -112,16 +114,19 @@ class DFA {
             }
         }
 
-        std::set<std::set<unsigned int> > sdivide;
-        std::set<std::set<unsigned int> > stemp;
+        std::set<decltype(sstart)> sdivide;
+        decltype(sdivide) stemp;
         stemp.insert(sstart);
         stemp.insert(send);
-        char titleID = 0;
+        char currentChar = 0;
 
-        while (stemp.size() != sdivide.size()) {
+        // display();
+
+        while (stemp != sdivide) {
             sdivide.swap(stemp);
             stemp.clear();
 
+            // puts("==========================");
             // printf("sdivide\n");
 
             // for (auto &d : sdivide) {
@@ -135,26 +140,39 @@ class DFA {
             bool endOfMinimize = true;
 
             // 遍历当前划分中的每一个集合
-            for (std::set<unsigned int> divide : sdivide) {
+            for (const auto &divide : sdivide) {
+
+                endOfMinimize = true;
+
+                // puts("new divide ========> ");
 
                 if (divide.size() == 1) {
                     stemp.insert(divide);
                     continue;
                 }
 
-                std::set<unsigned int> subset;
+                decltype(sstart) subset;
 
                 // 遍历 _title 中每一个可能的输入字符
-                for (unsigned int i = 0; i < _vecData.size(); ++i) {
-                    titleID = i;
+                for (unsigned int i = 0; i < _vecData[0].size(); ++i) {
+                    currentChar = i;
+                    // printf("currentChar = %d\n", currentChar);
                     subset.clear();
 
                     // 遍历当前所有状态，填充 subset 集合
                     for (unsigned int state : divide) {
-                        subset.insert(_vecData[state][titleID]);
+                        subset.insert(_vecData[state][currentChar]);
                     }
 
                     bool needChange = true;
+
+                    // printf("subset: => ");
+
+                    // for (auto &var : subset) {
+                    //     printf("%d ", var);
+                    // }
+
+                    // putchar(10);
 
                     // 判断结果是不是在同一个划分内
                     for (auto d : sdivide) {
@@ -166,40 +184,68 @@ class DFA {
 
                     // 如果不是
                     if (needChange) {
+                        // printf("need change.\n");
+
                         // 获得和所有 divide 的交集
                         for (auto d : sdivide) {
-                            std::set<unsigned int> st;
+                            decltype(subset) st;
                             std::set_intersection(subset.begin(), subset.end(), d.begin(), d.end(), std::inserter(st, st.begin()));
 
                             // 得到一个不为空的交集，添加所有单步结果在此交集内的元素到新的划分中
                             if (!st.empty()) {
-                                std::set<unsigned int> temp;
 
-                                for (unsigned int state : divide) {
-                                    if (st.find(_vecData[state][titleID]) != st.end()) {
-                                        temp.insert(state);
+                                if (d == divide) {
+                                    decltype(subset) temp;
+
+                                    // traverse current divide
+                                    for (unsigned int state : divide) {
+
+                                        if (st.find(_vecData[state][currentChar]) != st.end()) {
+                                            temp.insert(state);
+                                        }
+                                    }
+
+                                    stemp.insert(temp);
+                                } else {
+                                    for (unsigned int state : divide) {
+
+                                        if (st.find(_vecData[state][currentChar]) != st.end()) {
+                                            decltype(subset) temp;
+                                            temp.insert(state);
+                                            stemp.insert(temp);
+                                        }
                                     }
                                 }
 
-                                stemp.insert(temp);
                             }
                         }
 
                         endOfMinimize = false;
+                        // puts("stemp: ");
+
+                        // for (auto &d : stemp) {
+                        //     for (unsigned int data : d) {
+                        //         printf("%d ", data);
+                        //     }
+
+                        //     putchar(10);
+                        // }
+
                         break;
                     }
-
                 }
 
                 if (endOfMinimize) {
                     stemp.insert(divide);
                 }
             }
+
+
         }
 
         // puts("after minimize");
 
-        // for (auto &s : sdivide) {
+        // for (const auto &s : sdivide) {
         //     for (unsigned int var : s) {
         //         printf("%d ", var);
         //     }
@@ -208,70 +254,79 @@ class DFA {
         // }
 
         // puts("=========================");
-
         // fflush(stdout);
 
-        // modify data matrix
-        // for (auto &s : sdivide) {
-        //     if (s.size() > 1) {
-        //         unsigned int maxOfSet = *s.rbegin();
-        //         auto it = s.begin();
-        //         unsigned int tag = *it;
 
-        //         // update end state
-        //         std::vector<unsigned int> modify;
-        //         std::vector<unsigned int> vecRemove;
+        // puts("modify data matrix.");
 
-        //         for (auto endit = _sendState.begin();
-        //                 endit != _sendState.end(); ++endit) {
-        //             if (s.find(*endit) != s.end()) {
-        //                 vecRemove.push_back(*endit);
-        //                 continue;
-        //             }
+        // display();
 
-        //             if (*endit > maxOfSet) {
-        //                 modify.push_back(*endit);
-        //                 continue;
-        //             }
+        // decltype(_vecData) vecNew;
+        // vecNew.clear();
+        int id = -1;
 
-        //         }
+        for (const auto &divid : sdivide) {
+            ++id;
 
+            auto it = divid.begin();
+            unsigned int nodeID = *it;
 
-        //         for (auto &var : modify) {
-        //             _sendState.erase(var);
-        //             _sendState.insert(tag);
-        //         }
+            // for (auto &row : _vecData) {
+            //     for (auto &var : row) {
+            //         if (var == nodeID) {
+            //             if (_sendState.find(var) != _sendState.end()) {
+            //                 _sendState.erase(var);
+            //                 _sendState.insert(id);
+            //             }
 
-        //         for (auto &var : modify) {
-        //             _sendState.erase(var);
-        //             _sendState.insert(var - 1);
-        //         }
+            //             // var = id;
+            //         }
+            //     }
+            // }
 
-        //         for (auto &row : _vecData) {
-        //             for (unsigned int &var : row) {
-        //                 if (s.find(var) != s.end()) {
-        //                     var = tag;
-        //                 } else if (var > maxOfSet) {
-        //                     --var;
-        //                 }
-        //             }
-        //         }
+            ++it;
 
-        //         ++it;
+            if (it != divid.end()) {
+                for (; it != divid.end(); ++it) {
+                    if (_sendState.find(*it) != _sendState.end()) {
+                        _vecData.erase(_vecData.begin() + *it);
+                        _sendState.erase(*it);
+                        _sendState.insert(nodeID);
+                    }
 
-        //         for (; it != s.end(); ++it) {
-        //             // printf("it = %d\n", *it);
-        //             _vecData.erase(_vecData.begin() + *it);
-        //             _sendState.erase(*it);
-        //         }
+                    for (auto &row : _vecData) {
+                        for (auto &var : row) {
+                            if (var == *it) {
+                                var = nodeID;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            // printf("id = %d\n", id);
+            // printf("nodeID = %d\n", nodeID);
+            // vecNew.push_back(_vecData[nodeID]);
+        }
+
+        // display();
+
+        // printf("\n");
+
+        // for (auto &row : vecNew) {
+        //     for (auto &var : row) {
+        //         printf("%d ", var);
         //     }
+
+        //     putchar(10);
         // }
 
         // printf("start to remove died node\n");
         // fflush(stdout);
 
         // 记录死亡的节点
-        _died = std::vector<bool>(_vecData.size());
+
         bool diedFlag = true;
 
         for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
@@ -287,7 +342,7 @@ class DFA {
 
             if (diedFlag) {
                 // printf("died: %d\n", index);
-                _died[index] = true;
+                it = _vecData.erase(it);
             }
         }
 
@@ -306,7 +361,6 @@ class DFA {
   private:
     int *_titleHash;
     std::vector<std::vector<unsigned int> > _vecData;
-    std::vector<bool> _died;
     std::set<unsigned int> _sendState;
     std::string _tag = "default tag of dfa.";
 };
