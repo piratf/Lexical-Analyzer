@@ -31,8 +31,8 @@ reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
 ----- to dfa -----
 comment id keyword literal operator 
 -------- end display -------------------
-531 micro seconds
-7104278 micro seconds
+398 micro seconds
+6651586 micro seconds
 ============================
 => start parse.
 void main()
@@ -83,4 +83,4 @@ line 9: (    literal : =100 )
 line 9: (   operator : ; )
 line 10: (   operator : } )
 Analysis success!
-1439 micro seconds
+317 micro seconds
