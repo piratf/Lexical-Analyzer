@@ -66,7 +66,7 @@ void preprocess() {
 
         if (str[0]) {
             std::string reg(str, strlen(str));
-            if (*reg.rbegin() == 13) {
+            if (*reg.rbegin() == 13 || *reg.rbegin() == '#') {
                 reg.pop_back();
             }
             // printf("rrrr = %c\n", *reg.rbegin());
