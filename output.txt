@@ -1,0 +1,87 @@
+tag = number
+reg = [0-9]
+tag = char
+reg = [A-Z]|[a-z]
+tag = id
+reg = ([char]|_)([char]|[number]|_)*
+tag = keyword
+reg = int|void|float|#include|if|else|return|string
+tag = operator
+reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
+tag = literal
+reg = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
+tag = comment
+reg = //( |[char]|[number]|[operator])*
+-------- preprosessor display ----------
+size = 7
+tag = number
+reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
+tag = char
+reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z
+tag = id
+reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
+tag = keyword
+reg = int\|void\|float\|#include\|if\|else\|return\|string
+tag = operator
+reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=
+tag = literal
+reg = "\(\[char\]\|\[number\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*
+tag = comment
+reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
+----- to dfa -----
+comment id keyword literal operator 
+-------- end display -------------------
+0 micro seconds
+5701984 micro seconds
+============================
+=> start parse.
+void main()
+{ int x,a,b;
+// float y,c,d;
+ /*     x = a + b;
+      y = c / d; */
+      string str = "111";
+      if(x>y)
+        x = 10;
+      else
+        y=100;
+}
+
+line 1: (         id : void )
+line 1: (         id : main )
+line 1: (   operator : ( )
+line 1: (   operator : ) )
+line 2: (   operator : { )
+line 2: (         id : int )
+line 2: (         id : x )
+line 2: (   operator : , )
+line 2: (         id : a )
+line 2: (   operator : , )
+line 2: (         id : b )
+line 2: (   operator : ; )
+line 3: (    comment : // float y,c,d; )
+line 5: (    comment : /*     x = a + b;
+      y = c / d; */ )
+line 6: (         id : string )
+line 6: (         id : str )
+line 6: (   operator : = )
+line 6: (    literal : "111" )
+line 6: (   operator : ; )
+line 7: (         id : if )
+line 7: (   operator : ( )
+line 7: (         id : x )
+line 7: (   operator : > )
+line 7: (         id : y )
+line 7: (   operator : ) )
+line 8: (         id : x )
+line 8: (   operator : = )
+line 8: (    literal : 10 )
+line 8: (   operator : ; )
+line 9: (         id : else )
+line 10: (         id : y )
+line 10: (   operator : = )
+line 10: (    literal : 100 )
+line 10: (   operator : ; )
+line 11: (   operator : } )
+Analysis success!
+500 micro seconds

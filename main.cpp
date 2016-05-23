@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 
-// static const int N = 1024;
+// static const int N = 1024;   
 
 bool test(LexicalAnalyzer *la) {
     ifstream input("test.txt");

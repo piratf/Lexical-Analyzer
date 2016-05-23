@@ -159,6 +159,7 @@ class Preprocessor {
             DFA *dfa = buildDFA(nfa);
             dfa -> tag(tag);
             dfa -> minimize();
+            // dfa -> display();
             la -> add(dfa);
         }
 

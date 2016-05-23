@@ -1,7 +1,7 @@
 #ifndef LEXICALANALYZER_H_
 #define LEXICALANALYZER_H_
 
-#include "dfa.hpp"
+#include "dfalink.hpp"
 #include <fstream>
 #include <cstring>
 #include <set>

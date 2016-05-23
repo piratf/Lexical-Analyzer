@@ -10,7 +10,9 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <list>
 
+using iterator_array = int **;
 const size_t CHAR_CNT = 259;
 
 class DFA {
@@ -18,40 +20,42 @@ class DFA {
     // DFA() = default;
 
     DFA(int *titleHash,
-        std::vector<std::vector<unsigned int> > &&vecData,
-        std::set<unsigned int> &&sendState)
+        unsigned int char_count,
+        std::vector<iterator_array> &&vec_list_index,
+        std::list<iterator_array> &&listData,
+        std::set<iterator_array> &&sendState)
         : _titleHash(titleHash),
-          _vecData(std::move(vecData)),
+          _char_count(char_count),
+          _vec_list_index(vec_list_index),
+          _listData(std::move(listData)),
           _sendState(std::move(sendState)) {
 
     }
 
-    unsigned int move(unsigned int state, char title) {
+    iterator_array move(iterator_array state, char title) {
         if (_titleHash[static_cast<size_t>(title)] == -1) {
-            return -1;
-        }
-        if (state >= _vecData.size() || state < 0) {
-            return state;
+            return NULL;
         }
 
-        return _vecData[state][_titleHash[static_cast<size_t>(title)]];
+        return reinterpret_cast<iterator_array>
+               (state[_titleHash[static_cast<size_t>(title)]]);
     }
 
     bool calculate(const char *str) {
-        unsigned int s = 0;
+        iterator_array s = *_listData.begin();
 
         const char *p = str;
 
         while (*p) {
             // printf("*p = %c\n", *p);
+            // fflush(stdout);
             s = move(s, *p);
             // printf("s = %d\n", s);
-            // fflush(stdout);
 
-            if (s == static_cast<unsigned int>(-1)) {
+            if (!s) {
                 return false;
             }
-            
+
             ++p;
         }
 
@@ -80,14 +84,12 @@ class DFA {
 
         printf("the data matrix is:\n");
 
-        int rowid = 0;
+        for (auto &row : _listData) {
 
-        for (auto &row : _vecData) {
+            printf("%-8p: ", reinterpret_cast<void *>(row));
 
-            printf("%-2d: ", rowid++);
-
-            for (unsigned int var : row) {
-                printf("%-2d ", var);
+            for (unsigned int i = 0; i < _char_count; ++i) {
+                printf("%-8p ", static_cast<void *>(row[i]));
             }
 
             putchar(10);
@@ -95,8 +97,8 @@ class DFA {
 
         printf("the end state set:\n");
 
-        for (unsigned int var : _sendState) {
-            printf("%-2d ", var);
+        for (auto var : _sendState) {
+            printf("%-8p ", static_cast<void *>(var));
         }
 
         putchar(10);
@@ -105,12 +107,12 @@ class DFA {
     }
 
     void minimize() {
-        std::set<unsigned int> sstart;
+        decltype(_sendState) sstart;
         decltype(sstart) send(_sendState.begin(), _sendState.end());
 
-        for (unsigned int i = 0; i < _vecData.size(); ++i) {
-            if (send.find(i) == send.end()) {
-                sstart.insert(i);
+        for (auto var : _listData) {
+            if (send.find(var) == send.end()) {
+                sstart.insert(var);
             }
         }
 
@@ -118,7 +120,7 @@ class DFA {
         decltype(sdivide) stemp;
         stemp.insert(sstart);
         stemp.insert(send);
-        char currentChar = 0;
+        unsigned int currentChar = 0;
 
         // display();
 
@@ -154,14 +156,16 @@ class DFA {
                 decltype(sstart) subset;
 
                 // 遍历 _title 中每一个可能的输入字符
-                for (unsigned int i = 0; i < _vecData[0].size(); ++i) {
+                for (unsigned int i = 0; i < _char_count; ++i) {
                     currentChar = i;
                     // printf("currentChar = %d\n", currentChar);
                     subset.clear();
 
                     // 遍历当前所有状态，填充 subset 集合
-                    for (unsigned int state : divide) {
-                        subset.insert(_vecData[state][currentChar]);
+                    for (auto state : divide) {
+                        subset.insert(
+                            reinterpret_cast<int **>
+                            (state[currentChar]));
                     }
 
                     bool needChange = true;
@@ -198,18 +202,19 @@ class DFA {
                                     decltype(subset) temp;
 
                                     // traverse current divide
-                                    for (unsigned int state : divide) {
+                                    for (auto state : divide) {
 
-                                        if (st.find(_vecData[state][currentChar]) != st.end()) {
+                                        if (st.find(reinterpret_cast<iterator_array>(state[currentChar]))
+                                                != st.end()) {
                                             temp.insert(state);
                                         }
                                     }
 
                                     stemp.insert(temp);
                                 } else {
-                                    for (unsigned int state : divide) {
+                                    for (auto state : divide) {
 
-                                        if (st.find(_vecData[state][currentChar]) != st.end()) {
+                                        if (st.find(reinterpret_cast<iterator_array>(state[currentChar])) != st.end()) {
                                             decltype(subset) temp;
                                             temp.insert(state);
                                             stemp.insert(temp);
@@ -239,15 +244,14 @@ class DFA {
                     stemp.insert(divide);
                 }
             }
-
-
         }
 
         // puts("after minimize");
 
         // for (const auto &s : sdivide) {
-        //     for (unsigned int var : s) {
-        //         printf("%d ", var);
+
+        //     for (auto var : s) {
+        //         printf("%-8p ", reinterpret_cast<void *>(var));
         //     }
 
         //     putchar(10);
@@ -263,41 +267,31 @@ class DFA {
 
         // decltype(_vecData) vecNew;
         // vecNew.clear();
-        int id = -1;
 
         for (const auto &divid : sdivide) {
-            ++id;
 
             auto it = divid.begin();
-            unsigned int nodeID = *it;
-
-            // for (auto &row : _vecData) {
-            //     for (auto &var : row) {
-            //         if (var == nodeID) {
-            //             if (_sendState.find(var) != _sendState.end()) {
-            //                 _sendState.erase(var);
-            //                 _sendState.insert(id);
-            //             }
-
-            //             // var = id;
-            //         }
-            //     }
-            // }
+            auto nodeID = *it;
 
             ++it;
 
             if (it != divid.end()) {
                 for (; it != divid.end(); ++it) {
+
                     if (_sendState.find(*it) != _sendState.end()) {
-                        _vecData.erase(_vecData.begin() + *it);
+                        // _listData.erase(_listData.begin() + *it);
                         _sendState.erase(*it);
                         _sendState.insert(nodeID);
                     }
 
-                    for (auto &row : _vecData) {
-                        for (auto &var : row) {
-                            if (var == *it) {
-                                var = nodeID;
+                    for (auto it_data = _listData.begin(); it_data != _listData
+                        .end(); ++it_data) {
+                        if (*it == *(it_data)) {
+                            it_data == _listData.erase(it_data);
+                        }
+                        for (unsigned int i = 0; i < _char_count; ++i) {
+                            if ((*it_data)[i] == reinterpret_cast<int *>(*it)) {
+                                (*it_data)[i] = reinterpret_cast<int *>(nodeID);
                             }
                         }
                     }
@@ -322,19 +316,19 @@ class DFA {
         //     putchar(10);
         // }
 
-        // printf("start to remove died node\n");
-        // fflush(stdout);
+        // // printf("start to remove died node\n");
+        // // fflush(stdout);
 
         // 记录死亡的节点
 
         bool diedFlag = true;
 
-        for (auto it = _vecData.begin(); it != _vecData.end(); ++it) {
-            unsigned int index = it - _vecData.begin();
+        for (auto it = _listData.begin(); it != _listData.end(); ++it) {
+            auto index = *it;
             diedFlag = true;
 
-            for (auto &var : *it) {
-                if (var != index) {
+            for (unsigned int i = 0; i < _char_count; ++i) {
+                if (index[i] != reinterpret_cast<int *>(index)) {
                     diedFlag = false;
                     break;
                 }
@@ -342,10 +336,9 @@ class DFA {
 
             if (diedFlag) {
                 // printf("died: %d\n", index);
-                it = _vecData.erase(it);
+                it = _listData.erase(it);
             }
         }
-
     }
 
     std::string tag() {
@@ -360,8 +353,11 @@ class DFA {
 
   private:
     int *_titleHash;
-    std::vector<std::vector<unsigned int> > _vecData;
-    std::set<unsigned int> _sendState;
+    unsigned int _char_count = 0;
+    std::vector<iterator_array> _vec_list_index;
+    // std::vector<std::vector<unsigned int> > _vecData;
+    std::list<int **> _listData;
+    std::set<int **> _sendState;
     std::string _tag = "default tag of dfa.";
 };
 
@@ -376,12 +372,14 @@ DFA *buildDFA(NFA *nfa) {
     int *titleHash = new int[CHAR_CNT];
     memset(titleHash, -1, sizeof(int) * CHAR_CNT);
     // 存放 dfa data
-    std::vector<std::vector<unsigned int> > vecData;
+    // std::vector<std::vector<unsigned int> > vecData;
+    std::list<iterator_array> listData;
 
     // printf("cnt of char: %d\n", schar.size());
 
     // 统计字符情况
     int cnt = 0;
+
     for (char var : schar) {
         titleHash[static_cast<size_t>(var)] = cnt;
         ++cnt;
@@ -392,7 +390,7 @@ DFA *buildDFA(NFA *nfa) {
     // 当前遍历的集合
     std::set<NFANode *> scur;
     // 存储终态集合
-    std::set<unsigned int> sendState;
+    std::set<iterator_array> sendState;
     sstart.insert(nfa -> head());
     // 空闭包
     nfa -> getEplisonClosure(sstart);
@@ -404,10 +402,17 @@ DFA *buildDFA(NFA *nfa) {
     std::queue<unsigned int> qid;
 
     cnt = 0;
+
     sdstates[sstart] = cnt;
     qid.push(cnt);
     qunflag.push(sstart);
-    vecData.push_back(std::vector<unsigned int>(chCnt));
+
+    // 记录 list 下标对应的指针
+    std::vector<iterator_array> list_index;
+    iterator_array arr = new int *[chCnt];
+    listData.push_back(arr);
+    list_index.push_back(arr);
+
 
     int curID = 0;
 
@@ -430,14 +435,24 @@ DFA *buildDFA(NFA *nfa) {
                 sdstates[su] = cnt;
                 qunflag.push(su);
                 qid.push(cnt);
-                vecData.push_back(std::vector<unsigned int>(chCnt));
+                iterator_array arr = new int *[chCnt];
+                listData.push_back(arr);
+                list_index.push_back(arr);
 
                 if (su.find(nfa -> tail()) != su.end()) {
-                    sendState.insert(cnt);
+                    sendState.insert(arr);
                 }
             }
 
-            vecData[curID][titleHash[static_cast<size_t>(ch)]] = sdstates[su];
+            auto it = listData.begin();
+
+            for (int i = 0; i < curID; ++i) {
+                ++it;
+            }
+
+            unsigned int a = sdstates[su];
+            (*(it))[titleHash[static_cast<size_t>(ch)]] =
+                reinterpret_cast<int *>(list_index[a]);
         }
     }
 
@@ -450,7 +465,7 @@ DFA *buildDFA(NFA *nfa) {
     //     }
     // }
 
-    return new DFA(titleHash, std::move(vecData), std::move(sendState));
+    return new DFA(titleHash, chCnt, std::move(list_index), std::move(listData), std::move(sendState));
 }
 
 #endif
