@@ -1,7 +1,6 @@
 #ifndef PREPROCESSOR_H_
 #define PREPROCESSOR_H_
 
-#include "dfa.hpp"
 #include "LexicalAnalyzer.hpp"
 #include <string>
 #include <map>
@@ -158,8 +157,11 @@ class Preprocessor {
             NFA *nfa = buildNFA(_regTrees[tag]);
             DFA *dfa = buildDFA(nfa);
             dfa -> tag(tag);
-            dfa -> minimize();
             // dfa -> display();
+            // fflush(stdout);
+            dfa -> minimize();
+            // printf("tag = %s\n", tag.data());
+            // fflush(stdout);
             la -> add(dfa);
         }
 

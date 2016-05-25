@@ -262,7 +262,7 @@ class DFA {
 
 
         // puts("modify data matrix.");
-
+        // fflush(stdout);
         // display();
 
         // decltype(_vecData) vecNew;
@@ -276,26 +276,35 @@ class DFA {
             ++it;
 
             if (it != divid.end()) {
+                // start from the second one of the divid
                 for (; it != divid.end(); ++it) {
-
+                    
                     if (_sendState.find(*it) != _sendState.end()) {
                         // _listData.erase(_listData.begin() + *it);
                         _sendState.erase(*it);
                         _sendState.insert(nodeID);
                     }
 
+                    // find in data matrix;
                     for (auto it_data = _listData.begin(); it_data != _listData
-                        .end(); ++it_data) {
+                            .end(); ++it_data) {
+
                         if (*it == *(it_data)) {
-                            it_data == _listData.erase(it_data);
+                            delete *(it_data);
+                            it_data = _listData.erase(it_data);
+                            if (it_data == _listData.end()) {
+                                break;
+                            }
+                            // continue;
                         }
+
                         for (unsigned int i = 0; i < _char_count; ++i) {
+
                             if ((*it_data)[i] == reinterpret_cast<int *>(*it)) {
                                 (*it_data)[i] = reinterpret_cast<int *>(nodeID);
                             }
                         }
                     }
-
                 }
             }
 
@@ -305,6 +314,7 @@ class DFA {
         }
 
         // display();
+        // fflush(stdout);
 
         // printf("\n");
 
@@ -321,24 +331,25 @@ class DFA {
 
         // 记录死亡的节点
 
-        bool diedFlag = true;
+        // bool diedFlag = true;
 
-        for (auto it = _listData.begin(); it != _listData.end(); ++it) {
-            auto index = *it;
-            diedFlag = true;
+        // for (auto it = _listData.begin(); it != _listData.end(); ++it) {
+        //     auto index = *it;
+        //     diedFlag = true;
 
-            for (unsigned int i = 0; i < _char_count; ++i) {
-                if (index[i] != reinterpret_cast<int *>(index)) {
-                    diedFlag = false;
-                    break;
-                }
-            }
+        //     for (unsigned int i = 0; i < _char_count; ++i) {
+        //         if (index[i] != reinterpret_cast<int *>(index)) {
+        //             diedFlag = false;
+        //             break;
+        //         }
+        //     }
 
-            if (diedFlag) {
-                // printf("died: %d\n", index);
-                it = _listData.erase(it);
-            }
-        }
+        //     if (diedFlag) {
+        //         // printf("died: %d\n", index);
+        //         delete *(it);
+        //         it = _listData.erase(it);
+        //     }
+        // }
     }
 
     std::string tag() {
