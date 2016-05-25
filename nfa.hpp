@@ -140,11 +140,16 @@ class NFA {
                         qnfa.push(var.second);
                     }
                 }
-
             }
         }
 
-        // _tail = other -> head();
+         // printf("tail = %p\n", static_cast<void *>(_tail));
+        // fflush(stdout);
+
+        if (_tail) {
+            delete _tail;
+        }
+
         _tail = other -> tail();
     }
 
@@ -320,7 +325,7 @@ class NFA {
     std::set<char> _schar;
 };
 
-NFA *_buildNFA(RegTree *root) {
+NFA *_buildNFA(std::shared_ptr<RegTree> root) {
     if (!root) {
         return NULL;
     }
@@ -401,7 +406,7 @@ NFA *_buildNFA(RegTree *root) {
     return left;
 }
 
-NFA *buildNFA(RegTree *root) {
+NFA *buildNFA(std::shared_ptr<RegTree> root) {
     NFA *nfa = _buildNFA(root);
     return nfa;
 }

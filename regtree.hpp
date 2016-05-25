@@ -1,6 +1,7 @@
 #ifndef REGTREE_H_
 #define REGTREE_H_
 
+#include <memory>
 #include <string>
 
 using std::ifstream;
@@ -24,7 +25,7 @@ class RegTree {
   public:
     RegTree(): _leaf(false), _ope(OP_EMPTY), _lson(NULL), _rson(NULL) {}
 
-    RegTree(char data)
+    explicit RegTree(char data)
         : _leaf(true),
           _ope(data),
           _lson(NULL),
@@ -33,7 +34,7 @@ class RegTree {
     }
 
 
-    RegTree(char ope, RegTree *lson, RegTree *rson)
+    RegTree(char ope, std::shared_ptr<RegTree> lson, std::shared_ptr<RegTree> rson)
         : _leaf(false),
           _ope(ope),
           _lson(lson),
@@ -41,27 +42,39 @@ class RegTree {
 
     }
 
-    RegTree *lson() {
+    std::shared_ptr<RegTree> lson() {
         return _lson;
     }
 
-    RegTree *lson(RegTree *const data) {
+    std::shared_ptr<RegTree> lson(RegTree * const &data) {
+        _leaf = false;
+        _lson.reset(data);
+        return _lson;
+    }
+
+    std::shared_ptr<RegTree> lson(std::shared_ptr<RegTree> const data) {
         _leaf = false;
         _lson = data;
         return _lson;
     }
 
-    RegTree *rson() {
+    std::shared_ptr<RegTree> rson() {
         return _rson;
     }
 
-    RegTree *rson( RegTree *const &data) {
+    std::shared_ptr<RegTree> rson(RegTree * const &data) {
+        _leaf = false;
+        _rson.reset(data);
+        return _rson;
+    }
+
+    std::shared_ptr<RegTree> rson(std::shared_ptr<RegTree> const &data) {
         _leaf = false;
         _rson = data;
         return _rson;
     }
 
-    RegTree *rson( RegTree * const &&data) {
+    std::shared_ptr<RegTree> rson(std::shared_ptr<RegTree>  const &&data) {
         _leaf = false;
         _rson = std::move(data);
         return _rson;
@@ -84,8 +97,8 @@ class RegTree {
         return _leaf;
     }
 
-    void _backOrderDisplay(const RegTree *root) {
-        // printf("root = %p\n", static_cast<void *>(const_cast<RegTree *>(root)));
+    void _backOrderDisplay(RegTree * root) {
+        // printf("root = %p\n", static_cast<void *>(const_cast<std::shared_ptr<RegTree> >(root)));
 
         if (!root) {
             return;
@@ -95,11 +108,11 @@ class RegTree {
             printf("data = %c\n", root -> _ope);
         } else {
             if (root -> _lson) {
-                _backOrderDisplay(root -> _lson);
+                _backOrderDisplay(root -> _lson.get());
             }
 
             if (root -> _rson) {
-                _backOrderDisplay(root -> _rson);
+                _backOrderDisplay(root -> _rson.get());
             }
 
             printf("op = %c\n", root -> _ope);
@@ -110,13 +123,13 @@ class RegTree {
         backOrderDisplay(this);
     }
 
-    void backOrderDisplay(RegTree *other) {
+    void backOrderDisplay(RegTree * other) {
         _backOrderDisplay(other);
         printf("------------------------\n");
     }
 
-    void _preOrderDisplay(const RegTree *root) {
-        // printf("root = %p\n", static_cast<void *>(const_cast<RegTree *>(root)));
+    void _preOrderDisplay(RegTree * root) {
+        // printf("root = %p\n", static_cast<void *>(const_cast<std::shared_ptr<RegTree> >(root)));
 
         if (!root) {
             return;
@@ -128,11 +141,11 @@ class RegTree {
             printf("op = %c\n", root -> _ope);
 
             if (root -> _lson) {
-                _preOrderDisplay(root -> _lson);
+                _preOrderDisplay(root -> _lson.get());
             }
 
             if (root -> _rson) {
-                _preOrderDisplay(root -> _rson);
+                _preOrderDisplay(root -> _rson.get());
             }
         }
     }
@@ -141,13 +154,13 @@ class RegTree {
         preOrderDisplay(this);
     }
 
-    void preOrderDisplay(RegTree *other) {
+    void preOrderDisplay(RegTree * other) {
         _preOrderDisplay(other);
         printf("------------------------\n");
     }
 
-    void _middleOrderDisplay(const RegTree *root) {
-        // printf("root = %p\n", static_cast<void *>(const_cast<RegTree *>(root)));
+    void _middleOrderDisplay(RegTree * root) {
+        // printf("root = %p\n", static_cast<void *>(const_cast<std::shared_ptr<RegTree> >(root)));
 
         if (!root) {
             return;
@@ -157,13 +170,13 @@ class RegTree {
             printf("data = %c\n", root -> _ope);
         } else {
             if (root -> _lson) {
-                _middleOrderDisplay(root -> _lson);
+                _middleOrderDisplay(root -> _lson.get());
             }
 
             printf("op = %c\n", root -> _ope);
 
             if (root -> _rson) {
-                _middleOrderDisplay(root -> _rson);
+                _middleOrderDisplay(root -> _rson.get());
             }
         }
     }
@@ -172,18 +185,32 @@ class RegTree {
         middleOrderDisplay(this);
     }
 
-    void middleOrderDisplay(RegTree *other) {
+    void middleOrderDisplay(RegTree * other) {
         _middleOrderDisplay(other);
         printf("------------------------\n");
     }
 
-    ~RegTree() = default;
+    ~RegTree() {
+        // if (!_leaf) {
+        //     if (_lson) {
+        //         delete (_lson);
+        //         _lson = NULL;
+        //     }
+
+        //     if (_rson) {
+        //         delete (_rson);
+        //         _rson = NULL;
+        //     }
+
+        //     // printf("op = %c\n", root -> _ope);
+        // }
+    }
 
     // private:
     bool _leaf;
     char _ope;
-    RegTree *_lson;
-    RegTree *_rson;
+    std::shared_ptr<RegTree> _lson;
+    std::shared_ptr<RegTree> _rson;
 };
 
 void print_error(const char *message) {

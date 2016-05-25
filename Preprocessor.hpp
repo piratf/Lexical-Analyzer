@@ -38,6 +38,7 @@ class Preprocessor {
         while (*it2 == ' ') {
             ++it2;
         }
+
         // printf("reg2 = %s\n", tag.substr(it2 - tag.begin(), tag.end() - it2).data());
 
         std::string reg(std::move(tag.substr(it2 - tag.begin(), tag.end() - it2).data()));
@@ -122,7 +123,7 @@ class Preprocessor {
         _regs[tag] = strContent;
     }
 
-    std::map<std::string, std::string> & regs() {
+    std::map<std::string, std::string> &regs() {
         return _regs;
     }
 
@@ -146,8 +147,8 @@ class Preprocessor {
         puts("-------- end display -------------------");
     }
 
-    LexicalAnalyzer *buildLA() {
-        LexicalAnalyzer *la = new LexicalAnalyzer();
+    LexicalAnalyzer buildLA() {
+        LexicalAnalyzer la;
 
         for (auto &var : _vecRegs) {
             _regTrees[var.first] = buildRegTree(var.second);
@@ -162,17 +163,17 @@ class Preprocessor {
             dfa -> minimize();
             // printf("tag = %s\n", tag.data());
             // fflush(stdout);
-            la -> add(dfa);
+            la.add(dfa);
         }
 
         return la;
     }
 
-    RegTree *buildRegTree(const string &reg) {
-        RegTree *root = new RegTree();
-        RegTree *gp = NULL;
-        RegTree *parent = NULL;
-        RegTree *p = root;
+    std::shared_ptr<RegTree> buildRegTree(const string &reg) {
+        std::shared_ptr<RegTree> root(new RegTree());
+        std::shared_ptr<RegTree> gp = NULL;
+        std::shared_ptr<RegTree> parent = NULL;
+        std::shared_ptr<RegTree> p = root;
 
         // printf("reg = %s\n", reg.data());
         // printf("rbegin = %c\n", *reg.rbegin());
@@ -205,11 +206,12 @@ class Preprocessor {
                 it = reg.rend() - 1;
                 // printf("it = %c\n", *it);
                 // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
-                RegTree *r = buildRegTree(substr);
-                RegTree *n = root;
-                root = new RegTree('|');
+                std::shared_ptr<RegTree> r(buildRegTree(substr));
+                std::shared_ptr<RegTree> n = root;
+                root.reset(new RegTree('|'));
                 root -> rson(r);
                 root -> lson(n);
+
                 if (!gp) {
                     gp = root;
                 }
@@ -227,7 +229,7 @@ class Preprocessor {
                 std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
                 it += substr.size();
                 // 需要在右支上建立新的 星号运算树
-                RegTree *star = new RegTree(OP_STAR);
+                std::shared_ptr<RegTree> star(new RegTree(OP_STAR));
                 star -> rson(new RegTree('*'));
                 star -> lson(buildRegTree(substr));
                 p -> rson(star);
@@ -250,12 +252,13 @@ class Preprocessor {
 
         // 运行到 reg 结尾时，需要将 parent 的 rson 挂到 gp 的 lson 上
         if (!p -> data()) {
-            RegTree *r = parent -> rson();
+            std::shared_ptr<RegTree> r = parent -> rson();
+
             if (!gp) {
-                delete root;
+                // delete root;
                 root = r;
             } else {
-                delete gp -> lson();
+                // delete gp -> lson();
                 gp -> lson(r);
             }
         }
@@ -274,7 +277,7 @@ class Preprocessor {
     // tag need to be build to dfa
     std::set<std::string> _toDFA_tags;
     std::set<char> _set_op;
-    std::map<std::string, RegTree *> _regTrees;
+    std::map<std::string, std::shared_ptr<RegTree> > _regTrees;
 };
 
 #endif

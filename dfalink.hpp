@@ -278,9 +278,8 @@ class DFA {
             if (it != divid.end()) {
                 // start from the second one of the divid
                 for (; it != divid.end(); ++it) {
-                    
+
                     if (_sendState.find(*it) != _sendState.end()) {
-                        // _listData.erase(_listData.begin() + *it);
                         _sendState.erase(*it);
                         _sendState.insert(nodeID);
                     }
@@ -290,12 +289,11 @@ class DFA {
                             .end(); ++it_data) {
 
                         if (*it == *(it_data)) {
-                            delete *(it_data);
+                            delete [] *(it_data);
                             it_data = _listData.erase(it_data);
                             if (it_data == _listData.end()) {
                                 break;
                             }
-                            // continue;
                         }
 
                         for (unsigned int i = 0; i < _char_count; ++i) {

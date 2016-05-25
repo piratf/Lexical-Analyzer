@@ -12,54 +12,54 @@ using namespace std;
 
 // static const int N = 1024;   
 
-bool test(LexicalAnalyzer *la) {
-    ifstream input("test.txt");
-    char str[N] = {};
-    input.getline(str, N);
-    string code(str);
-    printf("input = %s\n", code.data());
+// bool test(LexicalAnalyzer *la) {
+//     ifstream input("test.txt");
+//     char str[N] = {};
+//     input.getline(str, N);
+//     string code(str);
+//     printf("input = %s\n", code.data());
 
-    printf("%s\n", la -> calculate(code.data()).data());
-    return true;
-}
+//     printf("%s\n", la -> calculate(code.data()).data());
+//     return true;
+// }
 
-bool test(NFA *nfa) {
-    ifstream input("test.txt");
-    string code;
-    input >> code;
-    printf("input = %s\n", code.data());
+// bool test(NFA *nfa) {
+//     ifstream input("test.txt");
+//     string code;
+//     input >> code;
+//     printf("input = %s\n", code.data());
 
-    if (nfa -> calculate(code.data())) {
-        printf("yes.\n");
-        return true;
-    } else {
-        printf("no.\n");
-        return false;
-    }
-}
+//     if (nfa -> calculate(code.data())) {
+//         printf("yes.\n");
+//         return true;
+//     } else {
+//         printf("no.\n");
+//         return false;
+//     }
+// }
 
-bool test(DFA *dfa) {
-    ifstream input("test.txt");
-    string code;
-    input >> code;
-    // code = "// 123";
-    cout << "input = " << code << endl;
+// bool test(DFA *dfa) {
+//     ifstream input("test.txt");
+//     string code;
+//     input >> code;
+//     // code = "// 123";
+//     cout << "input = " << code << endl;
 
-    if (dfa -> calculate(code.data())) {
-        printf("yes.\n");
-        return true;
-    } else {
-        printf("no.\n");
-        return false;
-    }
-}
+//     if (dfa -> calculate(code.data())) {
+//         printf("yes.\n");
+//         return true;
+//     } else {
+//         printf("no.\n");
+//         return false;
+//     }
+// }
 
 void preprocess() {
 
     auto begin = std::chrono::high_resolution_clock::now();
     Preprocessor ppr;
     ifstream input("input.txt");
-    char *str = new char[N];
+    char str[N] = {};
 
     while (!input.eof()) {
         input.getline(str, N, '\n');
@@ -82,12 +82,12 @@ void preprocess() {
     // fflush(stdout);
 
     begin = std::chrono::high_resolution_clock::now();
-    LexicalAnalyzer *la = ppr.buildLA();
+    LexicalAnalyzer la = ppr.buildLA();
     end = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
     begin = std::chrono::high_resolution_clock::now();
-    la -> parse("code.txt");
+    la.parse("code.txt");
     end = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
