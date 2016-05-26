@@ -2,8 +2,9 @@
 :char = [A-Z]|[a-z]
 :numseq = [number]([number])*
 keyword = int|void|float|#include|if|else|return|string
-id = ([char]|_)([char]|[number]|_)*
+id = ([char]|_)([char]|[number]|_)* 
 operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
-value = [numseq]|[numseq].([number])*
+value = [numseq]|[numseq].([number])*|[numseq]E(+|-)([number])*
 literal = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 comment = //( |[char]|[number]|[operator])*
+temp = [numseq]E|[numseq]E(+|-)

@@ -92,6 +92,8 @@ class LexicalAnalyzer {
                 temp[i] = 0;
             }
 
+            // for signle line comment
+
             // for multiline comment
             if (temp[0] == '/' && temp[1] == '*') {
 

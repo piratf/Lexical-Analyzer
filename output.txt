@@ -11,13 +11,15 @@ reg = ([char]|_)([char]|[number]|_)*
 tag = operator
 reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
 tag = value
-reg = [numseq]|([number])*.([number])*
+reg = [numseq]|[numseq].([number])*|[numseq]E(+|-)([number])*
 tag = literal
 reg = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 tag = comment
 reg = //( |[char]|[number]|[operator])*
+tag = temp
+reg = [numseq]E|[numseq]E(+|-)
 -------- preprosessor display ----------
-size = 9
+size = 10
 tag = number
 reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
 tag = char
@@ -31,20 +33,22 @@ reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 tag = operator
 reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=
 tag = value
-reg = \[numseq\]\|\(\[number\]\)\*.\(\[number\]\)\*
+reg = \[numseq\]\|\[numseq\].\(\[number\]\)\*\|\[numseq\]E\(+\|-\)\(\[number\]\)\*
 tag = literal
 reg = "\(\[char\]\|\[number\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*
 tag = comment
 reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
+tag = temp
+reg = \[numseq\]E\|\[numseq\]E\(+\|-\)
 ----- to dfa -----
-keyword id operator value literal comment 
+keyword id operator value literal comment temp 
 -------- end display -------------------
-211 micro seconds
-6369656 micro seconds
+227 micro seconds
+6168009 micro seconds
 ============================
 => start parse.
 Initial content: 
-void main()
+void 233main()
 { int x,a,b;
 // float y,c,d;
  /*     x = a + b;
@@ -54,10 +58,12 @@ void main()
         x = 10;
       else
         y=100;
-        z = 23.333;
+        z = 23.333
+        f=23E-233;
 }
 
 line 1: (    keyword : void )
+line 1: (      value : 233 )
 line 1: (         id : main )
 line 1: (   operator : ( )
 line 1: (   operator : ) )
@@ -95,7 +101,10 @@ line 10: (   operator : ; )
 line 11: (         id : z )
 line 11: (   operator : = )
 line 11: (      value : 23.333 )
-line 11: (   operator : ; )
-line 12: (   operator : } )
+line 12: (         id : f )
+line 12: (   operator : = )
+line 12: (      value : 23E-233 )
+line 12: (   operator : ; )
+line 13: (   operator : } )
 Analysis success!
-1523 micro seconds
+303 micro seconds
