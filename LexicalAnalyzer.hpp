@@ -88,12 +88,12 @@ class LexicalAnalyzer {
         bool failFlag = false;
         line_num = 1;
         unsigned int    error_cnt = 0;
-        char *buf = new char[BUFFER_SIZE];
+        char *buf = new char[BUFFER_SIZE << 4];
         char *temp = new char[BUFFER_SIZE];
 
         // init buffer
         memset(buf, 0, sizeof(char) * BUFFER_SIZE);
-        ifile.read(buf, N);
+        ifile.read(buf, N << 4);
 
         char *head = buf, *tail = buf;
         printf("Initial content: \n%s\n", buf);

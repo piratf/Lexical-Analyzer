@@ -213,7 +213,7 @@ class Preprocessor {
             // printf("cur = %c\n", cur);
             // fflush(stdout);
 
-            if (cur == '\\') {
+            if (cur == '\\' && (it + 1 != reg.rend() &&  *(it + 1) != '\\')) {
                 continue;
             }
 
