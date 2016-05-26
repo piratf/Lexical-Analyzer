@@ -67,10 +67,12 @@ class LexicalAnalyzer {
         int len_temp = strlen(temp);
         int len_output = strlen(output);
         char *p = temp + len_output;
+
         while (*p) {
             if (g_terminal_set.find(*p) == g_terminal_set.end()) {
                 return false;
             }
+
             ++p;
         }
 
@@ -78,15 +80,16 @@ class LexicalAnalyzer {
     }
 
     void parse(const char *filePath) {
-        puts("============================");
+        puts("===============================");
         printf("=> start parse.\n");
         std::ifstream ifile(filePath);
 
+        // mark if the current temp str failed.
         bool failFlag = false;
         line_num = 1;
+        unsigned int    error_cnt = 0;
         char *buf = new char[BUFFER_SIZE];
         char *temp = new char[BUFFER_SIZE];
-        std::vector<std::string> vecTagList;
 
         // init buffer
         memset(buf, 0, sizeof(char) * BUFFER_SIZE);
@@ -110,6 +113,7 @@ class LexicalAnalyzer {
                 printf("----------> %s\n", temp);
                 fflush(stdout);
                 err_shot("Unreachable sequences.");
+                ++error_cnt;
 
                 head = tail;
 
@@ -247,7 +251,6 @@ class LexicalAnalyzer {
                         // ...
                         // end of correction
 
-                        vecTagList.push_back(tag);
                         tag.clear();
                     } else {
                         continue;
@@ -270,7 +273,7 @@ class LexicalAnalyzer {
 
         }
 
-        if (!tag.empty() && (temp == "operator" || judgeDifferent(output, temp)) ) {
+        if (!tag.empty() && (temp == "operator" || judgeDifferent(temp, output)) ) {
 #ifdef DEBUG
             printf(" -----------> ");
 #endif
@@ -290,17 +293,22 @@ class LexicalAnalyzer {
             }
         }
 
+        puts("-------------------------------");
         if (tail - head) {
             err_shot("Unreachable sequences!");
+            printf("Parse end, %d error found.\n", error_cnt + 1);
         } else {
-            printf("Analysis success!\n");
+            if (error_cnt) {
+                printf("Parse end, %d error found.\n", error_cnt);
+            } else {
+                printf("Parse success!\n");
+            }
         }
+        puts("===============================");
 
 #ifdef DEBUG
         printf("head -> tail %d\n", tail - head);
 #endif
-
-        // }
 
         ifile.close();
     }

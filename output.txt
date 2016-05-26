@@ -39,8 +39,8 @@ reg = \[numseq\]E\|\[numseq\]E\(+\|-\)
 ----- to dfa -----
 keyword id operator value literal temp 
 -------- end display -------------------
-221 micro seconds
-5161917 micro seconds
+215 micro seconds
+5273520 micro seconds
 ============================
 => start parse.
 Initial content: 
@@ -100,5 +100,7 @@ line 11: (   operator : = )
 line 11: (      value : 23E-233 )
 line 11: (   operator : ; )
 line 12: (   operator : } )
-Analysis success!
-300 micro seconds
+----------------------------
+Parse end, 1 error found.
+============================
+358 micro seconds
