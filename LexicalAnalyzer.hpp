@@ -20,6 +20,15 @@ void trim(char *temp) {
     }
 }
 
+bool continuity(char *temp) {
+    while (*temp) {
+        if (*temp == ' ' || *temp == '\n') {
+            return false;
+        }
+    }
+    return true;
+}
+
 class LexicalAnalyzer {
   public:
     LexicalAnalyzer() {
@@ -135,22 +144,23 @@ class LexicalAnalyzer {
             fflush(stdout);
 #endif
 
-            // trim space in temp
-            // trim(temp);
-
             std::string cur = calculate(temp);
 
+            // matching failed
             if (cur.empty()) {
 #ifdef DEBUG
                 printf("failed, temp = %s\n", temp);
                 fflush(stdout);
 #endif
 
-                // 匹配失败
+                // has a success before
                 if (!tag.empty()) {
 #ifdef DEBUG
                     printf(" -----------> ");
 #endif
+                    // if (continuity(temp) && ) {
+
+                    // }
                     result_print(tag.data(), output);
                     fflush(stdout);
 
