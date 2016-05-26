@@ -164,6 +164,11 @@ class Preprocessor {
             // printf("tag = %s\n", tag.data());
             // fflush(stdout);
             la.add(dfa);
+
+            if (tag == "operator") {
+                la.separator(dfa);
+            }
+
         }
 
         return la;

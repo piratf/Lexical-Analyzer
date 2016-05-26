@@ -43,13 +43,13 @@ reg = \[numseq\]E\|\[numseq\]E\(+\|-\)
 ----- to dfa -----
 keyword id operator value literal comment temp 
 -------- end display -------------------
-227 micro seconds
-6168009 micro seconds
+236 micro seconds
+6737421 micro seconds
 ============================
 => start parse.
 Initial content: 
-void 233main()
-{ int x,a,b;
+  void main()
+{ int 123x,a,b;
 // float y,c,d;
  /*     x = a + b;
       y = c / d; */
@@ -63,48 +63,10 @@ void 233main()
 }
 
 line 1: (    keyword : void )
-line 1: (      value : 233 )
 line 1: (         id : main )
 line 1: (   operator : ( )
 line 1: (   operator : ) )
 line 2: (   operator : { )
 line 2: (    keyword : int )
-line 2: (         id : x )
-line 2: (   operator : , )
-line 2: (         id : a )
-line 2: (   operator : , )
-line 2: (         id : b )
-line 2: (   operator : ; )
-line 3: (    comment : // float y,c,d; )
-line 5: (    comment : /*     x = a + b;
-      y = c / d; */ )
-line 6: (    keyword : string )
-line 6: (         id : str )
-line 6: (   operator : = )
-line 6: (    literal : "111" )
-line 6: (   operator : ; )
-line 7: (    keyword : if )
-line 7: (   operator : ( )
-line 7: (         id : x )
-line 7: (   operator : > )
-line 7: (         id : y )
-line 7: (   operator : ) )
-line 8: (         id : x )
-line 8: (   operator : = )
-line 8: (      value : 10 )
-line 8: (   operator : ; )
-line 9: (    keyword : else )
-line 10: (         id : y )
-line 10: (   operator : = )
-line 10: (      value : 100 )
-line 10: (   operator : ; )
-line 11: (         id : z )
-line 11: (   operator : = )
-line 11: (      value : 23.333 )
-line 12: (         id : f )
-line 12: (   operator : = )
-line 12: (      value : 23E-233 )
-line 12: (   operator : ; )
-line 13: (   operator : } )
-Analysis success!
-303 micro seconds
+error** : Unreachable sequences! line 2
+416 micro seconds

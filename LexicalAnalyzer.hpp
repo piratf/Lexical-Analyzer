@@ -25,7 +25,10 @@ bool continuity(char *temp) {
         if (*temp == ' ' || *temp == '\n') {
             return false;
         }
+
+        ++temp;
     }
+
     return true;
 }
 
@@ -68,9 +71,21 @@ class LexicalAnalyzer {
         char *output = new char[BUFFER_SIZE];
         memset(output, 0, sizeof(char) * BUFFER_SIZE);
 
-        // printf("%s\n", buf);
-        while (*tail) {
+        // skip to my lou
+        while (
+            g_terminal_set.find(*head)
+            != g_terminal_set.end()) {
 
+            if (*head == '\n') {
+                ++line_num;
+            }
+
+            ++head;
+        }
+
+        tail = head;
+
+        while (*tail) {
             ++tail;
 
 #ifdef DEBUG
@@ -155,39 +170,46 @@ class LexicalAnalyzer {
 
                 // has a success before
                 if (!tag.empty()) {
+                    if (tag == "operator" ||
+                        ((!continuity(temp) ||
+                                                _separator -> calculate(temp + strlen(temp) - 1))
+                                                && strlen(output) == strlen(temp) - 1)) {
 #ifdef DEBUG
-                    printf(" -----------> ");
+                        printf(" -----------> ");
 #endif
-                    // if (continuity(temp) && ) {
+                        // if (continuity(temp) && ) {
 
-                    // }
-                    result_print(tag.data(), output);
-                    fflush(stdout);
+                        // }
+                        result_print(tag.data(), output);
+                        fflush(stdout);
 
-                    head = tail - (strlen(temp) - strlen(output));
+                        head = tail - (strlen(temp) - strlen(output));
 
-                    while (
-                        g_terminal_set.find(*head)
-                        != g_terminal_set.end()) {
+                        while (
+                            g_terminal_set.find(*head)
+                            != g_terminal_set.end()) {
 
-                        if (*head == '\n') {
-                            ++line_num;
+                            if (*head == '\n') {
+                                ++line_num;
+                            }
+
+                            ++head;
                         }
 
-                        ++head;
-                    }
-
 #ifdef DEBUG
-                    printf("head = %c\n", *head);
+                        printf("head = %c\n", *head);
 #endif
-                    tail = head;
+                        tail = head;
 
-                    // correction
-                    // ...
-                    // end of correction
+                        // correction
+                        // ...
+                        // end of correction
 
-                    vecTagList.push_back(tag);
-                    tag.clear();
+                        vecTagList.push_back(tag);
+                        tag.clear();
+                    } else {
+                        continue;
+                    }
                 }
 
             } else {
@@ -205,7 +227,7 @@ class LexicalAnalyzer {
 
         }
 
-        if (!tag.empty()) {
+        if (!tag.empty() && (temp == "operator" || strlen(temp) - 1 == strlen(output)) ) {
 #ifdef DEBUG
             printf(" -----------> ");
 #endif
@@ -242,6 +264,7 @@ class LexicalAnalyzer {
 
     void inline result_print(const char *tag, const char *content) {
         printf("line %d: ( %10.10s : %-s )\n", line_num, tag, content);
+        fflush(stdout);
     }
 
     std::string calculate(const char *input) {
@@ -262,8 +285,13 @@ class LexicalAnalyzer {
         fflush(stdout);
     }
 
+    void separator(DFA *other) {
+        _separator = other;
+    }
+
   private:
     std::vector<DFA *> _vecRM;
+    DFA *_separator;
     unsigned int line_num;
 };
 
