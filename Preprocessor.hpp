@@ -66,7 +66,7 @@ class Preprocessor {
         if (tag[0] == ':') {
             tag = tag.substr(1);
         } else {
-            _toDFA_tags.insert(tag);
+            _toDFA_tags.push_back(tag);
         }
 
         printf("tag = %s\n", tag.data());
@@ -169,6 +169,31 @@ class Preprocessor {
         return la;
     }
 
+    std::string findChildReg(const std::string &reg, size_t pos) {
+        size_t it = pos;
+        int cnt = 0;
+
+        while (it >= 0 && it < reg.size()) {
+            // printf(" it = %c\n", reg[it]);
+
+            if (reg[it] == ')' && reg[it - 1] == '\\') {
+                ++cnt;
+            }
+
+            if (reg[it] == '(' && reg[it - 1] == '\\') {
+                if (cnt) {
+                    --cnt;
+                } else {
+                    break;
+                }
+            }
+
+            --it;
+        }
+
+        return std::string(reg.data() + it + 1, pos - it - 1);
+    }
+
     std::shared_ptr<RegTree> buildRegTree(const string &reg) {
         std::shared_ptr<RegTree> root(new RegTree());
         std::shared_ptr<RegTree> gp = NULL;
@@ -216,18 +241,20 @@ class Preprocessor {
                     gp = root;
                 }
             } else if (cur == ')' && *(it + 1) == '\\') {
-                it += 2;
-                size_t t = reg.rfind("\\(", reg.rend() - (it));
-                std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
-                it += substr.size();
+                // size_t t = reg.rfind("\\(", reg.rend() - (it));
+                // std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
+                std::string substr = findChildReg(reg, reg.rend() - it - 2);
+                it += substr.size() + 3;
                 // 另右支为子表达式树，符号为默认
                 p -> rson(buildRegTree(substr));
                 p -> data(OP_CAT);
             } else if (cur == '*' && *(it + 1) == '\\') {
-                it += 3;
-                size_t t = reg.rfind("\\(", reg.rend() - (it));
-                std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
-                it += substr.size();
+                it += 2;
+                // size_t t = reg.rfind("\\(", reg.rend() - (it));
+                // std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
+                std::string substr = findChildReg(reg, reg.rend() - it - 2);
+
+                it += substr.size() + 3;
                 // 需要在右支上建立新的 星号运算树
                 std::shared_ptr<RegTree> star(new RegTree(OP_STAR));
                 star -> rson(new RegTree('*'));
@@ -275,7 +302,7 @@ class Preprocessor {
     std::vector<std::pair<std::string, std::string> > _vecRegs;
     std::map<std::string, std::string> _regs;
     // tag need to be build to dfa
-    std::set<std::string> _toDFA_tags;
+    std::vector<std::string> _toDFA_tags;
     std::set<char> _set_op;
     std::map<std::string, std::shared_ptr<RegTree> > _regTrees;
 };

@@ -7,7 +7,7 @@
 #include <set>
 
 // static const int N = 1024;
-static const int M = N + 7;
+static const int BUFFER_SIZE = N + 7;
 
 std::set<char> g_terminal_set;
 
@@ -44,21 +44,20 @@ class LexicalAnalyzer {
         std::ifstream ifile(filePath);
 
         line_num = 1;
-        char *buf = new char[M];
-        char *temp = new char[M];
+        char *buf = new char[BUFFER_SIZE];
+        char *temp = new char[BUFFER_SIZE];
         std::vector<std::string> vecTagList;
 
-        // while (!ifile.eof()) {
-        // read data to buffer
-        memset(buf, 0, sizeof(char) * M);
+        // init buffer
+        memset(buf, 0, sizeof(char) * BUFFER_SIZE);
         ifile.read(buf, N);
 
         char *head = buf, *tail = buf;
-        printf("%s\n", buf);
+        printf("Initial content: \n%s\n", buf);
         fflush(stdout);
         std::string tag;
-        char *output = new char[M];
-        memset(output, 0, sizeof(char) * M);
+        char *output = new char[BUFFER_SIZE];
+        memset(output, 0, sizeof(char) * BUFFER_SIZE);
 
         // printf("%s\n", buf);
         while (*tail) {
@@ -72,19 +71,19 @@ class LexicalAnalyzer {
             fflush(stdout);
 #endif
 
-            memset(temp, 0, sizeof(char) * M);
-            int i = 0;
+            memset(temp, 0, sizeof(char) * BUFFER_SIZE);
 
             if (tag == "comment") {
                 strncpy(temp, head, tail -  head);
                 temp[tail - head] = 0;
             } else {
+                int i = 0;
 
                 for (char *p = head; p != tail; ++p) {
-                    if (*p != '\n') {
-                        temp[i] = *p;
-                    } else {
+                    if (*p == '\n') {
                         temp[i] = ' ';
+                    } else {
+                        temp[i] = *p;
                     }
 
                     ++i;
@@ -93,14 +92,14 @@ class LexicalAnalyzer {
                 temp[i] = 0;
             }
 
-            // char *commenttail = tail;
-
+            // for multiline comment
             if (temp[0] == '/' && temp[1] == '*') {
 
                 while (!(*tail == '*' && *(tail + 1) == '/') || !(*tail)) {
                     if (*tail == '\n') {
                         ++line_num;
                     }
+
                     ++tail;
                 }
 
@@ -123,6 +122,7 @@ class LexicalAnalyzer {
                 printf("head = %c\n", *head);
 #endif
                 tail = head;
+                // complete a matching
                 tag.clear();
                 continue;
             }
@@ -134,7 +134,7 @@ class LexicalAnalyzer {
 #endif
 
             // trim space in temp
-            trim(temp);
+            // trim(temp);
 
             std::string cur = calculate(temp);
 

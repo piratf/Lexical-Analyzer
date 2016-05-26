@@ -8,4 +8,5 @@ void main()
         x = 10;
       else
         y=100;
+        z = 23.333;
 }
