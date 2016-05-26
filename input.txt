@@ -4,6 +4,6 @@
 keyword = int|void|float|#include|if|else|return|string
 id = ([char]|_)([char]|[number]|_)*
 operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
-value = [numseq]|([number])*.([number])*
+value = [numseq]|[numseq].([number])*
 literal = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
 comment = //( |[char]|[number]|[operator])*
