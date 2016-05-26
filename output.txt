@@ -9,11 +9,11 @@ reg = int|void|float|#include|if|else|return|string
 tag = id
 reg = ([char]|_)([char]|[number]|_)*
 tag = operator
-reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
+reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=|:|.
 tag = value
 reg = [numseq]|[numseq].([number])*|[numseq]E(+|-)([number])*
 tag = literal
-reg = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
+reg = "([char]|[number]|[operator])*"|'([char]|[number]|[operator])'|([number])*
 tag = comment
 reg = //( |[char]|[number]|[operator])*
 tag = temp
@@ -31,11 +31,11 @@ reg = int\|void\|float\|#include\|if\|else\|return\|string
 tag = id
 reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 tag = operator
-reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=
+reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\|:\|.
 tag = value
 reg = \[numseq\]\|\[numseq\].\(\[number\]\)\*\|\[numseq\]E\(+\|-\)\(\[number\]\)\*
 tag = literal
-reg = "\(\[char\]\|\[number\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*
+reg = "\(\[char\]\|\[number\]\|\[operator\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*
 tag = comment
 reg = //\( \|\[char\]\|\[number\]\|\[operator\]\)\*
 tag = temp
@@ -43,30 +43,192 @@ reg = \[numseq\]E\|\[numseq\]E\(+\|-\)
 ----- to dfa -----
 keyword id operator value literal comment temp 
 -------- end display -------------------
-236 micro seconds
-6737421 micro seconds
+196 micro seconds
+7732811 micro seconds
 ============================
 => start parse.
 Initial content: 
-  void main()
-{ int 123x,a,b;
-// float y,c,d;
- /*     x = a + b;
-      y = c / d; */
-      string str = "111";
-      if(x>y)
-        x = 10;
-      else
-        y=100;
-        z = 23.333
-        f=23E-233;
-}
+#include "LexicalAnalyzer.hpp"
+#include "Preprocessor.hpp"
+#include <cstdio>
+#include <fstream>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <chrono>
+#include <iostream>
+using namespace std;
 
-line 1: (    keyword : void )
-line 1: (         id : main )
-line 1: (   operator : ( )
-line 1: (   operator : ) )
-line 2: (   operator : { )
-line 2: (    keyword : int )
-error** : Unreachable sequences! line 2
-416 micro seconds
+// static const int N = 1024;   
+
+// bool test(LexicalAnalyzer *la) {
+//     ifstream input("test.txt");
+//     char str[N] = {};
+//     input.getline(str, N);
+//     string code(str);
+//     printf("input = %s\n", code.data());
+
+//     printf("%s\n", la -> calculate(code.data()).data());
+//     return true;
+// }
+
+// bool test(NFA *nfa) {
+//     ifstream input("test.txt");
+//     string code;
+//     input >> code;
+//     printf("input = %s\n", code.data());
+
+//     if (nfa -> calculate(code.data())) {
+//         printf("yes.\n");
+//         return true;
+//     } else {
+//         printf("no.\n");
+//         return false;
+//     }
+// }
+
+// bool test(DFA *dfa) {
+//     ifstream input("test.txt");
+//     string code;
+//     input >> code;
+//     // code = "// 123";
+//     cout << "input = " << c
+line 1: (    keyword : #include )
+line 1: (    literal : "LexicalAnalyzer.hpp" )
+line 2: (    keyword : #include )
+line 2: (    literal : "Preprocessor.hpp" )
+line 3: (    keyword : #include )
+line 3: (   operator : < )
+line 3: (         id : cstdio )
+line 3: (   operator : > )
+line 4: (    keyword : #include )
+line 4: (   operator : < )
+line 4: (         id : fstream )
+line 4: (   operator : > )
+line 5: (    keyword : #include )
+line 5: (   operator : < )
+line 5: (         id : vector )
+line 5: (   operator : > )
+line 6: (    keyword : #include )
+line 6: (   operator : < )
+line 6: (         id : queue )
+line 6: (   operator : > )
+line 7: (    keyword : #include )
+line 7: (   operator : < )
+line 7: (         id : set )
+line 7: (   operator : > )
+line 8: (    keyword : #include )
+line 8: (   operator : < )
+line 8: (         id : map )
+line 8: (   operator : > )
+line 9: (    keyword : #include )
+line 9: (   operator : < )
+line 9: (         id : chrono )
+line 9: (   operator : > )
+line 10: (    keyword : #include )
+line 10: (   operator : < )
+line 10: (         id : iostream )
+line 10: (   operator : > )
+line 11: (         id : using )
+line 11: (         id : namespace )
+line 11: (         id : std )
+line 11: (   operator : ; )
+line 13: (    comment : // static const int N = 1024;    )
+line 15: (    comment : // bool test(LexicalAnalyzer *la) { )
+line 16: (    comment : //     ifstream input( )
+line 16: (    literal : "test.txt" )
+line 16: (   operator : ) )
+line 16: (   operator : ; )
+line 17: (    comment : //     char str[N] = {}; )
+line 18: (    comment : //     input.getline(str, N); )
+line 19: (    comment : //     string code(str); )
+line 20: (    comment : //     printf( )
+----------> "input 
+error** : Unreachable sequences. line 20
+line 20: (   operator : = )
+----------> %s\n", 
+error** : Unreachable sequences. line 20
+line 20: (         id : code )
+line 20: (   operator : . )
+line 20: (         id : data )
+line 20: (   operator : ( )
+line 20: (   operator : ) )
+line 20: (   operator : ) )
+line 20: (   operator : ; )
+line 22: (    comment : //     printf( )
+----------> "%s\n", 
+error** : Unreachable sequences. line 22
+line 22: (         id : la )
+line 22: (   operator : - )
+line 22: (   operator : > )
+line 22: (         id : calculate )
+line 22: (   operator : ( )
+line 22: (         id : code )
+line 22: (   operator : . )
+line 22: (         id : data )
+line 22: (   operator : ( )
+line 22: (   operator : ) )
+line 22: (   operator : ) )
+line 22: (   operator : . )
+line 22: (         id : data )
+line 22: (   operator : ( )
+line 22: (   operator : ) )
+line 22: (   operator : ) )
+line 22: (   operator : ; )
+line 23: (    comment : //     return true; )
+line 24: (    comment : // } )
+line 26: (    comment : // bool test(NFA *nfa) { )
+line 27: (    comment : //     ifstream input( )
+line 27: (    literal : "test.txt" )
+line 27: (   operator : ) )
+line 27: (   operator : ; )
+line 28: (    comment : //     string code; )
+line 29: (    comment : //     input >> code; )
+line 30: (    comment : //     printf( )
+----------> "input 
+error** : Unreachable sequences. line 30
+line 30: (   operator : = )
+----------> %s\n", 
+error** : Unreachable sequences. line 30
+line 30: (         id : code )
+line 30: (   operator : . )
+line 30: (         id : data )
+line 30: (   operator : ( )
+line 30: (   operator : ) )
+line 30: (   operator : ) )
+line 30: (   operator : ; )
+line 32: (    comment : //     if (nfa -> calculate(code.data())) { )
+line 33: (    comment : //         printf( )
+----------> "yes.\n"); 
+error** : Unreachable sequences. line 33
+line 33: (    comment : //         return true; )
+line 34: (    comment : //     } else { )
+line 35: (    comment : //         printf( )
+----------> "no.\n"); 
+error** : Unreachable sequences. line 35
+line 35: (    comment : //         return false; )
+line 36: (    comment : //     } )
+line 37: (    comment : // } )
+line 39: (    comment : // bool test(DFA *dfa) { )
+line 40: (    comment : //     ifstream input( )
+line 40: (    literal : "test.txt" )
+line 40: (   operator : ) )
+line 40: (   operator : ; )
+line 41: (    comment : //     string code; )
+line 42: (    comment : //     input >> code; )
+line 43: (    comment : //     // code =  )
+----------> "// 
+error** : Unreachable sequences. line 43
+----------> 123"; 
+error** : Unreachable sequences. line 43
+line 43: (    comment : //     cout <<  )
+----------> "input 
+error** : Unreachable sequences. line 43
+line 43: (   operator : = )
+----------> " 
+error** : Unreachable sequences. line 43
+line 43: (   operator : < )
+line 43: (   operator : < )
+error** : Unreachable sequences! line 43
+1400 micro seconds

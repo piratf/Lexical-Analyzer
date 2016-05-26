@@ -1,5 +1,5 @@
-  void main()
-{ int 123x,a,b;
+  void 123main()
+{ int _x,a,b;
 // float y,c,d;
  /*     x = a + b;
       y = c / d; */
@@ -11,3 +11,4 @@
         z = 23.333
         f=23E-233;
 }
+    

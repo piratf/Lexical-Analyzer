@@ -55,6 +55,7 @@ class LexicalAnalyzer {
         printf("=> start parse.\n");
         std::ifstream ifile(filePath);
 
+        bool failFlag = false;
         line_num = 1;
         char *buf = new char[BUFFER_SIZE];
         char *temp = new char[BUFFER_SIZE];
@@ -86,6 +87,28 @@ class LexicalAnalyzer {
         tail = head;
 
         while (*tail) {
+            if (g_terminal_set.find(*(tail - 1))
+                    != g_terminal_set.end() && failFlag) {
+                printf("----------> %s\n", temp);
+                fflush(stdout);
+                err_shot("Unreachable sequences.");
+
+                head = tail;
+
+                while (
+                    g_terminal_set.find(*head)
+                    != g_terminal_set.end()) {
+
+                    if (*head == '\n') {
+                        ++line_num;
+                    }
+
+                    ++head;
+                }
+
+                tail = head;
+            }
+
             ++tail;
 
 #ifdef DEBUG
@@ -163,6 +186,7 @@ class LexicalAnalyzer {
 
             // matching failed
             if (cur.empty()) {
+                failFlag = true;
 #ifdef DEBUG
                 printf("failed, temp = %s\n", temp);
                 fflush(stdout);
@@ -171,9 +195,11 @@ class LexicalAnalyzer {
                 // has a success before
                 if (!tag.empty()) {
                     if (tag == "operator" ||
-                        ((!continuity(temp) ||
-                                                _separator -> calculate(temp + strlen(temp) - 1))
-                                                && strlen(output) == strlen(temp) - 1)) {
+                            ((!continuity(temp) ||
+                              _separator -> calculate(temp + strlen(temp) - 1))
+                             && strlen(output) == strlen(temp) - 1)) {
+
+                        failFlag = false;
 #ifdef DEBUG
                         printf(" -----------> ");
 #endif
@@ -213,6 +239,7 @@ class LexicalAnalyzer {
                 }
 
             } else {
+                failFlag = false;
 #ifdef DEBUG
                 printf("success, tag = %s, temp = %s\n", cur.data(), temp);
 #endif

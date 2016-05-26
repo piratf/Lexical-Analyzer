@@ -3,8 +3,8 @@
 :numseq = [number]([number])*
 keyword = int|void|float|#include|if|else|return|string
 id = ([char]|_)([char]|[number]|_)* 
-operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=
+operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=|:|.
 value = [numseq]|[numseq].([number])*|[numseq]E(+|-)([number])*
-literal = "([char]|[number])*"|'([char]|[number]|[operator])'|([number])*
+literal = "([char]|[number]|[operator])*"|'([char]|[number]|[operator])'|([number])*
 comment = //( |[char]|[number]|[operator])*
 temp = [numseq]E|[numseq]E(+|-)
