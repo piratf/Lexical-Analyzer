@@ -63,6 +63,20 @@ class LexicalAnalyzer {
         }
     }
 
+    bool judgeDifferent(char *temp, char *output) {
+        int len_temp = strlen(temp);
+        int len_output = strlen(output);
+        char *p = temp + len_output;
+        while (*p) {
+            if (g_terminal_set.find(*p) == g_terminal_set.end()) {
+                return false;
+            }
+            ++p;
+        }
+
+        return true;
+    }
+
     void parse(const char *filePath) {
         puts("============================");
         printf("=> start parse.\n");
@@ -256,7 +270,7 @@ class LexicalAnalyzer {
 
         }
 
-        if (!tag.empty() && (temp == "operator" || strlen(temp) - 1 == strlen(output)) ) {
+        if (!tag.empty() && (temp == "operator" || judgeDifferent(output, temp)) ) {
 #ifdef DEBUG
             printf(" -----------> ");
 #endif
