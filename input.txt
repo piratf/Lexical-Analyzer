@@ -6,5 +6,4 @@ id = ([char]|_)([char]|[number]|_)*
 operator = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=|:|.
 value = [numseq]|[numseq].([number])*|[numseq]E(+|-)([number])*
 literal = "([char]|[number]|[operator])*"|'([char]|[number]|[operator])'|([number])*
-comment = //( |[char]|[number]|[operator])*
 temp = [numseq]E|[numseq]E(+|-)
