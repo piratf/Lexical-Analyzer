@@ -1,3 +1,4 @@
+input.txt main.cpp
 tag = number
 reg = [0-9]
 tag = char
@@ -11,7 +12,7 @@ reg = int|void|float|#include|if|else|return|auto|while|do
 tag = id
 reg = ([char]|_)([char]|[number]|_)*
 tag = operator
-reg = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|#|\||\|\|
+reg = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|\||\|\|
 tag = literal
 reg = "([char]|[number]|[operator]| |\\\\[char])*"|'([char]|[number]|[operator])'|'\\\\[char]'
 tag = temp
@@ -31,7 +32,7 @@ reg = int\|void\|float\|#include\|if\|else\|return\|auto\|while\|do
 tag = id
 reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 tag = operator
-reg = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!\|#\||\|||
+reg = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!\||\|||
 tag = literal
 reg = "\(\[char\]\|\[number\]\|\[operator\]\| \|\\\[char\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|'\\\[char\]'
 tag = temp
@@ -39,71 +40,552 @@ reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-284 micro seconds
-11450996 micro seconds
+275 micro seconds
+12228230 micro seconds
 ===============================
 => start parse.
-read cnt = 210
-buf[0] =  
+read cnt = 1024
+buf[0] = #
 Current content: 
-  void 123main()
-{ int _x,a,b;
-// float y,c,d;
- /*     x = a + b;
-      y = c / d; */
-      string str = "111";
-      if(x>y)
-        x = 10;
-      else
-        y=100;
-        z = 23.;
-        f=23E-233;
+#include "LexicalAnalyzer.hpp"
+#include "Preprocessor.hpp"
+#include <cstdio>
+#include <fstream>
+#include <chrono>
+using namespace std;
+
+// static const int N = 1024;
+
+// bool test(LexicalAnalyzer *la) {
+//     ifstream input("test.txt");
+//     char str[N] = {};
+//     input.getline(str, N);
+//     string code(str);
+//     printf("input = %s\n", code.data());
+
+//     printf("%s\n", la -> calculate(code.data()).data());
+//     return true;
+// }
+
+// bool test(NFA *nfa) {
+//     ifstream input("test.txt");
+//     string code;
+//     input >> code;
+//     printf("input = %s\n", code.data());
+
+//     if (nfa -> calculate(code.data())) {
+//         printf("yes.\n");
+//         return true;
+//     } else {
+//         printf("no.\n");
+//         return false;
+//     }
+// }
+
+// bool test(DFA *dfa) {
+//     ifstream input("test.txt");
+//     string code;
+//     input >> code;
+//     // code = "// 123";
+//     cout << "input = " << code << endl;
+
+//     if (dfa -> calculate(code.data())) {
+//         printf("yes.1231231
+line 1   : (    keyword : #include )
+line 1   : (    literal : "LexicalAnalyzer.hpp" )
+line 2   : (    keyword : #include )
+line 2   : (    literal : "Preprocessor.hpp" )
+line 3   : (    keyword : #include )
+line 3   : (   operator : < )
+line 3   : (         id : cstdio )
+line 3   : (   operator : > )
+line 4   : (    keyword : #include )
+line 4   : (   operator : < )
+line 4   : (         id : fstream )
+line 4   : (   operator : > )
+line 5   : (    keyword : #include )
+line 5   : (   operator : < )
+line 5   : (         id : chrono )
+line 5   : (   operator : > )
+line 6   : (         id : using )
+line 6   : (         id : namespace )
+line 6   : (         id : std )
+line 6   : (   operator : ; )
+line 9   : (    comment : // static const int N = 1024; )
+line 11  : (    comment : // bool test(LexicalAnalyzer *la) { )
+line 12  : (    comment : //     ifstream input("test.txt"); )
+line 13  : (    comment : //     char str[N] = {}; )
+line 14  : (    comment : //     input.getline(str, N); )
+line 15  : (    comment : //     string code(str); )
+line 16  : (    comment : //     printf("input = %s\n", code.data()); )
+line 18  : (    comment : //     printf("%s\n", la -> calculate(code.data()).data()); )
+line 19  : (    comment : //     return true; )
+line 20  : (    comment : // } )
+line 22  : (    comment : // bool test(NFA *nfa) { )
+line 23  : (    comment : //     ifstream input("test.txt"); )
+line 24  : (    comment : //     string code; )
+line 25  : (    comment : //     input >> code; )
+line 26  : (    comment : //     printf("input = %s\n", code.data()); )
+line 28  : (    comment : //     if (nfa -> calculate(code.data())) { )
+line 29  : (    comment : //         printf("yes.\n"); )
+line 30  : (    comment : //         return true; )
+line 31  : (    comment : //     } else { )
+line 32  : (    comment : //         printf("no.\n"); )
+line 33  : (    comment : //         return false; )
+line 34  : (    comment : //     } )
+line 35  : (    comment : // } )
+line 37  : (    comment : // bool test(DFA *dfa) { )
+line 38  : (    comment : //     ifstream input("test.txt"); )
+line 39  : (    comment : //     string code; )
+line 40  : (    comment : //     input >> code; )
+line 41  : (    comment : //     // code = "// 123"; )
+line 42  : (    comment : //     cout << "input = " << code << endl; )
+line 44  : (    comment : //     if (dfa -> calculate(code.data())) { )
+read cnt = 1024
+buf[0] = 2
+Current content: 
+23\n");
+//         return true;
+//     } else {
+//         printf("no.\n");
+//         return false;
+//     }
+// }
+
+Preprocessor preprocess(const char *filePath) {
+
+    auto begin = std::chrono::high_resolution_clock::now();
+    Preprocessor ppr;
+    ifstream input(filePath);
+    char str[N] = {};
+
+    while (!input.eof()) {
+        input.getline(str, N, '\n');
+
+        if (str[0]) {
+            std::string reg(str, strlen(str));
+
+            if (*reg.rbegin() == 13 || *reg.rbegin() == '#') {
+                reg.pop_back();
+            }
+
+            // printf("rrrr = %c\n", *reg.rbegin());
+            ppr.update(reg);
+        }
+    }
+
+    input.close();
+
+    ppr.display();
+    auto end = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    // fflush(stdout);
+
+    return std::mo
+line 46  : (    comment : //         return true; )
+line 47  : (    comment : //     } else { )
+line 48  : (    comment : //         printf("no.\n"); )
+line 49  : (    comment : //         return false; )
+line 50  : (    comment : //     } )
+line 51  : (    comment : // } )
+line 52  : (         id : Preprocessor )
+line 52  : (         id : preprocess )
+line 52  : (   operator : ( )
+line 52  : (         id : const )
+line 52  : (         id : char )
+line 52  : (   operator : * )
+line 52  : (         id : filePath )
+line 52  : (   operator : ) )
+line 52  : (   operator : { )
+line 54  : (    keyword : auto )
+line 54  : (         id : begin )
+line 54  : (   operator : = )
+line 54  : (         id : std )
+line 54  : (   operator : :: )
+line 54  : (         id : chrono )
+line 54  : (   operator : :: )
+line 54  : (         id : high_resolution_clock )
+line 54  : (   operator : :: )
+line 54  : (         id : now )
+line 54  : (   operator : ( )
+line 54  : (   operator : ) )
+line 54  : (   operator : ; )
+line 55  : (         id : Preprocessor )
+line 55  : (         id : ppr )
+line 55  : (   operator : ; )
+line 56  : (         id : ifstream )
+line 56  : (         id : input )
+line 56  : (   operator : ( )
+line 56  : (         id : filePath )
+line 56  : (   operator : ) )
+line 56  : (   operator : ; )
+line 57  : (         id : char )
+line 57  : (         id : str )
+line 57  : (   operator : [ )
+line 57  : (         id : N )
+line 57  : (   operator : ] )
+line 57  : (   operator : = )
+line 57  : (   operator : { )
+line 57  : (   operator : } )
+line 57  : (   operator : ; )
+line 59  : (    keyword : while )
+line 59  : (   operator : ( )
+line 59  : (   operator : ! )
+line 59  : (         id : input )
+line 59  : (   operator : . )
+line 59  : (         id : eof )
+line 59  : (   operator : ( )
+line 59  : (   operator : ) )
+line 59  : (   operator : ) )
+line 59  : (   operator : { )
+line 60  : (         id : input )
+line 60  : (   operator : . )
+line 60  : (         id : getline )
+line 60  : (   operator : ( )
+line 60  : (         id : str )
+line 60  : (   operator : , )
+line 60  : (         id : N )
+line 60  : (   operator : , )
+line 60  : (    literal : '\n' )
+line 60  : (   operator : ) )
+line 60  : (   operator : ; )
+line 62  : (    keyword : if )
+line 62  : (   operator : ( )
+line 62  : (         id : str )
+line 62  : (   operator : [ )
+line 62  : (      value : 0 )
+line 62  : (   operator : ] )
+line 62  : (   operator : ) )
+line 62  : (   operator : { )
+line 63  : (         id : std )
+line 63  : (   operator : :: )
+line 63  : (         id : string )
+line 63  : (         id : reg )
+line 63  : (   operator : ( )
+line 63  : (         id : str )
+line 63  : (   operator : , )
+line 63  : (         id : strlen )
+line 63  : (   operator : ( )
+line 63  : (         id : str )
+line 63  : (   operator : ) )
+line 63  : (   operator : ) )
+line 63  : (   operator : ; )
+line 65  : (    keyword : if )
+line 65  : (   operator : ( )
+line 65  : (   operator : * )
+line 65  : (         id : reg )
+line 65  : (   operator : . )
+line 65  : (         id : rbegin )
+line 65  : (   operator : ( )
+line 65  : (   operator : ) )
+line 65  : (   operator : = )
+line 65  : (   operator : = )
+line 65  : (      value : 13 )
+line 65  : (   operator : || )
+line 65  : (   operator : * )
+line 65  : (         id : reg )
+line 65  : (   operator : . )
+line 65  : (         id : rbegin )
+line 65  : (   operator : ( )
+line 65  : (   operator : ) )
+line 65  : (   operator : = )
+line 65  : (   operator : = )
+----------> '#') 
+error** : Unreachable sequences. line 65
+line 65  : (   operator : { )
+line 66  : (         id : reg )
+line 66  : (   operator : . )
+line 66  : (         id : pop_back )
+line 66  : (   operator : ( )
+line 66  : (   operator : ) )
+line 66  : (   operator : ; )
+line 67  : (   operator : } )
+line 70  : (    comment : // printf("rrrr = %c\n", *reg.rbegin()); )
+line 70  : (         id : ppr )
+line 70  : (   operator : . )
+line 70  : (         id : update )
+line 70  : (   operator : ( )
+line 70  : (         id : reg )
+line 70  : (   operator : ) )
+line 70  : (   operator : ; )
+line 71  : (   operator : } )
+line 72  : (   operator : } )
+line 74  : (         id : input )
+line 74  : (   operator : . )
+line 74  : (         id : close )
+line 74  : (   operator : ( )
+line 74  : (   operator : ) )
+line 74  : (   operator : ; )
+line 76  : (         id : ppr )
+line 76  : (   operator : . )
+line 76  : (         id : display )
+line 76  : (   operator : ( )
+line 76  : (   operator : ) )
+line 76  : (   operator : ; )
+line 77  : (    keyword : auto )
+line 77  : (         id : end )
+line 77  : (   operator : = )
+line 77  : (         id : std )
+line 77  : (   operator : :: )
+line 77  : (         id : chrono )
+line 77  : (   operator : :: )
+line 77  : (         id : high_resolution_clock )
+line 77  : (   operator : :: )
+line 77  : (         id : now )
+line 77  : (   operator : ( )
+line 77  : (   operator : ) )
+line 77  : (   operator : ; )
+line 79  : (    comment : // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl; )
+line 79  : (         id : printf )
+line 79  : (   operator : ( )
+line 79  : (    literal : "%lld micro seconds\n" )
+line 79  : (   operator : , )
+line 79  : (         id : std )
+line 79  : (   operator : :: )
+line 79  : (         id : chrono )
+line 79  : (   operator : :: )
+line 79  : (         id : duration_cast )
+line 79  : (   operator : < )
+line 79  : (         id : std )
+line 79  : (   operator : :: )
+line 79  : (         id : chrono )
+line 79  : (   operator : :: )
+line 79  : (         id : microseconds )
+line 79  : (   operator : > )
+line 79  : (   operator : ( )
+line 79  : (         id : end )
+line 79  : (   operator : - )
+line 79  : (         id : begin )
+line 79  : (   operator : ) )
+line 79  : (   operator : . )
+line 79  : (         id : count )
+line 79  : (   operator : ( )
+line 79  : (   operator : ) )
+line 79  : (   operator : ) )
+line 79  : (   operator : ; )
+line 81  : (    comment : // fflush(stdout); )
+line 82  : (    keyword : return )
+line 82  : (         id : std )
+line 82  : (   operator : :: )
+read cnt = 1024
+buf[0] = m
+Current content: 
+move(ppr);
 }
-    
-line 1   : (    keyword : void )
-----------> 123main() 
-error** : Unreachable sequences. line 1
-line 1   : (   operator : { )
-line 1   : (    keyword : int )
-line 1   : (         id : _x )
-line 1   : (   operator : , )
-line 1   : (         id : a )
-line 1   : (   operator : , )
-line 1   : (         id : b )
-line 1   : (   operator : ; )
-line 3   : (    comment : // float y,c,d; )
-line 4   : (    comment : /*     x = a + b;
-      y = c / d; */ )
-line 5   : (         id : string )
-line 5   : (         id : str )
-line 5   : (   operator : = )
-line 5   : (    literal : "111" )
-line 5   : (   operator : ; )
-line 6   : (    keyword : if )
-line 6   : (   operator : ( )
-line 6   : (         id : x )
-line 6   : (   operator : > )
-line 6   : (         id : y )
-line 6   : (   operator : ) )
-line 7   : (         id : x )
-line 7   : (   operator : = )
-line 7   : (      value : 10 )
-line 7   : (   operator : ; )
-line 8   : (    keyword : else )
-line 9   : (         id : y )
-line 9   : (   operator : = )
-line 9   : (      value : 100 )
-line 9   : (   operator : ; )
-line 10  : (         id : z )
-line 10  : (   operator : = )
-----------> 23.; 
-error** : Unreachable sequences. line 10
-line 10  : (         id : f )
-line 10  : (   operator : = )
-line 10  : (      value : 23E-233 )
-line 10  : (   operator : ; )
-line 11  : (   operator : } )
+
+void test(const char *regFile, const char *codeFile) {
+    Preprocessor ppr = std::move(preprocess(regFile));
+
+    auto begin = std::chrono::high_resolution_clock::now();
+    LexicalAnalyzer la = ppr.buildLA();
+    auto end = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+
+    begin = std::chrono::high_resolution_clock::now();
+    la.parse(codeFile);
+    // la.parse("test.txt");
+    end = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+}
+
+int main(int argc, char *argv[]) {
+    freopen("output.txt", "w", stdout);
+
+    printf("%s %s\
+line 82  : (         id : move )
+line 82  : (   operator : ( )
+line 82  : (         id : ppr )
+line 82  : (   operator : ) )
+line 82  : (   operator : ; )
+line 83  : (   operator : } )
+line 85  : (    keyword : void )
+line 85  : (         id : test )
+line 85  : (   operator : ( )
+line 85  : (         id : const )
+line 85  : (         id : char )
+line 85  : (   operator : * )
+line 85  : (         id : regFile )
+line 85  : (   operator : , )
+line 85  : (         id : const )
+line 85  : (         id : char )
+line 85  : (   operator : * )
+line 85  : (         id : codeFile )
+line 85  : (   operator : ) )
+line 85  : (   operator : { )
+line 86  : (         id : Preprocessor )
+line 86  : (         id : ppr )
+line 86  : (   operator : = )
+line 86  : (         id : std )
+line 86  : (   operator : :: )
+line 86  : (         id : move )
+line 86  : (   operator : ( )
+line 86  : (         id : preprocess )
+line 86  : (   operator : ( )
+line 86  : (         id : regFile )
+line 86  : (   operator : ) )
+line 86  : (   operator : ) )
+line 86  : (   operator : ; )
+line 88  : (    keyword : auto )
+line 88  : (         id : begin )
+line 88  : (   operator : = )
+line 88  : (         id : std )
+line 88  : (   operator : :: )
+line 88  : (         id : chrono )
+line 88  : (   operator : :: )
+line 88  : (         id : high_resolution_clock )
+line 88  : (   operator : :: )
+line 88  : (         id : now )
+line 88  : (   operator : ( )
+line 88  : (   operator : ) )
+line 88  : (   operator : ; )
+line 89  : (         id : LexicalAnalyzer )
+line 89  : (         id : la )
+line 89  : (   operator : = )
+line 89  : (         id : ppr )
+line 89  : (   operator : . )
+line 89  : (         id : buildLA )
+line 89  : (   operator : ( )
+line 89  : (   operator : ) )
+line 89  : (   operator : ; )
+line 90  : (    keyword : auto )
+line 90  : (         id : end )
+line 90  : (   operator : = )
+line 90  : (         id : std )
+line 90  : (   operator : :: )
+line 90  : (         id : chrono )
+line 90  : (   operator : :: )
+line 90  : (         id : high_resolution_clock )
+line 90  : (   operator : :: )
+line 90  : (         id : now )
+line 90  : (   operator : ( )
+line 90  : (   operator : ) )
+line 90  : (   operator : ; )
+line 92  : (    comment : // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl; )
+line 92  : (         id : printf )
+line 92  : (   operator : ( )
+line 92  : (    literal : "%lld micro seconds\n" )
+line 92  : (   operator : , )
+line 92  : (         id : std )
+line 92  : (   operator : :: )
+line 92  : (         id : chrono )
+line 92  : (   operator : :: )
+line 92  : (         id : duration_cast )
+line 92  : (   operator : < )
+line 92  : (         id : std )
+line 92  : (   operator : :: )
+line 92  : (         id : chrono )
+line 92  : (   operator : :: )
+line 92  : (         id : microseconds )
+line 92  : (   operator : > )
+line 92  : (   operator : ( )
+line 92  : (         id : end )
+line 92  : (   operator : - )
+line 92  : (         id : begin )
+line 92  : (   operator : ) )
+line 92  : (   operator : . )
+line 92  : (         id : count )
+line 92  : (   operator : ( )
+line 92  : (   operator : ) )
+line 92  : (   operator : ) )
+line 92  : (   operator : ; )
+line 94  : (         id : begin )
+line 94  : (   operator : = )
+line 94  : (         id : std )
+line 94  : (   operator : :: )
+line 94  : (         id : chrono )
+line 94  : (   operator : :: )
+line 94  : (         id : high_resolution_clock )
+line 94  : (   operator : :: )
+line 94  : (         id : now )
+line 94  : (   operator : ( )
+line 94  : (   operator : ) )
+line 94  : (   operator : ; )
+line 95  : (         id : la )
+line 95  : (   operator : . )
+line 95  : (         id : parse )
+line 95  : (   operator : ( )
+line 95  : (         id : codeFile )
+line 95  : (   operator : ) )
+line 95  : (   operator : ; )
+line 97  : (    comment : // la.parse("test.txt"); )
+line 97  : (         id : end )
+line 97  : (   operator : = )
+line 97  : (         id : std )
+line 97  : (   operator : :: )
+line 97  : (         id : chrono )
+line 97  : (   operator : :: )
+line 97  : (         id : high_resolution_clock )
+line 97  : (   operator : :: )
+line 97  : (         id : now )
+line 97  : (   operator : ( )
+line 97  : (   operator : ) )
+line 97  : (   operator : ; )
+line 99  : (    comment : // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl; )
+line 99  : (         id : printf )
+line 99  : (   operator : ( )
+line 99  : (    literal : "%lld micro seconds\n" )
+line 99  : (   operator : , )
+line 99  : (         id : std )
+line 99  : (   operator : :: )
+line 99  : (         id : chrono )
+line 99  : (   operator : :: )
+line 99  : (         id : duration_cast )
+line 99  : (   operator : < )
+line 99  : (         id : std )
+line 99  : (   operator : :: )
+line 99  : (         id : chrono )
+line 99  : (   operator : :: )
+line 99  : (         id : microseconds )
+line 99  : (   operator : > )
+line 99  : (   operator : ( )
+line 99  : (         id : end )
+line 99  : (   operator : - )
+line 99  : (         id : begin )
+line 99  : (   operator : ) )
+line 99  : (   operator : . )
+line 99  : (         id : count )
+line 99  : (   operator : ( )
+line 99  : (   operator : ) )
+line 99  : (   operator : ) )
+line 99  : (   operator : ; )
+line 100 : (   operator : } )
+line 102 : (    keyword : int )
+line 102 : (         id : main )
+line 102 : (   operator : ( )
+line 102 : (    keyword : int )
+line 102 : (         id : argc )
+line 102 : (   operator : , )
+line 102 : (         id : char )
+line 102 : (   operator : * )
+line 102 : (         id : argv )
+line 102 : (   operator : [ )
+line 102 : (   operator : ] )
+line 102 : (   operator : ) )
+line 102 : (   operator : { )
+line 103 : (         id : freopen )
+line 103 : (   operator : ( )
+line 103 : (    literal : "output.txt" )
+line 103 : (   operator : , )
+line 103 : (    literal : "w" )
+line 103 : (   operator : , )
+line 103 : (         id : stdout )
+line 103 : (   operator : ) )
+line 103 : (   operator : ; )
+line 105 : (         id : printf )
+line 105 : (   operator : ( )
+read cnt = 66
+buf[0] = "
+Current content: 
+"%s %s\, argv[1], argv[2]);
+
+    test(argv[1], argv[2]);
+
+    retu
 -------------------------------
+error** : Unreachable sequences! line 105
 Parse end, 2 error found.
 ===============================
-1105 micro seconds
+3633 micro seconds

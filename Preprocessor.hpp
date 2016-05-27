@@ -153,6 +153,8 @@ class Preprocessor {
 
         for (auto &var : _vecRegs) {
             _regTrees[var.first] = buildRegTree(var.second);
+            // _regTrees[var.first] -> backOrderDisplay();
+            // _regTrees[var.first] -> middleOrderDisplay();
         }
 
         for (auto &tag : _toDFA_tags) {
@@ -164,6 +166,8 @@ class Preprocessor {
             // dfa -> display();
             // fflush(stdout);
             dfa -> minimize();
+            // dfa -> display();
+            // fflush(stdout);
             // printf("tag = %s\n", tag.data());
             // fflush(stdout);
             la.add(dfa);

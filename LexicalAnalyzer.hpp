@@ -110,7 +110,7 @@ class LexicalAnalyzer {
 
             head = buf;
             tail = buf;
-            fflush(stdout);
+            // fflush(stdout);
             memset(output, 0, sizeof(char) * BUFFER_SIZE);
 
             // skip to my lou
