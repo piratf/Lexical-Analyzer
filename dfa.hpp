@@ -385,6 +385,7 @@ DFA *buildDFA(NFA *nfa) {
     for (char var : schar) {
         titleHash[static_cast<size_t>(var)] = cnt;
         ++cnt;
+        
     }
 
     // 初始集合

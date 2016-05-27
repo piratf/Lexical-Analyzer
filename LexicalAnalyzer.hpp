@@ -56,6 +56,11 @@ class LexicalAnalyzer {
     bool judgeDifferent(char *temp, char *output) {
         int len_temp = strlen(temp);
         int len_output = strlen(output);
+
+        if (len_temp > len_output) {
+            return false;
+        }
+
         char *p = temp + len_output;
 
         while (*p) {
@@ -268,7 +273,7 @@ class LexicalAnalyzer {
 
         }
 
-        if (!tag.empty() && tag != "temp" && (temp == "operator" || judgeDifferent(temp, output)) ) {
+        if (!tag.empty() && strcmp(tag.data(), "temp") != 0 && (strcmp(temp, "operator") == 0 || judgeDifferent(temp, output)) ) {
 #ifdef DEBUG
             printf(" -----------> ");
 #endif
