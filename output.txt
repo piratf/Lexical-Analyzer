@@ -13,7 +13,7 @@ reg = ([char]|_)([char]|[number]|_)*
 tag = operator
 reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=|::|:|.|!|\\\\|#|\||\|\|
 tag = literal
-reg = "([char]|[number]|[operator]| )*"|'([char]|[number]|[operator])'|([number])*|'\\\\[char]'
+reg = "([char]|[number]|[operator]| )*"|'([char]|[number]|[operator])'|'\\\\[char]'
 tag = temp
 reg = [numseq].|[numseq]E|[numseq]E(+|-)|"([char]|[number]|[operator]| )*
 -------- preprosessor display ----------
@@ -33,14 +33,14 @@ reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 tag = operator
 reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|!\|\\\|#\||\|||
 tag = literal
-reg = "\(\[char\]\|\[number\]\|\[operator\]\| \)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*\|'\\\[char\]'
+reg = "\(\[char\]\|\[number\]\|\[operator\]\| \)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|'\\\[char\]'
 tag = temp
 reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[operator\]\| \)\*
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-241 micro seconds
-9218225 micro seconds
+407 micro seconds
+9360941 micro seconds
 ===============================
 => start parse.
 Initial content: 
@@ -186,7 +186,7 @@ int main() {
 
     preprocess();
     return 0;
-}~	
+}
 line 1: (   operator : # )
 line 1: (         id : include )
 line 1: (    literal : "LexicalAnalyzer.hpp" )
@@ -645,7 +645,6 @@ line 142: (      value : 0 )
 line 142: (   operator : ; )
 line 143: (   operator : } )
 -------------------------------
-error** : Unreachable sequences! line 143
-Parse end, 1 error found.
+Parse success!
 ===============================
-3671 micro seconds
+5323 micro seconds

@@ -82,18 +82,22 @@ class LexicalAnalyzer {
     void parse(const char *filePath) {
         puts("===============================");
         printf("=> start parse.\n");
-        std::ifstream ifile(filePath);
+        // std::ifstream ifile(filePath);
+        std::FILE* f = std::fopen(filePath, "r");
 
         // mark if the current temp str failed.
         bool failFlag = false;
         line_num = 1;
         unsigned int    error_cnt = 0;
-        char *buf = new char[BUFFER_SIZE << 4];
+        char *buf = new char[BUFFER_SIZE << 3];
         char *temp = new char[BUFFER_SIZE];
 
         // init buffer
         memset(buf, 0, sizeof(char) * BUFFER_SIZE);
-        ifile.read(buf, N << 4);
+        // ifile.read(buf, N << 3);
+        size_t cnt = std::fread(buf, sizeof buf[0], N << 3, f);
+        buf[cnt] = 0;
+        // ifile.close();
 
         char *head = buf, *tail = buf;
         printf("Initial content: \n%s\n", buf);
@@ -312,8 +316,6 @@ class LexicalAnalyzer {
 #ifdef DEBUG
         printf("head -> tail %d\n", tail - head);
 #endif
-
-        ifile.close();
     }
 
     void inline result_print(const char *tag, const char *content) {
