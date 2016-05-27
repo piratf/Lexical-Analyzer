@@ -114,28 +114,19 @@ class NFA {
 
             if (!cur -> children().empty()) {
                 for (auto &var : cur -> children()) {
+                    if (!var.second -> children().empty()) {
+                        for (auto &temp : var.second -> children()) {
+                            if (temp.second == _tail) {
+                                // printf("secode !\n");
+                                temp.second = other -> head();
+                            }
+                        }
+                    }
+
                     if (var.second == _tail) {
                         // printf("secode !\n");
                         var.second = other -> head();
-                    }
-                }
-            }
-
-            for (auto &var : cur ->children()) {
-
-                if (!var.second -> children().empty()) {
-                    for (auto &temp : var.second -> children()) {
-                        if (temp.second == _tail) {
-                            // printf("secode !\n");
-                            temp.second = other -> head();
-                        }
-                    }
-                }
-
-                if (var.second != _tail) {
-                    if (svisit.find(var.second) != svisit.end()) {
-                        continue;
-                    } else {
+                    } else if (svisit.find(var.second) == svisit.end()) {
                         svisit.insert(var.second);
                         qnfa.push(var.second);
                     }
@@ -143,7 +134,7 @@ class NFA {
             }
         }
 
-         // printf("tail = %p\n", static_cast<void *>(_tail));
+        // printf("tail = %p\n", static_cast<void *>(_tail));
         // fflush(stdout);
 
         if (_tail) {

@@ -84,15 +84,19 @@ class LexicalAnalyzer {
         bool failFlag = false;
         line_num = 1;
         unsigned int    error_cnt = 0;
-        char *buf = new char[BUFFER_SIZE];
-        char *temp = new char[BUFFER_SIZE];
+        std::unique_ptr<char[]> _buf(new char[BUFFER_SIZE]);
+        std::unique_ptr<char[]> _temp(new char[BUFFER_SIZE]);
+        std::unique_ptr<char[]> _output(new char[BUFFER_SIZE]);
+
+        char * buf = _buf.get();
+        char * temp = _temp.get();
+        char * output = _output.get();
         char *tail = NULL;
         char *head = NULL;
 
         // init buffer
         memset(buf, 0, sizeof(char) * BUFFER_SIZE);
         std::string tag;
-        char *output = new char[BUFFER_SIZE];
 
         // ifile.read(buf, N);
         size_t read_cnt = N;

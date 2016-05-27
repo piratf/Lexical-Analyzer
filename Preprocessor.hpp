@@ -159,23 +159,21 @@ class Preprocessor {
 
         for (auto &tag : _toDFA_tags) {
             NFA *nfa = buildNFA(_regTrees[tag]);
-            // _regTrees[tag] -> backOrderDisplay();
-            // _regTrees[tag] -> middleOrderDisplay();
-            DFA *dfa = buildDFA(nfa);
-            dfa -> tag(tag);
-            // dfa -> display();
-            // fflush(stdout);
-            dfa -> minimize();
+            // // _regTrees[tag] -> backOrderDisplay();
+            // // _regTrees[tag] -> middleOrderDisplay();
+            // DFA *dfa = buildDFA(nfa);
+            // dfa -> tag(tag);
+            // dfa -> minimize();
+            // la.add(dfa);
+
+            // if (tag == "operator") {
+            //     la.separator(dfa);
+            // }
+
             // dfa -> display();
             // fflush(stdout);
             // printf("tag = %s\n", tag.data());
             // fflush(stdout);
-            la.add(dfa);
-
-            if (tag == "operator") {
-                la.separator(dfa);
-            }
-
         }
 
         return la;
