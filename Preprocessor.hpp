@@ -14,6 +14,7 @@ class Preprocessor {
         _set_op.insert('[');
         _set_op.insert(']');
         _set_op.insert('*');
+        _set_op.insert('?');
     }
 
     ~Preprocessor() = default;
@@ -156,6 +157,8 @@ class Preprocessor {
 
         for (auto &tag : _toDFA_tags) {
             NFA *nfa = buildNFA(_regTrees[tag]);
+            // _regTrees[tag] -> backOrderDisplay();
+            // _regTrees[tag] -> middleOrderDisplay();
             DFA *dfa = buildDFA(nfa);
             dfa -> tag(tag);
             // dfa -> display();
@@ -265,6 +268,12 @@ class Preprocessor {
                 star -> rson(new RegTree('*'));
                 star -> lson(buildRegTree(substr));
                 p -> rson(star);
+                p -> data(OP_CAT);
+            } else if (cur == '?' && *(it + 1) == '\\') {
+                ++it;
+                // set to zero, empty jump
+                p -> rson(new RegTree(0));
+                // 设置运算符
                 p -> data(OP_CAT);
             } else {
                 // 内容放到右节点

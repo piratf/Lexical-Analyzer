@@ -4,18 +4,18 @@ tag = char
 reg = [A-Z]|[a-z]
 tag = numseq
 reg = [number]([number])*
+tag = value
+reg = [numseq](?|.[numseq]|E(+|-)[numseq])
 tag = keyword
-reg = int|void|float|#include|if|else|return|string
+reg = int|void|float|#include|if|else|return|auto|while|do
 tag = id
 reg = ([char]|_)([char]|[number]|_)*
 tag = operator
-reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=|::|:|.|!|\\\\|#|\|
-tag = value
-reg = [numseq]|[numseq].([number])*|[numseq]E(+|-)([number])*
+reg = \(|,|\)|<|>|[|]|;|{|}|+|-|\*|/|=|::|:|.|!|\\\\|#|\||\|\|
 tag = literal
 reg = "([char]|[number]|[operator]| )*"|'([char]|[number]|[operator])'|([number])*|'\\\\[char]'
 tag = temp
-reg = [numseq]E|[numseq]E(+|-)|"([char]|[number]|[operator]| )*
+reg = [numseq].|[numseq]E|[numseq]E(+|-)|"([char]|[number]|[operator]| )*
 -------- preprosessor display ----------
 size = 9
 tag = number
@@ -24,23 +24,23 @@ tag = char
 reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z
 tag = numseq
 reg = \[number\]\(\[number\]\)\*
+tag = value
+reg = \[numseq\]\(\?\|.\[numseq\]\|E\(+\|-\)\[numseq\]\)
 tag = keyword
-reg = int\|void\|float\|#include\|if\|else\|return\|string
+reg = int\|void\|float\|#include\|if\|else\|return\|auto\|while\|do
 tag = id
 reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 tag = operator
-reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|!\|\\\|#\||
-tag = value
-reg = \[numseq\]\|\[numseq\].\(\[number\]\)\*\|\[numseq\]E\(+\|-\)\(\[number\]\)\*
+reg = (\|,\|)\|<\|>\|[\|]\|;\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|!\|\\\|#\||\|||
 tag = literal
 reg = "\(\[char\]\|\[number\]\|\[operator\]\| \)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|\(\[number\]\)\*\|'\\\[char\]'
 tag = temp
-reg = \[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[operator\]\| \)\*
+reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[operator\]\| \)\*
 ----- to dfa -----
-keyword id operator value literal temp 
+value keyword id operator literal temp 
 -------- end display -------------------
-235 micro seconds
-9024119 micro seconds
+241 micro seconds
+9218225 micro seconds
 ===============================
 => start parse.
 Initial content: 
@@ -134,6 +134,7 @@ void preprocess() {
 
     begin = std::chrono::high_resolution_clock::now();
     la.parse("main.cpp");
+    // la.parse("code.txt");
     end = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
 
@@ -185,7 +186,7 @@ int main() {
 
     preprocess();
     return 0;
-}
+}~	
 line 1: (   operator : # )
 line 1: (         id : include )
 line 1: (    literal : "LexicalAnalyzer.hpp" )
@@ -278,7 +279,7 @@ line 57: (         id : preprocess )
 line 57: (   operator : ( )
 line 57: (   operator : ) )
 line 57: (   operator : { )
-line 59: (         id : auto )
+line 59: (    keyword : auto )
 line 59: (         id : begin )
 line 59: (   operator : = )
 line 59: (         id : std )
@@ -309,7 +310,7 @@ line 62: (   operator : = )
 line 62: (   operator : { )
 line 62: (   operator : } )
 line 62: (   operator : ; )
-line 64: (         id : while )
+line 64: (    keyword : while )
 line 64: (   operator : ( )
 line 64: (   operator : ! )
 line 64: (         id : input )
@@ -340,7 +341,7 @@ line 67: (   operator : ) )
 line 67: (   operator : { )
 line 68: (         id : std )
 line 68: (   operator : :: )
-line 68: (    keyword : string )
+line 68: (         id : string )
 line 68: (         id : reg )
 line 68: (   operator : ( )
 line 68: (         id : str )
@@ -362,8 +363,7 @@ line 69: (   operator : ) )
 line 69: (   operator : = )
 line 69: (   operator : = )
 line 69: (      value : 13 )
-line 69: (   operator : | )
-line 69: (   operator : | )
+line 69: (   operator : || )
 line 69: (   operator : * )
 line 69: (         id : reg )
 line 69: (   operator : . )
@@ -404,7 +404,7 @@ line 79: (         id : display )
 line 79: (   operator : ( )
 line 79: (   operator : ) )
 line 79: (   operator : ; )
-line 80: (         id : auto )
+line 80: (    keyword : auto )
 line 80: (         id : end )
 line 80: (   operator : = )
 line 80: (         id : std )
@@ -540,110 +540,112 @@ line 90: (   operator : ( )
 line 90: (    literal : "main.cpp" )
 line 90: (   operator : ) )
 line 90: (   operator : ; )
-line 91: (         id : end )
-line 91: (   operator : = )
-line 91: (         id : std )
-line 91: (   operator : :: )
-line 91: (         id : chrono )
-line 91: (   operator : :: )
-line 91: (         id : high_resolution_clock )
-line 91: (   operator : :: )
-line 91: (         id : now )
-line 91: (   operator : ( )
-line 91: (   operator : ) )
-line 91: (   operator : ; )
-line 92: (         id : std )
-line 92: (   operator : :: )
-line 92: (         id : cout )
-line 92: (   operator : < )
-line 92: (   operator : < )
-line 92: (         id : std )
-line 92: (   operator : :: )
-line 92: (         id : chrono )
-line 92: (   operator : :: )
-line 92: (         id : duration_cast )
-line 92: (   operator : < )
-line 92: (         id : std )
-line 92: (   operator : :: )
-line 92: (         id : chrono )
-line 92: (   operator : :: )
-line 92: (         id : microseconds )
-line 92: (   operator : > )
-line 92: (   operator : ( )
+line 92: (    comment : // la.parse("code.txt"); )
 line 92: (         id : end )
-line 92: (   operator : - )
-line 92: (         id : begin )
-line 92: (   operator : ) )
-line 92: (   operator : . )
-line 92: (         id : count )
-line 92: (   operator : ( )
-line 92: (   operator : ) )
-line 92: (   operator : < )
-line 92: (   operator : < )
-line 92: (    literal : " micro seconds" )
-line 92: (   operator : < )
-line 92: (   operator : < )
+line 92: (   operator : = )
 line 92: (         id : std )
 line 92: (   operator : :: )
-line 92: (         id : endl )
+line 92: (         id : chrono )
+line 92: (   operator : :: )
+line 92: (         id : high_resolution_clock )
+line 92: (   operator : :: )
+line 92: (         id : now )
+line 92: (   operator : ( )
+line 92: (   operator : ) )
 line 92: (   operator : ; )
-line 95: (    comment : // test(la); )
-line 97: (    comment : // std::string literal("literal"); )
-line 98: (    comment : // std::string id("id"); )
-line 99: (    comment : // std::string strchar("char"); )
-line 100: (    comment : // )
-line 101: (    comment : // std::string strtest("test"); )
-line 103: (    comment : // auto &regs = ppr.regs(); )
-line 104: (    comment : // std::string reg = regs[strtest]; )
-line 106: (    comment : // printf("reg = %s\n", reg.data()); )
-line 107: (    comment : // fflush(stdout); )
-line 108: (    comment : // RegTree *root = ppr.buildRegTree(reg); )
-line 109: (    comment : // root -> backOrderDisplay(); )
-line 110: (    comment : // fflush(stdout); )
-line 111: (    comment : // root -> middleOrderDisplay(); )
-line 112: (    comment : // NFA *nfa = buildNFA(root); )
-line 113: (    comment : // DFA *dfa = buildDFA(nfa); )
-line 114: (    comment : // fflush(stdout); )
-line 116: (    comment : // dfa -> minimize(); )
-line 117: (    comment : // dfa -> display(); )
-line 118: (    comment : // fflush(stdout); )
-line 120: (    comment : // test(dfa); )
-line 122: (    comment : // la -> add(dfa); )
-line 123: (   operator : } )
-line 125: (    keyword : int )
-line 125: (         id : main )
-line 125: (   operator : ( )
-line 125: (   operator : ) )
-line 125: (   operator : { )
-line 126: (         id : freopen )
+line 93: (         id : std )
+line 93: (   operator : :: )
+line 93: (         id : cout )
+line 93: (   operator : < )
+line 93: (   operator : < )
+line 93: (         id : std )
+line 93: (   operator : :: )
+line 93: (         id : chrono )
+line 93: (   operator : :: )
+line 93: (         id : duration_cast )
+line 93: (   operator : < )
+line 93: (         id : std )
+line 93: (   operator : :: )
+line 93: (         id : chrono )
+line 93: (   operator : :: )
+line 93: (         id : microseconds )
+line 93: (   operator : > )
+line 93: (   operator : ( )
+line 93: (         id : end )
+line 93: (   operator : - )
+line 93: (         id : begin )
+line 93: (   operator : ) )
+line 93: (   operator : . )
+line 93: (         id : count )
+line 93: (   operator : ( )
+line 93: (   operator : ) )
+line 93: (   operator : < )
+line 93: (   operator : < )
+line 93: (    literal : " micro seconds" )
+line 93: (   operator : < )
+line 93: (   operator : < )
+line 93: (         id : std )
+line 93: (   operator : :: )
+line 93: (         id : endl )
+line 93: (   operator : ; )
+line 96: (    comment : // test(la); )
+line 98: (    comment : // std::string literal("literal"); )
+line 99: (    comment : // std::string id("id"); )
+line 100: (    comment : // std::string strchar("char"); )
+line 101: (    comment : // )
+line 102: (    comment : // std::string strtest("test"); )
+line 104: (    comment : // auto &regs = ppr.regs(); )
+line 105: (    comment : // std::string reg = regs[strtest]; )
+line 107: (    comment : // printf("reg = %s\n", reg.data()); )
+line 108: (    comment : // fflush(stdout); )
+line 109: (    comment : // RegTree *root = ppr.buildRegTree(reg); )
+line 110: (    comment : // root -> backOrderDisplay(); )
+line 111: (    comment : // fflush(stdout); )
+line 112: (    comment : // root -> middleOrderDisplay(); )
+line 113: (    comment : // NFA *nfa = buildNFA(root); )
+line 114: (    comment : // DFA *dfa = buildDFA(nfa); )
+line 115: (    comment : // fflush(stdout); )
+line 117: (    comment : // dfa -> minimize(); )
+line 118: (    comment : // dfa -> display(); )
+line 119: (    comment : // fflush(stdout); )
+line 121: (    comment : // test(dfa); )
+line 123: (    comment : // la -> add(dfa); )
+line 124: (   operator : } )
+line 126: (    keyword : int )
+line 126: (         id : main )
 line 126: (   operator : ( )
-line 126: (    literal : "output.txt" )
-line 126: (   operator : , )
-line 126: (    literal : "w" )
-line 126: (   operator : , )
-line 126: (         id : stdout )
 line 126: (   operator : ) )
-line 126: (   operator : ; )
-line 128: (    comment : // NFA *nfa = inputNFA(); )
-line 129: (    comment : // nfa -> display(); )
-line 130: (    comment : // test(nfa); )
-line 132: (    comment : // DFA *dfa = inputDFA(); )
-line 133: (    comment : // dfa -> display(); )
-line 134: (    comment : // dfa -> minimize(); )
-line 135: (    comment : // test(dfa); )
-line 136: (    comment : // dfa -> display(); )
-line 137: (    comment : // fflush(stdout); )
-line 138: (    comment : // delete nfa; )
-line 139: (    comment : // delete dfa; )
-line 140: (         id : preprocess )
-line 140: (   operator : ( )
-line 140: (   operator : ) )
-line 140: (   operator : ; )
-line 141: (    keyword : return )
-line 141: (      value : 0 )
+line 126: (   operator : { )
+line 127: (         id : freopen )
+line 127: (   operator : ( )
+line 127: (    literal : "output.txt" )
+line 127: (   operator : , )
+line 127: (    literal : "w" )
+line 127: (   operator : , )
+line 127: (         id : stdout )
+line 127: (   operator : ) )
+line 127: (   operator : ; )
+line 129: (    comment : // NFA *nfa = inputNFA(); )
+line 130: (    comment : // nfa -> display(); )
+line 131: (    comment : // test(nfa); )
+line 133: (    comment : // DFA *dfa = inputDFA(); )
+line 134: (    comment : // dfa -> display(); )
+line 135: (    comment : // dfa -> minimize(); )
+line 136: (    comment : // test(dfa); )
+line 137: (    comment : // dfa -> display(); )
+line 138: (    comment : // fflush(stdout); )
+line 139: (    comment : // delete nfa; )
+line 140: (    comment : // delete dfa; )
+line 141: (         id : preprocess )
+line 141: (   operator : ( )
+line 141: (   operator : ) )
 line 141: (   operator : ; )
-line 142: (   operator : } )
+line 142: (    keyword : return )
+line 142: (      value : 0 )
+line 142: (   operator : ; )
+line 143: (   operator : } )
 -------------------------------
-Parse success!
+error** : Unreachable sequences! line 143
+Parse end, 1 error found.
 ===============================
-3380 micro seconds
+3671 micro seconds

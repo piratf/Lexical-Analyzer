@@ -214,18 +214,19 @@ class LexicalAnalyzer {
 
                 // has a success before
                 if (!tag.empty()) {
+                    if (tag == "temp") {
+                        continue;
+                    }
+                    // operator could be the separator
                     if (tag == "operator" ||
-                            ((!continuity(temp) ||
-                              _separator -> calculate(temp + strlen(temp) - 1))
+                            ((!continuity(temp) || _separator -> calculate(temp + strlen(temp) - 1))
                              && strlen(output) == strlen(temp) - 1)) {
 
                         failFlag = false;
 #ifdef DEBUG
                         printf(" -----------> ");
 #endif
-                        // if (continuity(temp) && ) {
 
-                        // }
                         result_print(tag.data(), output);
                         fflush(stdout);
 
@@ -273,7 +274,7 @@ class LexicalAnalyzer {
 
         }
 
-        if (!tag.empty() && (temp == "operator" || judgeDifferent(temp, output)) ) {
+        if (!tag.empty() && tag != "temp" && (temp == "operator" || judgeDifferent(temp, output)) ) {
 #ifdef DEBUG
             printf(" -----------> ");
 #endif
@@ -294,6 +295,7 @@ class LexicalAnalyzer {
         }
 
         puts("-------------------------------");
+
         if (tail - head) {
             err_shot("Unreachable sequences!");
             printf("Parse end, %d error found.\n", error_cnt + 1);
@@ -304,6 +306,7 @@ class LexicalAnalyzer {
                 printf("Parse success!\n");
             }
         }
+
         puts("===============================");
 
 #ifdef DEBUG
