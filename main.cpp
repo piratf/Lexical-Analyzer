@@ -2,12 +2,7 @@
 #include "Preprocessor.hpp"
 #include <cstdio>
 #include <fstream>
-#include <vector>
-#include <queue>
-#include <set>
-#include <map>
 #include <chrono>
-#include <iostream>
 using namespace std;
 
 // static const int N = 1024;   
@@ -78,19 +73,22 @@ void preprocess() {
 
     ppr.display();
     auto end = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     // fflush(stdout);
 
     begin = std::chrono::high_resolution_clock::now();
     LexicalAnalyzer la = ppr.buildLA();
     end = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 
     begin = std::chrono::high_resolution_clock::now();
     la.parse("main.cpp");
-    // la.parse("code.txt");
+    // la.parse("test.txt");
     end = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 
     // test(la);
 

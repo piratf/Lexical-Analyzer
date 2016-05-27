@@ -3,7 +3,7 @@
 
 #include "nfa.hpp"
 #include <cstdio>
-#include <memory.h>
+#include <cstring>
 #include <vector>
 #include <string>
 #include <queue>

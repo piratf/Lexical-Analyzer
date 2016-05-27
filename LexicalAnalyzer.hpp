@@ -2,7 +2,6 @@
 #define LEXICALANALYZER_H_
 
 #include "dfalink.hpp"
-#include <fstream>
 #include <cstring>
 #include <set>
 
@@ -10,15 +9,6 @@
 static const int BUFFER_SIZE = N + 7;
 
 std::set<char> g_terminal_set;
-
-void trim(char *temp) {
-    int i = strlen(temp);
-
-    while (temp[i - 1] == ' ') {
-        temp[i - 1] = temp[i];
-        --i;
-    }
-}
 
 bool continuity(char *temp) {
     while (*temp) {
