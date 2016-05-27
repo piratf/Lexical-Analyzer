@@ -39,11 +39,13 @@ reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-978 micro seconds
-10862378 micro seconds
+242 micro seconds
+12838114 micro seconds
 ===============================
 => start parse.
-Initial content: 
+read cnt = 1024
+buf[0] = #
+Current content: 
 #include "LexicalAnalyzer.hpp"
 #include "Preprocessor.hpp"
 #include <cstdio>
@@ -87,104 +89,7 @@ using namespace std;
 //     cout << "input = " << code << endl;
 
 //     if (dfa -> calculate(code.data())) {
-//         printf("yes.\n");
-//         return true;
-//     } else {
-//         printf("no.\n");
-//         return false;
-//     }
-// }
-
-void preprocess() {
-
-    auto begin = std::chrono::high_resolution_clock::now();
-    Preprocessor ppr;
-    ifstream input("input.txt");
-    char str[N] = {};
-
-    while (!input.eof()) {
-        input.getline(str, N, '\n');
-
-        if (str[0]) {
-            std::string reg(str, strlen(str));
-            if (*reg.rbegin() == 13 || *reg.rbegin() == '#') {
-                reg.pop_back();
-            }
-            // printf("rrrr = %c\n", *reg.rbegin());
-            ppr.update(reg);
-        }
-    }
-
-    input.close();
-
-    ppr.display();
-    auto end = std::chrono::high_resolution_clock::now();
-    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
-    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-    // fflush(stdout);
-
-    begin = std::chrono::high_resolution_clock::now();
-    LexicalAnalyzer la = ppr.buildLA();
-    end = std::chrono::high_resolution_clock::now();
-    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
-    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-
-    begin = std::chrono::high_resolution_clock::now();
-    la.parse("main.cpp");
-    // la.parse("test.txt");
-    end = std::chrono::high_resolution_clock::now();
-    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
-    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-
-    // test(la);
-
-    // std::string literal("literal");
-    // std::string id("id");
-    // std::string strchar("char");
-    //
-    // std::string strtest("test");
-
-    // auto &regs = ppr.regs();
-    // std::string reg = regs[strtest];
-
-    // printf("reg = %s\n", reg.data());
-    // fflush(stdout);
-    // RegTree *root = ppr.buildRegTree(reg);
-    // root -> backOrderDisplay();
-    // fflush(stdout);
-    // root -> middleOrderDisplay();
-    // NFA *nfa = buildNFA(root);
-    // DFA *dfa = buildDFA(nfa);
-    // fflush(stdout);
-
-    // dfa -> minimize();
-    // dfa -> display();
-    // fflush(stdout);
-
-    // test(dfa);
-
-    // la -> add(dfa);
-
-}
-
-int main() {
-    freopen("output.txt", "w", stdout);
-    // NFA *nfa = inputNFA();
-    // nfa -> display();
-    // test(nfa);
-
-    // DFA *dfa = inputDFA();
-    // dfa -> display();
-    // dfa -> minimize();
-    // test(dfa);
-    // dfa -> display();
-    // fflush(stdout);
-    // delete nfa;
-    // delete dfa;
-
-    preprocess();
-    return 0;
-}
+//         printf("yes.1231
 line 1: (   operator : # )
 line 1: (         id : include )
 line 1: (    literal : "LexicalAnalyzer.hpp" )
@@ -240,7 +145,47 @@ line 40: (    comment : //     input >> code; )
 line 41: (    comment : //     // code = "// 123"; )
 line 42: (    comment : //     cout << "input = " << code << endl; )
 line 44: (    comment : //     if (dfa -> calculate(code.data())) { )
-line 45: (    comment : //         printf("yes.\n"); )
+comment ? 1
+read cnt = 1024
+buf[0] = 2
+Current content: 
+23123\n");
+//         return true;
+//     } else {
+//         printf("no.\n");
+//         return false;
+//     }
+// }
+
+void preprocess() {
+
+    auto begin = std::chrono::high_resolution_clock::now();
+    Preprocessor ppr;
+    ifstream input("input.txt");
+    char str[N] = {};
+
+    while (!input.eof()) {
+        input.getline(str, N, '\n');
+
+        if (str[0]) {
+            std::string reg(str, strlen(str));
+            if (*reg.rbegin() == 13 || *reg.rbegin() == '#') {
+                reg.pop_back();
+            }
+            // printf("rrrr = %c\n", *reg.rbegin());
+            ppr.update(reg);
+        }
+    }
+
+    input.close();
+
+    ppr.display();
+    auto end = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    // fflush(stdout);
+
+    begin = std::chrono::high_resolution_c
 line 46: (    comment : //         return true; )
 line 47: (    comment : //     } else { )
 line 48: (    comment : //         printf("no.\n"); )
@@ -425,6 +370,36 @@ line 80: (         id : std )
 line 80: (   operator : :: )
 line 80: (         id : chrono )
 line 80: (   operator : :: )
+comment ? 0
+copy !
+read cnt = 1024
+buf[0] = h
+Current content: 
+high_resolution_clock::now();
+    LexicalAnalyzer la = ppr.buildLA();
+    end = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+
+    begin = std::chrono::high_resolution_clock::now();
+    la.parse("main.cpp");
+    // la.parse("test.txt");
+    end = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
+    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+
+    // test(la);
+
+    // std::string literal("literal");
+    // std::string id("id");
+    // std::string strchar("char");
+    //
+    // std::string strtest("test");
+
+    // auto &regs = ppr.regs();
+    // std::string reg = regs[strtest];
+
+    // printf("
 line 80: (         id : high_resolution_clock )
 line 80: (   operator : :: )
 line 80: (         id : now )
@@ -548,7 +523,48 @@ line 99: (    comment : // )
 line 100: (    comment : // std::string strtest("test"); )
 line 102: (    comment : // auto &regs = ppr.regs(); )
 line 103: (    comment : // std::string reg = regs[strtest]; )
-line 105: (    comment : // printf("reg = %s\n", reg.data()); )
+comment ? 1
+read cnt = 731
+buf[0] = d
+Current content: 
+data());
+    // fflush(stdout);
+    // RegTree *root = ppr.buildRegTree(reg);
+    // root -> backOrderDisplay();
+    // fflush(stdout);
+    // root -> middleOrderDisplay();
+    // NFA *nfa = buildNFA(root);
+    // DFA *dfa = buildDFA(nfa);
+    // fflush(stdout);
+
+    // dfa -> minimize();
+    // dfa -> display();
+    // fflush(stdout);
+
+    // test(dfa);
+
+    // la -> add(dfa);
+
+}
+
+int main() {
+    freopen("output.txt", "w", stdout);
+    // NFA *nfa = inputNFA();
+    // nfa -> display();
+    // test(nfa);
+
+    // DFA *dfa = inputDFA();
+    // dfa -> display();
+    // dfa -> minimize();
+    // test(dfa);
+    // dfa -> display();
+    // fflush(stdout);
+    // delete nfa;
+    // delete dfa;
+
+    preprocess();
+    return 0;
+}
 line 106: (    comment : // fflush(stdout); )
 line 107: (    comment : // RegTree *root = ppr.buildRegTree(reg); )
 line 108: (    comment : // root -> backOrderDisplay(); )
@@ -595,8 +611,10 @@ line 139: (   operator : ; )
 line 140: (    keyword : return )
 line 140: (      value : 0 )
 line 140: (   operator : ; )
+comment ? 0
+copy !
 line 141: (   operator : } )
 -------------------------------
 Parse success!
 ===============================
-3910 micro seconds
+3181 micro seconds

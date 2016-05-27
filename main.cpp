@@ -41,7 +41,7 @@ using namespace std;
 //     cout << "input = " << code << endl;
 
 //     if (dfa -> calculate(code.data())) {
-//         printf("yes.\n");
+//         printf("yes.123123123\n");
 //         return true;
 //     } else {
 //         printf("no.\n");
