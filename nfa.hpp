@@ -22,7 +22,7 @@ class NFANode {
     }
 
     void add(char tag, NFANode *next) {
-        _vecNext.push_back(std::make_pair(0, next));
+        _vecNext.push_back(std::make_pair(tag, next));
     }
 
     std::vector<pair<char, NFANode *>> &children() {
@@ -30,7 +30,7 @@ class NFANode {
     }
 
     const std::vector<pair<char, NFANode *>> &children() const {
-        return const_cast<const std::vector<pair<char, NFANode *>>&>(_vecNext);
+        return _vecNext;
     }
 
     bool end() {

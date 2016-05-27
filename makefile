@@ -4,6 +4,9 @@ resources = main.cpp Preprocessor.hpp LexicalAnalyzer.hpp regtree.hpp nfa.hpp df
 main: $(resources)
 	g++ --std=c++11 main.cpp -o main
 
+g: $(resources)
+	g++ --std=c++11 -o0 -g main.cpp -o main
+
 o: $(resources)
 	g++ --std=c++11 -o3 main.cpp -o main
 

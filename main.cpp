@@ -49,10 +49,9 @@ using namespace std;
 //     }
 // }
 
-Preprocessor preprocess(const char *filePath) {
+void preprocess(const char *filePath, Preprocessor &ppr) {
 
     auto begin = std::chrono::high_resolution_clock::now();
-    Preprocessor ppr;
     ifstream input(filePath);
     char str[N] = {};
 
@@ -78,33 +77,31 @@ Preprocessor preprocess(const char *filePath) {
     // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
     printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     // fflush(stdout);
-
-    return std::move(ppr);
-}
-
-void test(const char *regFile, const char *codeFile) {
-    Preprocessor ppr = std::move(preprocess(regFile));
-
-    auto begin = std::chrono::high_resolution_clock::now();
-    LexicalAnalyzer la = ppr.buildLA();
-    auto end = std::chrono::high_resolution_clock::now();
-    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
-    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-
-    begin = std::chrono::high_resolution_clock::now();
-    la.parse(codeFile);
-    // la.parse("test.txt");
-    end = std::chrono::high_resolution_clock::now();
-    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
-    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 }
 
 int main(int argc, char *argv[]) {
     freopen("output.txt", "w", stdout);
+    Preprocessor ppr;
+    LexicalAnalyzer la;
 
-    printf("%s %s\n", argv[1], argv[2]);
+    printf("argc = %d\n", argc);
 
-    test(argv[1], argv[2]);
+    if (argc > 1) {
+        preprocess(argv[1], ppr);
+        auto begin = std::chrono::high_resolution_clock::now();
+        la = ppr.buildLA();
+        auto end = std::chrono::high_resolution_clock::now();
+        printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    }
+
+    if (argc > 2) {
+
+        auto begin = std::chrono::high_resolution_clock::now();
+        la.parse(argv[2]);
+        // la.parse("test.txt");
+        auto end = std::chrono::high_resolution_clock::now();
+        printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    }
 
     return 0;
 }
