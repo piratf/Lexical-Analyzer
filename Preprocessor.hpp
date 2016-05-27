@@ -233,7 +233,7 @@ class Preprocessor {
                 it += substr.size() + 1;
             } else if (cur == '|' && *(it + 1) == '\\') {
                 // fflush(stdout);
-                std::string substr = reg.substr(0, reg.rend() - it - 1);
+                std::string substr = reg.substr(0, reg.rend() - it - 2);
                 // printf("substr = %s\n", substr.data());
                 // fflush(stdout);
                 it = reg.rend() - 1;

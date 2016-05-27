@@ -11,9 +11,9 @@ reg = int|void|float|#include|if|else|return|auto|while|do
 tag = id
 reg = ([char]|_)([char]|[number]|_)*
 tag = operator
-reg = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|!|#|\||\|\||\\\\
+reg = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|#|\||\|\|
 tag = literal
-reg = "([char]|[number]|[operator]| )*"|'([char]|[number]|[operator])'|'\\\\[char]'
+reg = "([char]|[number]|[operator]| |\\\\[char])*"|'([char]|[number]|[operator])'|'\\\\[char]'
 tag = temp
 reg = [numseq].|[numseq]E|[numseq]E(+|-)|"([char]|[number]|[operator]| )*
 -------- preprosessor display ----------
@@ -31,16 +31,130 @@ reg = int\|void\|float\|#include\|if\|else\|return\|auto\|while\|do
 tag = id
 reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
 tag = operator
-reg = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|!\|#\||\|||\|\\
+reg = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!\|#\||\|||
 tag = literal
-reg = "\(\[char\]\|\[number\]\|\[operator\]\| \)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|'\\\[char\]'
+reg = "\(\[char\]\|\[number\]\|\[operator\]\| \|\\\[char\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'\|'\\\[char\]'
 tag = temp
 reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[operator\]\| \)\*
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-234 micro seconds
-9405234 micro seconds
+245 micro seconds
+substr = 0\|1\|2\|3\|4\|5\|6\|7\|8
+substr = 0\|1\|2\|3\|4\|5\|6\|7
+substr = 0\|1\|2\|3\|4\|5\|6
+substr = 0\|1\|2\|3\|4\|5
+substr = 0\|1\|2\|3\|4
+substr = 0\|1\|2\|3
+substr = 0\|1\|2
+substr = 0\|1
+substr = 0
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I\|J
+substr = A\|B\|C\|D\|E\|F\|G\|H\|I
+substr = A\|B\|C\|D\|E\|F\|G\|H
+substr = A\|B\|C\|D\|E\|F\|G
+substr = A\|B\|C\|D\|E\|F
+substr = A\|B\|C\|D\|E
+substr = A\|B\|C\|D
+substr = A\|B\|C
+substr = A\|B
+substr = A
+substr = +
+substr = \?\|.\[numseq\]
+substr = \?
+substr = int\|void\|float\|#include\|if\|else\|return\|auto\|while
+substr = int\|void\|float\|#include\|if\|else\|return\|auto
+substr = int\|void\|float\|#include\|if\|else\|return
+substr = int\|void\|float\|#include\|if\|else
+substr = int\|void\|float\|#include\|if
+substr = int\|void\|float\|#include
+substr = int\|void\|float
+substr = int\|void
+substr = int
+substr = \[char\]\|\[number\]
+substr = \[char\]
+substr = \[char\]
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!\|#\||
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!\|#
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%\|^
+substr = (\|,\|)\|<\|>\|[\|]\|;\|%
+substr = (\|,\|)\|<\|>\|[\|]\|;
+substr = (\|,\|)\|<\|>\|[\|]
+substr = (\|,\|)\|<\|>\|[
+substr = (\|,\|)\|<\|>
+substr = (\|,\|)\|<
+substr = (\|,\|)
+substr = (\|,
+substr = (
+substr = "\(\[char\]\|\[number\]\|\[operator\]\| \|\\\[char\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\)'
+substr = \[char\]\|\[number\]
+substr = \[char\]
+substr = "\(\[char\]\|\[number\]\|\[operator\]\| \|\\\[char\]\)\*"
+substr = \[char\]\|\[number\]\|\[operator\]\| 
+substr = \[char\]\|\[number\]\|\[operator\]
+substr = \[char\]\|\[number\]
+substr = \[char\]
+substr = \[char\]\|\[number\]\|\[operator\]
+substr = \[char\]\|\[number\]
+substr = \[char\]
+substr = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)
+substr = +
+substr = \[numseq\].\|\[numseq\]E
+substr = \[numseq\].
+11562547 micro seconds
 ===============================
 => start parse.
 Initial content: 
@@ -599,4 +713,4 @@ line 141: (   operator : } )
 -------------------------------
 Parse success!
 ===============================
-3163 micro seconds
+3191 micro seconds
