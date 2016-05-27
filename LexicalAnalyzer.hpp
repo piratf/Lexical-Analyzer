@@ -386,7 +386,7 @@ class LexicalAnalyzer {
     }
 
     void inline result_print(const char *tag, const char *content) {
-        printf("line %d: ( %10.10s : %-s )\n", line_num, tag, content);
+        printf("line %-4d: ( %10.10s : %-s )\n", line_num, tag, content);
         fflush(stdout);
     }
 

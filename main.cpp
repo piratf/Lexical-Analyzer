@@ -84,7 +84,8 @@ void preprocess() {
     printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
 
     begin = std::chrono::high_resolution_clock::now();
-    la.parse("main.cpp");
+    // la.parse("main.cpp");
+    la.parse("code.txt");
     // la.parse("test.txt");
     end = std::chrono::high_resolution_clock::now();
     // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
