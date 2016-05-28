@@ -166,6 +166,7 @@ class Preprocessor {
             DFA *dfa = buildDFA(nfa);
             dfa -> tag(tag);
             dfa -> minimize();
+
             la.add(dfa);
 
             if (tag == "operator") {

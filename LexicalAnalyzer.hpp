@@ -29,8 +29,9 @@ class LexicalAnalyzer {
     }
 
     ~LexicalAnalyzer() {
-        printf("11111111\n");
-        fflush(stdout);
+        for (auto var : _vecRM) {
+            delete var;
+        }
     }
 
     void init() {
@@ -127,7 +128,7 @@ class LexicalAnalyzer {
 
             while (*tail) {
 
-                if (g_terminal_set.find(*(tail - 1))
+                if ((tail > buf) && g_terminal_set.find(*(tail - 1))
                         != g_terminal_set.end() && failFlag) {
                     printf("----------> %s\n", temp);
                     fflush(stdout);

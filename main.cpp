@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
     if (argc > 2) {
         auto begin = std::chrono::high_resolution_clock::now();
         la.parse(argv[2]);
-        // la.parse("test.txt");
+        la.parse("test.txt");
         auto end = std::chrono::high_resolution_clock::now();
         printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     }

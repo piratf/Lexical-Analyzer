@@ -33,6 +33,24 @@ class DFA {
 
     }
 
+    DFA(std::array<int, CHAR_CNT> &char_hash,
+        size_t char_count,
+        std::vector<iterator_array> &vec_list_index,
+        std::list<iterator_array> &listData,
+        std::set<iterator_array> &sendState)
+        : _char_hash(char_hash),
+          _char_count(char_count),
+          _vec_list_index(vec_list_index),
+          _sendState(sendState) {
+        _listData = listData;
+    }
+
+    ~DFA() {
+        for (auto fuck : _listData) {
+            delete[] fuck;
+        }
+    }
+
     iterator_array move(iterator_array state, char title) {
         if (_char_hash[static_cast<size_t>(title)] == -1) {
             return NULL;
@@ -360,8 +378,6 @@ class DFA {
         _tag = tag;
     }
 
-    ~DFA() = default;
-
   private:
     std::array<int, CHAR_CNT> _char_hash;
     unsigned int _char_count = 0;
@@ -372,7 +388,7 @@ class DFA {
     std::string _tag = "default tag of dfa.";
 };
 
-DFA* buildDFA(NFATable &nfa) {
+DFA *buildDFA(NFATable &nfa) {
     nfa.update();
     auto chCnt = nfa.schar().size();
     std::array<int, CHAR_CNT> char_hash;
@@ -457,7 +473,7 @@ DFA* buildDFA(NFATable &nfa) {
         }
     }
 
-    return new DFA(char_hash, chCnt, std::move(list_index), std::move(listData), std::move(sendState));
+    return new DFA(char_hash, chCnt, list_index, listData, sendState);
 }
 
 #endif

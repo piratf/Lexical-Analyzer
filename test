@@ -1,0 +1,6 @@
+make g && valgrind --leak-check=full ./main input.txt main.cpp 2>1.txt
+
+for i in `seq 0 10`; do
+  echo -e '\a'
+  sleep 0.4
+done
