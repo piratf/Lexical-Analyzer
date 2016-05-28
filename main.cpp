@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     if (argc > 1) {
         preprocess(argv[1], ppr);
         auto begin = std::chrono::high_resolution_clock::now();
-        la = ppr.buildLA();
+        ppr.buildLA(la);
         auto end = std::chrono::high_resolution_clock::now();
         printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     }

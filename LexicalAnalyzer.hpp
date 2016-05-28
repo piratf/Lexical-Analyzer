@@ -28,7 +28,10 @@ class LexicalAnalyzer {
         init();
     }
 
-    ~LexicalAnalyzer() = default;
+    ~LexicalAnalyzer() {
+        printf("11111111\n");
+        fflush(stdout);
+    }
 
     void init() {
         g_terminal_set.insert(' ');

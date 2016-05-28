@@ -150,8 +150,7 @@ class Preprocessor {
         puts("-------- end display -------------------");
     }
 
-    LexicalAnalyzer buildLA() {
-        LexicalAnalyzer la;
+    void buildLA(LexicalAnalyzer &la) {
 
         for (auto &var : _vecRegs) {
             _regTrees[var.first] = buildRegTree(var.second);
@@ -178,8 +177,6 @@ class Preprocessor {
             // printf("tag = %s\n", tag.data());
             // fflush(stdout);
         }
-
-        return std::move(la);
     }
 
     std::string findChildReg(const std::string &reg, size_t pos) {
