@@ -42,7 +42,7 @@ class DFA {
           _char_count(char_count),
           _vec_list_index(vec_list_index),
           _sendState(sendState) {
-        _listData = listData;
+        _listData = std::move(listData);
     }
 
     ~DFA() {

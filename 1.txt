@@ -1,21 +1,21 @@
-==30311== Memcheck, a memory error detector
-==30311== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
-==30311== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
-==30311== Command: ./main input.txt main.cpp
-==30311== 
-==30311== 
-==30311== HEAP SUMMARY:
-==30311==     in use at exit: 19,648 bytes in 3 blocks
-==30311==   total heap usage: 11,359,905 allocs, 11,359,902 frees, 229,716,092 bytes allocated
-==30311== 
-==30311== LEAK SUMMARY:
-==30311==    definitely lost: 0 bytes in 0 blocks
-==30311==    indirectly lost: 0 bytes in 0 blocks
-==30311==      possibly lost: 0 bytes in 0 blocks
-==30311==    still reachable: 19,648 bytes in 3 blocks
-==30311==         suppressed: 0 bytes in 0 blocks
-==30311== Reachable blocks (those to which a pointer was found) are not shown.
-==30311== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==30311== 
-==30311== For counts of detected and suppressed errors, rerun with: -v
-==30311== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==6404== Memcheck, a memory error detector
+==6404== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==6404== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==6404== Command: ./main input.txt main.cpp
+==6404== 
+==6404== 
+==6404== HEAP SUMMARY:
+==6404==     in use at exit: 19,296 bytes in 2 blocks
+==6404==   total heap usage: 11,834,195 allocs, 11,834,193 frees, 239,253,603 bytes allocated
+==6404== 
+==6404== LEAK SUMMARY:
+==6404==    definitely lost: 0 bytes in 0 blocks
+==6404==    indirectly lost: 0 bytes in 0 blocks
+==6404==      possibly lost: 0 bytes in 0 blocks
+==6404==    still reachable: 19,296 bytes in 2 blocks
+==6404==         suppressed: 0 bytes in 0 blocks
+==6404== Reachable blocks (those to which a pointer was found) are not shown.
+==6404== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==6404== 
+==6404== For counts of detected and suppressed errors, rerun with: -v
+==6404== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -16,5 +16,14 @@ run: $(resources)
 	g++ --std=c++11 -o3 main.cpp -o main
 	./main input.txt main.cpp
 
+check: $(resources)
+	g++ --std=c++11 -o0 -g main.cpp -o main
+	valgrind --leak-check=full ./main input.txt main.cpp 2>1.txt
+	for i in `seq 0 3`; do
+  		echo -e '\a'
+  		sleep 0.4
+	done
+
+
 clean:
 	rm main
