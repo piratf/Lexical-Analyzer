@@ -5,50 +5,6 @@
 #include <chrono>
 using namespace std;
 
-// static const int N = 1024;
-
-// bool test(LexicalAnalyzer *la) {
-//     ifstream input("test.txt");
-//     char str[N] = {};
-//     input.getline(str, N);
-//     string code(str);
-//     printf("input = %s\n", code.data());
-
-//     printf("%s\n", la -> calculate(code.data()).data());
-//     return true;
-// }
-
-// bool test(NFA *nfa) {
-//     ifstream input("test.txt");
-//     string code;
-//     input >> code;
-//     printf("input = %s\n", code.data());
-
-//     if (nfa -> calculate(code.data())) {
-//         printf("yes.\n");
-//         return true;
-//     } else {
-//         printf("no.\n");
-//         return false;
-//     }
-// }
-
-// bool test(DFA *dfa) {
-//     ifstream input("test.txt");
-//     string code;
-//     input >> code;
-//     // code = "// 123";
-//     cout << "input = " << code << endl;
-
-//     if (dfa -> calculate(code.data())) {
-//         printf("yes.123123123\n");
-//         return true;
-//     } else {
-//         printf("no.\n");
-//         return false;
-//     }
-// }
-
 void preprocess(const char *filePath, Preprocessor &ppr) {
 
     auto begin = std::chrono::high_resolution_clock::now();
@@ -98,7 +54,6 @@ int main(int argc, char *argv[]) {
     if (argc > 2) {
         auto begin = std::chrono::high_resolution_clock::now();
         la.parse(argv[2]);
-        la.parse("test.txt");
         auto end = std::chrono::high_resolution_clock::now();
         printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     }

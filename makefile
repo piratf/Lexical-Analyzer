@@ -1,5 +1,4 @@
-
-resources = main.cpp Preprocessor.hpp LexicalAnalyzer.hpp regtree.hpp nfa.hpp dfa.hpp dfalink.hpp nfatable.hpp
+resources = main.cpp Preprocessor.hpp LexicalAnalyzer.hpp regtree.hpp nfa.hpp dfa.hpp dfalink.hpp nfatable.hpp pclock.hpp
 
 main: $(resources)
 	g++ --std=c++11 main.cpp -o main
@@ -12,6 +11,10 @@ o: $(resources)
 
 debug: $(resources)
 	g++ --std=c++11 -D DEBUG main.cpp -o main
+
+run: $(resources)
+	g++ --std=c++11 -o3 main.cpp -o main
+	./main input.txt main.cpp
 
 clean:
 	rm main

@@ -4,6 +4,6 @@
 value = [numseq](?|.[numseq]|E(+|-)[numseq])
 keyword = int|void|float|#include|if|else|return|auto|while|do
 id = ([char]|_)([char]|[number]|_)*
-operator = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|\||\|\|
-literal = "([char]|[number]|[operator]| |\\\\[char])*"|'([char]|[number]|[operator])'|'\\\\[char]'
+operator = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|\||\|\||&|&&
+literal = "([char]|[number]|[operator]| |\\\\[char])*"|'([char]|[number]|[operator]|#)'|'\\\\[char]'
 temp = [numseq].|[numseq]E|[numseq]E(+|-)|"([char]|[number]|[operator]| )*

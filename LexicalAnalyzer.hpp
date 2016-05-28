@@ -82,19 +82,19 @@ class LexicalAnalyzer {
         puts("===============================");
         printf("=> start parse.\n");
         // std::ifstream ifile(filePath);
-        std::FILE *f = std::fopen(filePath, "r");
+        std::FILE *f = std::fopen(filePath, "rb");
 
         // mark if the current temp str failed.
         bool failFlag = false;
         line_num = 1;
         unsigned int    error_cnt = 0;
-        std::unique_ptr<char[]> _buf(new char[BUFFER_SIZE]);
+        std::unique_ptr<char[]> _buf(new char[BUFFER_SIZE << 1]);
         std::unique_ptr<char[]> _temp(new char[BUFFER_SIZE]);
         std::unique_ptr<char[]> _output(new char[BUFFER_SIZE]);
 
-        char * buf = _buf.get();
-        char * temp = _temp.get();
-        char * output = _output.get();
+        char *buf = _buf.get();
+        char *temp = _temp.get();
+        char *output = _output.get();
         char *tail = NULL;
         char *head = NULL;
 
@@ -108,11 +108,17 @@ class LexicalAnalyzer {
         bool comment_state = false;
         bool long_comment_state = false;
 
-        while (read_cnt >= N) {
-            read_cnt = std::fread(buf + remain_size, sizeof buf[0], N, f);
+        while (!feof(f)) {
+            read_cnt = std::fread(buf + remain_size, 1, N, f);
+
+            if (std::ferror(f)) {
+                puts("Error indicator set");
+                return;
+            }
+
             printf("read cnt = %d\n", read_cnt);
             printf("buf[0] = %c\n", buf[0]);
-            buf[read_cnt] = 0;
+            buf[read_cnt + remain_size] = 0;
             printf("Current content: \n%s\n", buf);
             // ifile.close();
 
@@ -142,6 +148,7 @@ class LexicalAnalyzer {
                     tail = head;
                 }
 
+                // deal with unfinished comment
                 if (comment_state) {
                     while (*tail && *tail != '\n') {
                         ++head;
@@ -153,9 +160,7 @@ class LexicalAnalyzer {
                     // printf("comment head.\n");
                     // fflush(stdout);
                     comment_state = false;
-                }
-
-                if (long_comment_state) {
+                } else if (long_comment_state) {
                     while (*tail && *tail != '/' && *(tail - 1) == '*') {
                         ++head;
                         ++tail;
@@ -222,10 +227,7 @@ class LexicalAnalyzer {
                     // complete a matching
                     tag.clear();
                     continue;
-                }
-
-                // for multiline comment
-                if (temp[0] == '/' && temp[1] == '*') {
+                } else if (temp[0] == '/' && temp[1] == '*') {
                     long_comment_state = true;
 
                     while (!(*tail == '*' && *(tail + 1) == '/') || !(*tail)) {
@@ -270,6 +272,7 @@ class LexicalAnalyzer {
                     failFlag = true;
 #ifdef DEBUG
                     printf("failed, temp = %s\n", temp);
+                    printf("tag = %s\n", tag.data());
                     fflush(stdout);
 #endif
 
@@ -346,6 +349,7 @@ class LexicalAnalyzer {
                     ++head;
                     --remain_size;
                 }
+
                 strncpy(output, head, remain_size);
                 strncpy(buf, output, remain_size);
             } else {
