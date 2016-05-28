@@ -1,6 +1,8 @@
 #ifndef PREPROCESSOR_H_
 #define PREPROCESSOR_H_
 
+#include "nfatable.hpp"
+#include "dfalink.hpp"
 #include "LexicalAnalyzer.hpp"
 #include <string>
 #include <map>
@@ -158,17 +160,18 @@ class Preprocessor {
         }
 
         for (auto &tag : _toDFA_tags) {
-            NFA *nfa = buildNFA(_regTrees[tag]);
+            auto nfa = buildNFA(_regTrees[tag]);
+
             // // _regTrees[tag] -> backOrderDisplay();
             // // _regTrees[tag] -> middleOrderDisplay();
-            // DFA *dfa = buildDFA(nfa);
-            // dfa -> tag(tag);
-            // dfa -> minimize();
-            // la.add(dfa);
+            DFA *dfa = buildDFA(nfa);
+            dfa -> tag(tag);
+            dfa -> minimize();
+            la.add(dfa);
 
-            // if (tag == "operator") {
-            //     la.separator(dfa);
-            // }
+            if (tag == "operator") {
+                la.separator(dfa);
+            }
 
             // dfa -> display();
             // fflush(stdout);
@@ -176,7 +179,7 @@ class Preprocessor {
             // fflush(stdout);
         }
 
-        return la;
+        return std::move(la);
     }
 
     std::string findChildReg(const std::string &reg, size_t pos) {

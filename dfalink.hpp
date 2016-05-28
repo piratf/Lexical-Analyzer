@@ -1,7 +1,7 @@
 #ifndef DFA_H_
 #define DFA_H_
 
-#include "nfa.hpp"
+#include "nfatable.hpp"
 #include <cstdio>
 #include <cstring>
 #include <vector>
@@ -11,6 +11,7 @@
 #include <map>
 #include <algorithm>
 #include <list>
+#include <array>
 
 using iterator_array = int **;
 const size_t CHAR_CNT = 259;
@@ -19,12 +20,12 @@ class DFA {
   public:
     // DFA() = default;
 
-    DFA(int *titleHash,
-        unsigned int char_count,
+    DFA(std::array<int, CHAR_CNT> &char_hash,
+        size_t char_count,
         std::vector<iterator_array> &&vec_list_index,
         std::list<iterator_array> &&listData,
         std::set<iterator_array> &&sendState)
-        : _titleHash(titleHash),
+        : _char_hash(char_hash),
           _char_count(char_count),
           _vec_list_index(vec_list_index),
           _listData(std::move(listData)),
@@ -33,12 +34,12 @@ class DFA {
     }
 
     iterator_array move(iterator_array state, char title) {
-        if (_titleHash[static_cast<size_t>(title)] == -1) {
+        if (_char_hash[static_cast<size_t>(title)] == -1) {
             return NULL;
         }
 
         return reinterpret_cast<iterator_array>
-               (state[_titleHash[static_cast<size_t>(title)]]);
+               (state[_char_hash[static_cast<size_t>(title)]]);
     }
 
     bool calculate(const char *str) {
@@ -75,7 +76,7 @@ class DFA {
         putchar(' ');
 
         for (size_t i = 0; i < CHAR_CNT; ++i) {
-            if (~_titleHash[i]) {
+            if (~_char_hash[i]) {
                 printf("%2c ", i);
             }
         }
@@ -291,6 +292,7 @@ class DFA {
                         if (*it == *(it_data)) {
                             delete [] *(it_data);
                             it_data = _listData.erase(it_data);
+
                             if (it_data == _listData.end()) {
                                 break;
                             }
@@ -361,7 +363,7 @@ class DFA {
     ~DFA() = default;
 
   private:
-    int *_titleHash;
+    std::array<int, CHAR_CNT> _char_hash;
     unsigned int _char_count = 0;
     std::vector<iterator_array> _vec_list_index;
     // std::vector<std::vector<unsigned int> > _vecData;
@@ -370,48 +372,39 @@ class DFA {
     std::string _tag = "default tag of dfa.";
 };
 
-DFA *buildDFA(NFA *nfa) {
-    // 更新 nfa 状态
-    nfa -> update();
-    // 获取 nfa 中的字符集合
-    std::set<char> schar = nfa -> schar();
-    // 字符集合中的字符数量
-    unsigned int chCnt = schar.size();
-    // 存放 dfa char 和对应的 index，默认值为 -1
-    int *titleHash = new int[CHAR_CNT];
-    memset(titleHash, -1, sizeof(int) * CHAR_CNT);
-    // 存放 dfa data
-    // std::vector<std::vector<unsigned int> > vecData;
+DFA* buildDFA(NFATable &nfa) {
+    nfa.update();
+    auto chCnt = nfa.schar().size();
+    std::array<int, CHAR_CNT> char_hash;
+    // the invaild of char hash is -1
+    memset(char_hash.data(), -1, char_hash.max_size() * sizeof(char_hash[0]));
+
     std::list<iterator_array> listData;
-
-    // printf("cnt of char: %d\n", schar.size());
-
     // 统计字符情况
-    int cnt = 0;
+    size_t cnt = 0;
 
-    for (char var : schar) {
-        titleHash[static_cast<size_t>(var)] = cnt;
+    for (char var : nfa.schar()) {
+        char_hash[static_cast<size_t>(var)] = cnt;
         ++cnt;
     }
 
     // 初始集合
-    std::set<NFANode *> sstart;
+    std::set<size_t> sstart;
     // 当前遍历的集合
-    std::set<NFANode *> scur;
+    std::set<size_t> scur;
     // 存储终态集合
     std::set<iterator_array> sendState;
-    sstart.insert(nfa -> head());
+    sstart.insert(nfa.index_head());
     // 空闭包
-    nfa -> getEplisonClosure(sstart);
+    nfa.getEplisonClosure(sstart);
     // 所有状态
-    std::map<std::set<NFANode *>, unsigned int> sdstates;
+    std::map<std::set<size_t>, size_t> sdstates;
     // 所有未标记状态
-    std::queue<std::set<NFANode *>> qunflag;
+    std::queue<std::set<size_t>> qunflag;
     // 未标记状态对应的 ID
-    std::queue<unsigned int> qid;
+    std::queue<size_t> qid;
 
     cnt = 0;
-
     sdstates[sstart] = cnt;
     qid.push(cnt);
     qunflag.push(sstart);
@@ -421,7 +414,6 @@ DFA *buildDFA(NFA *nfa) {
     iterator_array arr = new int *[chCnt];
     listData.push_back(arr);
     list_index.push_back(arr);
-
 
     int curID = 0;
 
@@ -434,10 +426,10 @@ DFA *buildDFA(NFA *nfa) {
         qid.pop();
 
         // for 每一个输入字符 a
-        for (char ch : schar) {
-            std::set<NFANode *> su = scur;
-            nfa -> getRouteClosure(ch, su);
-            nfa -> getEplisonClosure(su);
+        for (char ch : nfa.schar()) {
+            std::set<size_t> su = scur;
+            nfa.getRouteClosure(ch, su);
+            nfa.getEplisonClosure(su);
 
             if (sdstates.find(su) == sdstates.end()) {
                 ++cnt;
@@ -448,7 +440,7 @@ DFA *buildDFA(NFA *nfa) {
                 listData.push_back(arr);
                 list_index.push_back(arr);
 
-                if (su.find(nfa -> tail()) != su.end()) {
+                if (su.find(nfa.index_tail()) != su.end()) {
                     sendState.insert(arr);
                 }
             }
@@ -460,21 +452,12 @@ DFA *buildDFA(NFA *nfa) {
             }
 
             unsigned int a = sdstates[su];
-            (*(it))[titleHash[static_cast<size_t>(ch)]] =
+            (*(it))[char_hash[static_cast<size_t>(ch)]] =
                 reinterpret_cast<int *>(list_index[a]);
         }
     }
 
-
-    // minimize end state
-
-    // for (auto &endstate : sendState) {
-    //     for (unsigned int &var : vecData[endstate]) {
-    //         sendState.insert(var);
-    //     }
-    // }
-
-    return new DFA(titleHash, chCnt, std::move(list_index), std::move(listData), std::move(sendState));
+    return new DFA(char_hash, chCnt, std::move(list_index), std::move(listData), std::move(sendState));
 }
 
 #endif

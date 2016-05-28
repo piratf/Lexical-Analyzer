@@ -77,6 +77,7 @@ void preprocess(const char *filePath, Preprocessor &ppr) {
     // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
     printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     // fflush(stdout);
+    fflush(stdout);
 }
 
 int main(int argc, char *argv[]) {
@@ -95,7 +96,6 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc > 2) {
-
         auto begin = std::chrono::high_resolution_clock::now();
         la.parse(argv[2]);
         // la.parse("test.txt");

@@ -1,5 +1,5 @@
 
-resources = main.cpp Preprocessor.hpp LexicalAnalyzer.hpp regtree.hpp nfa.hpp dfa.hpp dfalink.hpp
+resources = main.cpp Preprocessor.hpp LexicalAnalyzer.hpp regtree.hpp nfa.hpp dfa.hpp dfalink.hpp nfatable.hpp
 
 main: $(resources)
 	g++ --std=c++11 main.cpp -o main
