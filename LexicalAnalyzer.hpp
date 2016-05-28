@@ -346,7 +346,8 @@ class LexicalAnalyzer {
                     ++head;
                     --remain_size;
                 }
-                strncpy(buf, head, remain_size);
+                strncpy(output, head, remain_size);
+                strncpy(buf, output, remain_size);
             } else {
                 remain_size = 0;
                 memset(buf, 0, sizeof(buf[0]) * N);
