@@ -63,32 +63,44 @@ class Preprocessor {
                 && ((it + 1 == str.end()) || (*(it + 1) == '|'))) || ((*(it - 1) == '(') && (*(it + 1) == ')'));
     }
 
+    /**
+     * 预处理正规式字符串
+     * @author piratf
+     * @param  tag 原始正规式字符串
+     */
     void update(std::string &tag) {
 
+        // 分割字符串，传去的 string 被切割剩下 tag，返回后半段的 reg 内容 string。
         std::string reg = split(tag);
+        // 处理语法糖，去除分割后字符串首位的空格。
         trim(tag);
         trim(reg);
 
+        // 处理 ':' 开头的辅助正规式语义
         if (tag[0] == ':') {
+            // 去除这个符号
             tag = tag.substr(1);
         } else {
+            // 添加到将要被处理成 DFA 的 vector 中。
             _toDFA_tags.push_back(tag);
         }
 
         printf("tag = %s\n", tag.data());
         printf("reg = %s\n", reg.data());
 
+        // 存储被处理后的 reg 内容
         std::string strContent;
 
         for (auto it = reg.begin(); it != reg.end(); ++it) {
 
+            // 转义字符，直接填到结果中
             if (*it == '\\') {
                 ++it;
                 strContent.push_back(*it);
                 continue;
             }
 
-            // 处理 [ ] 括号中的语法糖
+            // 处理 [ ] 括号中的语法糖，语义不需要支持嵌套括号
             if (*it == '[' && !standalone(reg, it)) {
                 size_t right = reg.find(']', it - reg.begin());
 
@@ -97,10 +109,10 @@ class Preprocessor {
                     error_shoot("error reg. missing ] ");
                 }
 
-                // 构造子字符串 得到括号中的内容
+                // 构造子字符串 得到 [ ] 括号中的内容
                 std::string subreg(it + 1, reg.begin() + right);
 
-                // 处理连续字符缩写语法糖
+                // 处理连续字符缩写语法糖，正则式引用的逻辑先保留，到语法树阶段再处理
                 if (subreg.size() == 3 && subreg[1] == '-') {
                     char startchar = subreg[0], endchar = subreg[2];
                     subreg.clear();
@@ -118,6 +130,7 @@ class Preprocessor {
 
             }
 
+            // 如果这个字符是独立出现的运算符，就在之前加上运算符转义
             if (!standalone(reg, it) && _set_op.find(*it) != _set_op.end()) {
                 strContent.push_back('\\');
             }
@@ -125,7 +138,9 @@ class Preprocessor {
             strContent.push_back(*it);
         }
 
+        // 处理完成后的 reg 连同 tag，添加到 vector 中
         _vecRegs.push_back(make_pair(tag, strContent));
+        // 加入集合
         _regs[tag] = strContent;
     }
 
