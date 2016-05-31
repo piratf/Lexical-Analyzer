@@ -10,6 +10,11 @@
 
 using namespace piratf;
 
+extern const char OP_CAT;
+extern const char OP_OR;
+extern const char OP_STAR;
+extern const char JUMP_EMP;
+
 class Preprocessor {
   public:
     // 构造时插入运算符到集合
@@ -239,8 +244,11 @@ class Preprocessor {
 
     std::shared_ptr<RegTree> buildRegTree(const string &reg) {
         std::shared_ptr<RegTree> root(new RegTree());
+        // 当前结点的祖父节点
         std::shared_ptr<RegTree> gp = NULL;
+        // 当前结点的父节点
         std::shared_ptr<RegTree> parent = NULL;
+        // 当前结点
         std::shared_ptr<RegTree> p = root;
 
         // printf("reg = %s\n", reg.data());
@@ -255,11 +263,18 @@ class Preprocessor {
                 continue;
             }
 
-            // 子表达式树重用
+            // 子表达式树重用逻辑
             if (cur == ']' && *(it + 1) == '\\') {
                 it += 2;
+                // 找到结束括号
                 size_t t = reg.rfind("\\[", reg.rend() - (it));
+                // 取出内容
                 std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
+                // 在保存树的 set 结构中找到对应树的根节点，赋值
+                if (_regTrees.find(substr) == _regTrees.end()) {
+                    error_shoot("can't find the sub reg tree.");
+                    return std::shared_ptr<RegTree>(NULL);
+                }
                 p -> rson(_regTrees[substr]);
                 p -> data(OP_CAT);
                 it += substr.size() + 1;
@@ -296,7 +311,7 @@ class Preprocessor {
             } else if (cur == '?' && *(it + 1) == '\\') {
                 ++it;
                 // ? 运算表示空跳转，空跳转设置为 0
-                p -> rson(new RegTree(0));
+                p -> rson(new RegTree(JUMP_EMPTY));
                 // 设置运算符
                 p -> data(OP_CAT);
             } else {
