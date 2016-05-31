@@ -42,67 +42,108 @@ value keyword id operator literal temp
 -------- end display -------------------
 977 micro seconds
 value
-36171 micro seconds
+36173 micro seconds
 keyword
 2933 micro seconds
 id
-2266617 micro seconds
+2215841 micro seconds
 operator
-5007 micro seconds
+5053 micro seconds
 literal
-5545646 micro seconds
+5423382 micro seconds
 temp
-3356970 micro seconds
+3317103 micro seconds
 ===============================
 => start parse.
 read cnt = 1024
 buf[0] = #
 Current content: 
-#include "LexicalAnalyzer.hpp"
-#include "Preprocessor.hpp"
-#include <cstdio>
-#include <fstream>
-#include <chrono>
-using namespace std;
-
-/**
- * 预处理正规式文件
- * @author piratf
- * @param  filePath 正规式文件路径
- * @param  ppr      被更新的预处理对象
- */
-void preprocess(const char *filePath, Preprocessor &ppr) {
-
-    auto begin = std::chrono::high_resolution_clock::now();
-    ifstream input(filePath);
-    char str[N] = {};
-
-    while (!input.eof()) {
-        input.getline(str, N, '\n');
-
-        // 处理正规式注释
-        if (str[0] && str[0] != '#') {
-            std::string reg(str, strlen(str));
-
-            // 处理 CRLF 换行
-            if (*reg.rbegin() == 13) {
-                reg.pop_back();
-            }
-
-            ppr.update(reg);
-        }
-    }
-
-    input.close();
-
-    ppr.display();
-    auto end = std::chrono::high_resolution_clock::now();
+#include "LexicalAnalyzer.hpp"
+
+#include "Preprocessor.hpp"
+
+#include <cstdio>
+
+#include <fstream>
+
+#include <chrono>
+
+using namespace std;
+
+
+
+/**
+
+ * 预处理正规式文件
+
+ * @author piratf
+
+ * @param  filePath 正规式文件路径
+
+ * @param  ppr      被更新的预处理对象
+
+ */
+
+void preprocess(const char *filePath, Preprocessor &ppr) {
+
+
+
+    auto begin = std::chrono::high_resolution_clock::now();
+
+    ifstream input(filePath);
+
+    char str[N] = {};
+
+
+
+    while (!input.eof()) {
+
+        input.getline(str, N, '\n');
+
+
+
+        // 处理正规式注释
+
+        if (str[0] && str[0] != '#') {
+
+            std::string reg(str, strlen(str));
+
+
+
+            // 处理 CRLF 换行
+
+            if (*reg.rbegin() == 13) {
+
+                reg.pop_back();
+
+            }
+
+
+
+            ppr.update(reg);
+
+        }
+
+    }
+
+
+
+    input.close();
+
+
+
+    ppr.display();
+
+    auto end = std::chrono::high_resolution_clock::now();
+
     printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseco
 line 1   : (    keyword : #include )
-----------> "LexicalAnalyzer.hpp"
+----------> "LexicalAnalyzer.hpp"
+
 error** : Unreachable sequences. line 1
 line 2   : (    keyword : #include )
-----------> "Preprocessor.hpp"
+----------> "Preprocessor.hpp"
+
 error** : Unreachable sequences. line 2
 line 3   : (    keyword : #include )
 line 3   : (   operator : < )
@@ -120,11 +161,16 @@ line 6   : (         id : using )
 line 6   : (         id : namespace )
 line 6   : (         id : std )
 line 6   : (   operator : ; )
-line 13  : (    comment : /**
- * 预处理正规式文件
- * @author piratf
- * @param  filePath 正规式文件路径
- * @param  ppr      被更新的预处理对象
+line 13  : (    comment : /**
+
+ * 预处理正规式文件
+
+ * @author piratf
+
+ * @param  filePath 正规式文件路径
+
+ * @param  ppr      被更新的预处理对象
+
  */ )
 line 14  : (    keyword : void )
 line 14  : (         id : preprocess )
@@ -188,7 +234,8 @@ line 21  : (   operator : , )
 line 21  : (    literal : '\n' )
 line 21  : (   operator : ) )
 line 21  : (   operator : ; )
-line 24  : (    comment : // 处理正规式注释 )
+line 24  : (    comment : // 处理正规式注释
+ )
 line 24  : (    keyword : if )
 line 24  : (   operator : ( )
 line 24  : (         id : str )
@@ -218,7 +265,8 @@ line 25  : (         id : str )
 line 25  : (   operator : ) )
 line 25  : (   operator : ) )
 line 25  : (   operator : ; )
-line 28  : (    comment : // 处理 CRLF 换行 )
+line 28  : (    comment : // 处理 CRLF 换行
+ )
 line 28  : (    keyword : if )
 line 28  : (   operator : ( )
 line 28  : (   operator : * )
@@ -290,37 +338,68 @@ line 40  : (   operator : :: )
 read cnt = 1024
 buf[0] = m
 Current content: 
-microseconds>(end - begin).count());
-    fflush(stdout);
-}
-
-void test(Preprocessor &ppr, LexicalAnalyzer &la) {
-    preprocess("input.txt", ppr);
-    ppr.buildLA(la);
-    la.parse("main.cpp");
-}
-
-int main(int argc, char *argv[]) {
-    freopen("output.txt", "w", stdout);
-    Preprocessor ppr;
-    LexicalAnalyzer la;
-
-    printf("argc = %d\n", argc);
-
-    if (argc > 1) {
-        preprocess(argv[1], ppr);
-        auto begin = std::chrono::high_resolution_clock::now();
-        ppr.buildLA(la);
-        auto end = std::chrono::high_resolution_clock::now();
-        printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-    } else {
-        test(ppr, la);
-    }
-
-    if (argc > 2) {
-        auto begin = std::chrono::high_resolution_clock::now();
-        la.parse(argv[2]);
-        auto end = std::chrono::high_resolution_clock::now();
+microseconds>(end - begin).count());
+
+    fflush(stdout);
+
+}
+
+
+
+void test(Preprocessor &ppr, LexicalAnalyzer &la) {
+
+    preprocess("input.txt", ppr);
+
+    ppr.buildLA(la);
+
+    la.parse("main.cpp");
+
+}
+
+
+
+int main(int argc, char *argv[]) {
+
+    freopen("output.txt", "w", stdout);
+
+    Preprocessor ppr;
+
+    LexicalAnalyzer la;
+
+
+
+    printf("argc = %d\n", argc);
+
+
+
+    if (argc > 1) {
+
+        preprocess(argv[1], ppr);
+
+        auto begin = std::chrono::high_resolution_clock::now();
+
+        ppr.buildLA(la);
+
+        auto end = std::chrono::high_resolution_clock::now();
+
+        printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+
+    } else {
+
+        test(ppr, la);
+
+    }
+
+
+
+    if (argc > 2) {
+
+        auto begin = std::chrono::high_resolution_clock::now();
+
+        la.parse(argv[2]);
+
+        auto end = std::chrono::high_resolution_clock::now();
+
         printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
 line 40  : (         id : microseconds )
 line 40  : (   operator : > )
@@ -568,10 +647,14 @@ line 71  : (   operator : ( )
 read cnt = 29
 buf[0] = )
 Current content: 
-));
-    }
-
-    return 0;
+));
+
+    }
+
+
+
+    return 0;
+
 }
 line 71  : (   operator : ) )
 line 71  : (   operator : ) )

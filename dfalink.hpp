@@ -22,12 +22,10 @@ class DFA {
 
     DFA(std::array<int, CHAR_CNT> &char_hash,
         size_t char_count,
-        std::vector<iterator_array> &&vec_list_index,
         std::list<iterator_array> &&listData,
         std::set<iterator_array> &&sendState)
         : _char_hash(char_hash),
           _char_count(char_count),
-          _vec_list_index(vec_list_index),
           _listData(std::move(listData)),
           _sendState(std::move(sendState)) {
 
@@ -35,12 +33,10 @@ class DFA {
 
     DFA(std::array<int, CHAR_CNT> &char_hash,
         size_t char_count,
-        std::vector<iterator_array> &vec_list_index,
         std::list<iterator_array> &listData,
         std::set<iterator_array> &sendState)
         : _char_hash(char_hash),
           _char_count(char_count),
-          _vec_list_index(vec_list_index),
           _sendState(sendState) {
         _listData = std::move(listData);
     }
@@ -381,8 +377,6 @@ class DFA {
   private:
     std::array<int, CHAR_CNT> _char_hash;
     unsigned int _char_count = 0;
-    std::vector<iterator_array> _vec_list_index;
-    // std::vector<std::vector<unsigned int> > _vecData;
     std::list<int **> _listData;
     std::set<int **> _sendState;
     std::string _tag = "default tag of dfa.";
@@ -472,7 +466,7 @@ DFA *buildDFA(NFATable &nfa) {
         }
     }
 
-    return new DFA(char_hash, chCnt, list_index, listData, sendState);
+    return new DFA(char_hash, chCnt, listData, sendState);
 }
 
 #endif
