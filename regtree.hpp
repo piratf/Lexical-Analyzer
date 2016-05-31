@@ -23,6 +23,7 @@ const char OP_EMPTY = 0;
 
 class RegTree {
   public:
+    // 默认构造情况下，该节点为空跳转，不是叶子结点
     RegTree(): _leaf(false), _ope(OP_EMPTY), _lson(NULL), _rson(NULL) {}
 
     explicit RegTree(char data)

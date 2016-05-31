@@ -12,7 +12,7 @@ reg = int|void|float|#include|if|else|return|auto|while|do
 tag = id
 reg = ([char]|_)([char]|[number]|_)*
 tag = operator
-reg = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|\||\|\||&|&&
+reg = \(|,|\)|<|>|\[|\]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|\||\|\||&|&&
 tag = literal
 reg = "([char]|[number]|[operator]| |\\\\[char])*"|'([char]|[number]|[operator]|#)'|'\\\\[char]'
 tag = temp
@@ -40,19 +40,19 @@ reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-1011 micro seconds
+500 micro seconds
 value
-35764 micro seconds
+34926 micro seconds
 keyword
-3910 micro seconds
+1955 micro seconds
 id
-2267120 micro seconds
+2235064 micro seconds
 operator
-4888 micro seconds
+4426 micro seconds
 literal
-5504597 micro seconds
+5428686 micro seconds
 temp
-3360506 micro seconds
+3327054 micro seconds
 ===============================
 => start parse.
 read cnt = 1024

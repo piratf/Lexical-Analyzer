@@ -108,8 +108,9 @@ class Preprocessor {
                 continue;
             }
 
-            // 处理 [ ] 括号中的语法糖，语义不需要支持嵌套括号
-            if (*it == '[' && !standalone(reg, it)) {
+            // 处理 [ ] 括号中的语法糖
+            if (*it == '[') {
+                // 语义不需要支持嵌套括号
                 size_t right = reg.find(']', it - reg.begin());
 
                 // 如果中括号不成对
@@ -259,19 +260,12 @@ class Preprocessor {
                 it += 2;
                 size_t t = reg.rfind("\\[", reg.rend() - (it));
                 std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
-                // printf("substr = %s\n", substr.data());
-                // fflush(stdout);
-                // _regTrees[substr] -> middleOrderDisplay();
                 p -> rson(_regTrees[substr]);
                 p -> data(OP_CAT);
                 it += substr.size() + 1;
             } else if (cur == '|' && *(it + 1) == '\\') {
-                // fflush(stdout);
                 std::string substr = reg.substr(0, reg.rend() - it - 2);
-                // printf("substr = %s\n", substr.data());
-                // fflush(stdout);
                 it = reg.rend() - 1;
-                // printf("it = %c\n", *it);
                 // 右支为子表达式树，和父节点的右支相对应，因此修改父节点的运算符
                 std::shared_ptr<RegTree> r(buildRegTree(substr));
                 std::shared_ptr<RegTree> n = root;
@@ -283,8 +277,6 @@ class Preprocessor {
                     gp = root;
                 }
             } else if (cur == ')' && *(it + 1) == '\\') {
-                // size_t t = reg.rfind("\\(", reg.rend() - (it));
-                // std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
                 std::string substr = findChildReg(reg, reg.rend() - it - 2);
                 it += substr.size() + 3;
                 // 另右支为子表达式树，符号为默认
@@ -292,8 +284,6 @@ class Preprocessor {
                 p -> data(OP_CAT);
             } else if (cur == '*' && *(it + 1) == '\\') {
                 it += 2;
-                // size_t t = reg.rfind("\\(", reg.rend() - (it));
-                // std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
                 std::string substr = findChildReg(reg, reg.rend() - it - 2);
 
                 it += substr.size() + 3;
@@ -305,7 +295,7 @@ class Preprocessor {
                 p -> data(OP_CAT);
             } else if (cur == '?' && *(it + 1) == '\\') {
                 ++it;
-                // set to zero, empty jump
+                // ? 运算表示空跳转，空跳转设置为 0
                 p -> rson(new RegTree(0));
                 // 设置运算符
                 p -> data(OP_CAT);
@@ -330,10 +320,8 @@ class Preprocessor {
             std::shared_ptr<RegTree> r = parent -> rson();
 
             if (!gp) {
-                // delete root;
                 root = r;
             } else {
-                // delete gp -> lson();
                 gp -> lson(r);
             }
         }
