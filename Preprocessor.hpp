@@ -30,9 +30,16 @@ class Preprocessor {
         }
     }
 
+    /**
+     * 分割字符串，得到表达式名称字符串，返回表达式内容字符串
+     * @author piratf
+     * @param  tag 原始表达式字符串
+     * @return     表达式内容字符串
+     */
     std::string split(std::string &tag) {
         auto it = tag.begin();
 
+        // 找到第一个 = 符号
         for (; it != tag.end(); ++it) {
             if (*it == '=') {
                 break;
@@ -41,15 +48,15 @@ class Preprocessor {
 
         auto it2 = it + 1;
 
+        // 处理 reg 前部的空格
         while (*it2 == ' ') {
             ++it2;
         }
 
-        // printf("reg2 = %s\n", tag.substr(it2 - tag.begin(), tag.end() - it2).data());
-
         std::string reg(std::move(tag.substr(it2 - tag.begin(), tag.end() - it2).data()));
         it2 = it - 1;
 
+        // 处理 tag 尾部的空格
         while (*it2 == ' ') {
             --it2;
         }
@@ -72,8 +79,7 @@ class Preprocessor {
 
         // 分割字符串，传去的 string 被切割剩下 tag，返回后半段的 reg 内容 string。
         std::string reg = split(tag);
-        // 处理语法糖，去除分割后字符串首位的空格。
-        trim(tag);
+        // 处理语法糖，去除分割后 reg 末尾的空格。
         trim(reg);
 
         // 处理 ':' 开头的辅助正规式语义

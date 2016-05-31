@@ -36,6 +36,12 @@ void preprocess(const char *filePath, Preprocessor &ppr) {
     fflush(stdout);
 }
 
+void test(Preprocessor &ppr, LexicalAnalyzer &la) {
+    preprocess("input.txt", ppr);
+    ppr.buildLA(la);
+    la.parse("main.cpp");
+}
+
 int main(int argc, char *argv[]) {
     freopen("output.txt", "w", stdout);
     Preprocessor ppr;
@@ -49,6 +55,8 @@ int main(int argc, char *argv[]) {
         ppr.buildLA(la);
         auto end = std::chrono::high_resolution_clock::now();
         printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    } else {
+        test(ppr, la);
     }
 
     if (argc > 2) {

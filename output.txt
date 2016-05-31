@@ -1,0 +1,48 @@
+argc = 1
+tag = number
+reg = [0-9]
+tag = char
+reg = [A-Z]|[a-z]
+tag = numseq
+reg = [number]([number])*
+tag = value
+reg = [numseq](?|.[numseq]|E(+|-)[numseq])
+tag = keyword
+reg = int|void|float|#include|if|else|return|auto|while|do
+tag = id
+reg = ([char]|_)([char]|[number]|_)*
+tag = operator
+reg = \(|,|\)|<|>|[|]|;|%|^|{|}|+|-|\*|/|=|::|:|.|\\\\|!|\||\|\||&|&&
+tag = literal
+reg = "([char]|[number]|[operator]| |\\\\[char])*"|'([char]|[number]|[operator]|#)'|'\\\\[char]'
+tag = temp
+reg = [numseq].|[numseq]E|[numseq]E(+|-)|"([char]|[number]|[operator]| )*
+-------- preprosessor display ----------
+size = 9
+tag = number
+reg = 0\|1\|2\|3\|4\|5\|6\|7\|8\|9
+tag = char
+reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z\|a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z
+tag = numseq
+reg = \[number\]\(\[number\]\)\*
+tag = value
+reg = \[numseq\]\(\?\|.\[numseq\]\|E\(+\|-\)\[numseq\]\)
+tag = keyword
+reg = int\|void\|float\|#include\|if\|else\|return\|auto\|while\|do
+tag = id
+reg = \(\[char\]\|_\)\(\[char\]\|\[number\]\|_\)\*
+tag = operator
+reg = (\|,\|)\|<\|>\|[\|]\|;\|%\|^\|{\|}\|+\|-\|*\|/\|=\|::\|:\|.\|\\\|!\||\|||\|&\|&&
+tag = literal
+reg = "\(\[char\]\|\[number\]\|\[operator\]\| \|\\\[char\]\)\*"\|'\(\[char\]\|\[number\]\|\[operator\]\|#\)'\|'\\\[char\]'
+tag = temp
+reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[operator\]\| \)\*
+----- to dfa -----
+value keyword id operator literal temp 
+-------- end display -------------------
+17040 micro seconds
+value
+57098 micro seconds
+keyword
+2932 micro seconds
+id
