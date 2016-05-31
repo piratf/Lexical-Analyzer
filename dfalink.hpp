@@ -437,7 +437,6 @@ DFA *buildDFA(NFATable &nfa) {
         // 标记 X
         scur = qunflag.front();
         curID = qid.front();
-        // printf("at start, scur size = %d\n", scur.size());
         qunflag.pop();
         qid.pop();
 

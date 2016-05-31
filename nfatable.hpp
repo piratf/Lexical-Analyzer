@@ -39,10 +39,17 @@ class NFATable {
         return 0;
     }
 
+    /**
+     * 添加一个 nfa 到当前 nfa 中，合并两个表，另外一个 nfa 的内容会被删除
+     * @author piratf
+     * @param  other 另一个 nfa
+     * @return       另一个 nfa 的 head 位置
+     */
     size_t add(NFATable &other) {
         size_t base_size = _table.size();
 
         for (auto &row : other.table()) {
+            // 处理行号
             for (auto &pair : row) {
                 pair.second += base_size;
             }
@@ -152,14 +159,14 @@ class NFATable {
     }
 
     void line(NFATable &lhs, NFATable &rhs) {
-        // head node
+        // add head node
         addNode();
         size_t headID = index_tail();
         _table[headID].push_back(std::make_pair(0, add(lhs)));
         size_t lhs_tail = index_tail();
         _table[headID].push_back(std::make_pair(0, add(rhs)));
         size_t rhs_tail = index_tail();
-        // tail node
+        // add tail node
         addNode();
         _table[lhs_tail].push_back(std::make_pair(0, index_tail()));
         _table[rhs_tail].push_back(std::make_pair(0, index_tail()));
