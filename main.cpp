@@ -13,11 +13,10 @@ void preprocess(const char *filePath, Preprocessor &ppr) {
 
     while (!input.eof()) {
         input.getline(str, N, '\n');
-
-        if (str[0]) {
+        if (str[0] && str[0] != '#') {
             std::string reg(str, strlen(str));
 
-            if (*reg.rbegin() == 13 || *reg.rbegin() == '#') {
+            if (*reg.rbegin() == 13) {
                 reg.pop_back();
             }
 

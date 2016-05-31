@@ -1,6 +1,7 @@
-:number = [0-9]
-:char = [A-Z]|[a-z]
-:numseq = [number]([number])*
+#123123123
+:number=[0-9]  
+:char=[A-Z]|[a-z]
+:numseq = [number]([number])*   
 value = [numseq](?|.[numseq]|E(+|-)[numseq])
 keyword = int|void|float|#include|if|else|return|auto|while|do
 id = ([char]|_)([char]|[number]|_)*
