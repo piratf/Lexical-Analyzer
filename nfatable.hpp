@@ -137,17 +137,31 @@ class NFATable {
         input.swap(ret);
     }
 
-    // 得到空闭包
+    /**
+     * 递归函数，得到空闭包
+     * @author piratf
+     * @param  index_head 当前函数内起始状态的下标
+     * @param  ret        状态集合
+     */
     void _getEplisonClosure(size_t index_head, std::set<size_t> &ret) {
+        // 遍历邻接表由起始状态所关联的所有状态
         for (auto &var : _table[index_head]) {
+            // 如果是空跳转且不在 ret 集合内
             if (!var.first && ret.find(var.second) == ret.end()) {
                 ret.insert(var.second);
+                // 空闭包会无限递归，直到没有空跳转为止
                 _getEplisonClosure(var.second, ret);
             }
         }
     }
 
+    /**
+     * 得到空闭包
+     * @author piratf
+     * @param  input 输入一个状态组成的集合
+     */
     void getEplisonClosure(std::set<size_t> &input) {
+        // 遍历输入集合内的状态
         for (auto &node : input) {
             _getEplisonClosure(node, input);
         }
