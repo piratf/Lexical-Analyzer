@@ -270,11 +270,13 @@ class Preprocessor {
                 size_t t = reg.rfind("\\[", reg.rend() - (it));
                 // 取出内容
                 std::string substr = reg.substr(t + 2, reg.rend() - it - t - 2);
+
                 // 在保存树的 set 结构中找到对应树的根节点，赋值
                 if (_regTrees.find(substr) == _regTrees.end()) {
-                    error_shoot("can't find the sub reg tree.");
-                    return std::shared_ptr<RegTree>(NULL);
+                    error_shoot("build regtree: can't find the sub reg tree.");
+                    exit(0);
                 }
+
                 p -> rson(_regTrees[substr]);
                 p -> data(OP_CAT);
                 it += substr.size() + 1;
@@ -292,6 +294,7 @@ class Preprocessor {
                     gp = root;
                 }
             } else if (cur == ')' && *(it + 1) == '\\') {
+                // 括号要注意嵌套括号的问题
                 std::string substr = findChildReg(reg, reg.rend() - it - 2);
                 it += substr.size() + 3;
                 // 另右支为子表达式树，符号为默认
@@ -300,7 +303,6 @@ class Preprocessor {
             } else if (cur == '*' && *(it + 1) == '\\') {
                 it += 2;
                 std::string substr = findChildReg(reg, reg.rend() - it - 2);
-
                 it += substr.size() + 3;
                 // 需要在右支上建立新的 星号运算树
                 std::shared_ptr<RegTree> star(new RegTree(OP_STAR));
@@ -331,6 +333,7 @@ class Preprocessor {
         }
 
         // 运行到 reg 结尾时，需要将 parent 的 rson 挂到 gp 的 lson 上
+        // 以去除多余的空节点
         if (!p -> data()) {
             std::shared_ptr<RegTree> r = parent -> rson();
 
@@ -346,6 +349,7 @@ class Preprocessor {
 
     void error_shoot(const char *message) {
         printf("from preprosessor: error** -> %s\n", message);
+        fflush(stdout);
     }
 
   private:
