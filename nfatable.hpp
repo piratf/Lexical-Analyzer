@@ -172,18 +172,26 @@ class NFATable {
         _table[headID].push_back(std::make_pair(0, other_head));
         size_t other_tail = index_tail();
         _table[other_tail].push_back(std::make_pair(0, other_head));
-        // tail
         addNode();
         _table[other_tail].push_back(std::make_pair(0, index_tail()));
         _table[headID].push_back(std::make_pair(0, index_tail()));
     }
 
-    // private:
+  private:
+    // 邻接表
     std::vector<std::vector<std::pair<char, size_t> > > _table;
+    // 记录 nfa 的字符集
     std::set<char> _schar;
 };
 
+/**
+ * 构造 NFA
+ * @author piratf
+ * @param  root 语法树的根节点
+ * @return      NFA 对象
+ */
 NFATable _buildNFA(std::shared_ptr<RegTree> root) {
+    // 空 NFA
     if (root == nullptr) {
         return NFATable();
     }
@@ -191,11 +199,13 @@ NFATable _buildNFA(std::shared_ptr<RegTree> root) {
     char tag = 0;
     NFATable left, right, nfa;
 
+    // 单字符跳转
     if (root -> leaf()) {
         tag = root -> data();
         return NFATable(tag);
     }
 
+    // 后序遍历
     if (root -> lson()) {
         left = _buildNFA(root -> lson());
     }

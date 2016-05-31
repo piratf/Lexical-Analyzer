@@ -248,7 +248,6 @@ class Preprocessor {
         return std::move(std::string(reg.data() + it + 1, pos - it - 1));
     }
 
-    
     std::shared_ptr<RegTree> buildRegTree(const string &reg) {
         std::shared_ptr<RegTree> root(new RegTree());
         // 当前结点的祖父节点
