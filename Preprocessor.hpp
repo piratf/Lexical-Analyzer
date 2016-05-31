@@ -217,12 +217,18 @@ class Preprocessor {
         }
     }
 
-    std::string findChildReg(const std::string &reg, size_t pos) {
+    /**
+     * 在字符串中通过记数找到对应层级的左括号，从 pos 起向左查找
+     * @author piratf
+     * @param  reg 字符串对象
+     * @param  pos 起始查找位置
+     * @return     括号中的子字符串
+     */
+    std::string rfindChildReg(const std::string &reg, size_t pos) {
         size_t it = pos;
         int cnt = 0;
 
         while (it >= 0 && it < reg.size()) {
-            // printf(" it = %c\n", reg[it]);
 
             if (reg[it] == ')' && reg[it - 1] == '\\') {
                 ++cnt;
@@ -239,9 +245,10 @@ class Preprocessor {
             --it;
         }
 
-        return std::string(reg.data() + it + 1, pos - it - 1);
+        return std::move(std::string(reg.data() + it + 1, pos - it - 1));
     }
 
+    
     std::shared_ptr<RegTree> buildRegTree(const string &reg) {
         std::shared_ptr<RegTree> root(new RegTree());
         // 当前结点的祖父节点
@@ -295,14 +302,14 @@ class Preprocessor {
                 }
             } else if (cur == ')' && *(it + 1) == '\\') {
                 // 括号要注意嵌套括号的问题
-                std::string substr = findChildReg(reg, reg.rend() - it - 2);
+                std::string substr(rfindChildReg(reg, reg.rend() - it - 2));
                 it += substr.size() + 3;
                 // 另右支为子表达式树，符号为默认
                 p -> rson(buildRegTree(substr));
                 p -> data(OP_CAT);
             } else if (cur == '*' && *(it + 1) == '\\') {
                 it += 2;
-                std::string substr = findChildReg(reg, reg.rend() - it - 2);
+                std::string substr(rfindChildReg(reg, reg.rend() - it - 2));
                 it += substr.size() + 3;
                 // 需要在右支上建立新的 星号运算树
                 std::shared_ptr<RegTree> star(new RegTree(OP_STAR));

@@ -6,7 +6,7 @@ reg = [A-Z]|[a-z]
 tag = numseq
 reg = [number]([number])*
 tag = value
-reg = [bitch](?|.[numseq]|E(+|-)[numseq])
+reg = [numseq](?|.[numseq]|E(+|-)[numseq])
 tag = keyword
 reg = int|void|float|#include|if|else|return|auto|while|do
 tag = id
@@ -26,7 +26,7 @@ reg = A\|B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\
 tag = numseq
 reg = \[number\]\(\[number\]\)\*
 tag = value
-reg = \[bitch\]\(\?\|.\[numseq\]\|E\(+\|-\)\[numseq\]\)
+reg = \[numseq\]\(\?\|.\[numseq\]\|E\(+\|-\)\[numseq\]\)
 tag = keyword
 reg = int\|void\|float\|#include\|if\|else\|return\|auto\|while\|do
 tag = id
@@ -40,5 +40,15 @@ reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-977 micro seconds
-from preprosessor: error** -> can't find the sub reg tree.
+968 micro seconds
+value
+35179 micro seconds
+keyword
+1955 micro seconds
+id
+2260096 micro seconds
+operator
+4902 micro seconds
+literal
+5609245 micro seconds
+temp
