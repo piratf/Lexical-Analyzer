@@ -5,6 +5,12 @@
 #include <chrono>
 using namespace std;
 
+/**
+ * 预处理正规式文件
+ * @author piratf
+ * @param  filePath 正规式文件路径
+ * @param  ppr      被更新的预处理对象
+ */
 void preprocess(const char *filePath, Preprocessor &ppr) {
 
     auto begin = std::chrono::high_resolution_clock::now();
@@ -13,14 +19,16 @@ void preprocess(const char *filePath, Preprocessor &ppr) {
 
     while (!input.eof()) {
         input.getline(str, N, '\n');
+
+        // 处理正规式注释
         if (str[0] && str[0] != '#') {
             std::string reg(str, strlen(str));
 
+            // 处理 CRLF 换行
             if (*reg.rbegin() == 13) {
                 reg.pop_back();
             }
 
-            // printf("rrrr = %c\n", *reg.rbegin());
             ppr.update(reg);
         }
     }
@@ -29,9 +37,7 @@ void preprocess(const char *filePath, Preprocessor &ppr) {
 
     ppr.display();
     auto end = std::chrono::high_resolution_clock::now();
-    // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " micro seconds" << std::endl;
     printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-    // fflush(stdout);
     fflush(stdout);
 }
 
