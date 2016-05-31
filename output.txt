@@ -40,19 +40,19 @@ reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-992 micro seconds
+977 micro seconds
 value
-37150 micro seconds
+36171 micro seconds
 keyword
-2502 micro seconds
+2933 micro seconds
 id
-2264482 micro seconds
+2266617 micro seconds
 operator
-4503 micro seconds
+5007 micro seconds
 literal
-5598566 micro seconds
+5545646 micro seconds
 temp
-3390998 micro seconds
+3356970 micro seconds
 ===============================
 => start parse.
 read cnt = 1024

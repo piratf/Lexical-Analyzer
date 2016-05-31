@@ -122,7 +122,12 @@ class NFATable {
         return _schar;
     }
 
-    // replace the origin closure
+    /**
+     * smove 函数
+     * @author piratf
+     * @param  ch    跳转字符
+     * @param  input 输入集合
+     */
     void getRouteClosure(char ch, std::set<size_t> &input) {
         std::set<size_t> ret;
 
@@ -134,6 +139,7 @@ class NFATable {
             }
         }
 
+        // 交换集合，原来的输入状态被抛弃
         input.swap(ret);
     }
 
