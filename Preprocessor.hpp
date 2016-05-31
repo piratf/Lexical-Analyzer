@@ -12,6 +12,7 @@ using namespace piratf;
 
 class Preprocessor {
   public:
+    // 构造时插入运算符到集合
     Preprocessor() {
         _set_op.insert('|');
         _set_op.insert(')');
@@ -24,7 +25,13 @@ class Preprocessor {
 
     ~Preprocessor() = default;
 
-    void inline trim(std::string &reg) {
+    /**
+     * 去除字符串尾部的空格
+     * @author piratf
+     * @param  reg 字符串引用
+     * @return     void
+     */
+    void inline trim_after(std::string &reg) {
         while (reg.back() == ' ') {
             reg.pop_back();
         }
@@ -65,11 +72,6 @@ class Preprocessor {
         return std::move(reg);
     }
 
-    bool standalone(const std::string &str, const std::string::iterator &it) {
-        return (((it - 1 == str.begin()) || (*(it - 1) == '|'))
-                && ((it + 1 == str.end()) || (*(it + 1) == '|'))) || ((*(it - 1) == '(') && (*(it + 1) == ')'));
-    }
-
     /**
      * 预处理正规式字符串
      * @author piratf
@@ -80,7 +82,7 @@ class Preprocessor {
         // 分割字符串，传去的 string 被切割剩下 tag，返回后半段的 reg 内容 string。
         std::string reg = split(tag);
         // 处理语法糖，去除分割后 reg 末尾的空格。
-        trim(reg);
+        trim_after(reg);
 
         // 处理 ':' 开头的辅助正规式语义
         if (tag[0] == ':') {
@@ -137,7 +139,7 @@ class Preprocessor {
             }
 
             // 如果这个字符是独立出现的运算符，就在之前加上运算符转义
-            if (!standalone(reg, it) && _set_op.find(*it) != _set_op.end()) {
+            if (_set_op.find(*it) != _set_op.end()) {
                 strContent.push_back('\\');
             }
 
