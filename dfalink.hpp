@@ -26,27 +26,27 @@ class DFA {
 
     DFA(std::array<int, CHAR_CNT> &char_hash,
         size_t char_count,
-        std::list<iterator_array> &&listData,
-        std::set<iterator_array> &&sendState)
+        std::list<iterator_array> &&list_data,
+        std::set<iterator_array> &&s_end_state)
         : _char_hash(char_hash),
           _char_count(char_count),
-          _listData(std::move(listData)),
-          _sendState(std::move(sendState)) {
+          _list_data(std::move(list_data)),
+          _s_end_state(std::move(s_end_state)) {
 
     }
 
     DFA(std::array<int, CHAR_CNT> &char_hash,
         size_t char_count,
-        std::list<iterator_array> &listData,
-        std::set<iterator_array> &sendState)
+        std::list<iterator_array> &list_data,
+        std::set<iterator_array> &s_end_state)
         : _char_hash(char_hash),
           _char_count(char_count),
-          _listData(std::move(listData)),
-          _sendState(sendState) {
+          _list_data(std::move(list_data)),
+          _s_end_state(s_end_state) {
     }
 
     ~DFA() {
-        for (auto fuck : _listData) {
+        for (auto fuck : _list_data) {
             delete[] fuck;
         }
     }
@@ -61,7 +61,7 @@ class DFA {
     }
 
     bool calculate(const char *str) {
-        iterator_array s = *_listData.begin();
+        iterator_array s = *_list_data.begin();
 
         const char *p = str;
 
@@ -78,7 +78,7 @@ class DFA {
             ++p;
         }
 
-        if (_sendState.find(s) != _sendState.end()) {
+        if (_s_end_state.find(s) != _s_end_state.end()) {
             return true;
         } else {
             return false;
@@ -103,7 +103,7 @@ class DFA {
 
         printf("the data matrix is:\n");
 
-        for (auto &row : _listData) {
+        for (auto &row : _list_data) {
 
             printf("%-8p: ", reinterpret_cast<void *>(row));
 
@@ -116,7 +116,7 @@ class DFA {
 
         printf("the end state set:\n");
 
-        for (auto var : _sendState) {
+        for (auto var : _s_end_state) {
             printf("%-8p ", static_cast<void *>(var));
         }
 
@@ -126,10 +126,10 @@ class DFA {
     }
 
     void minimize() {
-        decltype(_sendState) sstart;
-        decltype(sstart) send(_sendState.begin(), _sendState.end());
+        decltype(_s_end_state) sstart;
+        decltype(sstart) send(_s_end_state.begin(), _s_end_state.end());
 
-        for (auto var : _listData) {
+        for (auto var : _list_data) {
             if (send.find(var) == send.end()) {
                 sstart.insert(var);
             }
@@ -298,20 +298,20 @@ class DFA {
                 // start from the second one of the divid
                 for (; it != divid.end(); ++it) {
 
-                    if (_sendState.find(*it) != _sendState.end()) {
-                        _sendState.erase(*it);
-                        _sendState.insert(nodeID);
+                    if (_s_end_state.find(*it) != _s_end_state.end()) {
+                        _s_end_state.erase(*it);
+                        _s_end_state.insert(nodeID);
                     }
 
                     // find in data matrix;
-                    for (auto it_data = _listData.begin(); it_data != _listData
+                    for (auto it_data = _list_data.begin(); it_data != _list_data
                             .end(); ++it_data) {
 
                         if (*it == *(it_data)) {
                             delete [] *(it_data);
-                            it_data = _listData.erase(it_data);
+                            it_data = _list_data.erase(it_data);
 
-                            if (it_data == _listData.end()) {
+                            if (it_data == _list_data.end()) {
                                 break;
                             }
                         }
@@ -351,7 +351,7 @@ class DFA {
 
         // bool diedFlag = true;
 
-        // for (auto it = _listData.begin(); it != _listData.end(); ++it) {
+        // for (auto it = _list_data.begin(); it != _list_data.end(); ++it) {
         //     auto index = *it;
         //     diedFlag = true;
 
@@ -365,7 +365,7 @@ class DFA {
         //     if (diedFlag) {
         //         // printf("died: %d\n", index);
         //         delete *(it);
-        //         it = _listData.erase(it);
+        //         it = _list_data.erase(it);
         //     }
         // }
     }
@@ -381,26 +381,31 @@ class DFA {
   private:
     std::array<int, CHAR_CNT> _char_hash;
     unsigned int _char_count = 0;
-    std::list<int **> _listData;
-    std::set<int **> _sendState;
+    std::list<int **> _list_data;
+    std::set<int **> _s_end_state;
     std::string _tag = "default tag of dfa.";
 };
 
+/**
+ * 构造 dfa
+ * @author piratf
+ * @param  nfa nfa 对象
+ * @return     DFA 对象的指针
+ */
 DFA *buildDFA(NFATable &nfa) {
-    Clock clock;
-    clock.start("nfa update.");
+    // update 函数，记录 nfa 除空跳转外的其他字符集
     nfa.update();
-    clock.terminal("nfa update end.");
-    auto chCnt = nfa.schar().size();
+    auto char_cnt = nfa.schar().size();
+    // 长度固定的 hash 表
     std::array<int, CHAR_CNT> char_hash;
-    // the invaild of char hash is -1
+    // 不被包含的字符位置为 -1
     memset(char_hash.data(), -1, char_hash.max_size() * sizeof(char_hash[0]));
 
-    std::list<iterator_array> listData;
     // 统计字符情况
     size_t cnt = 0;
 
     for (char var : nfa.schar()) {
+        // 对每一个字符填不同的值
         char_hash[static_cast<size_t>(var)] = cnt;
         ++cnt;
     }
@@ -410,7 +415,7 @@ DFA *buildDFA(NFATable &nfa) {
     // 当前遍历的集合
     std::set<size_t> scur;
     // 存储终态集合
-    std::set<iterator_array> sendState;
+    std::set<iterator_array> s_end_state;
     sstart.insert(nfa.index_head());
     // 空闭包
     nfa.getEplisonClosure(sstart);
@@ -421,62 +426,75 @@ DFA *buildDFA(NFATable &nfa) {
     // 未标记状态对应的 ID
     std::queue<size_t> qid;
 
+    // 第一个状态集的 ID 为 0
     cnt = 0;
+    // 第一个未标记的状态
     sdstates[sstart] = cnt;
     qid.push(cnt);
     qunflag.push(sstart);
 
+    // list 数据容器
+    std::list<iterator_array> list_data;
     // 记录 list 下标对应的指针
     std::vector<iterator_array> list_index;
-    iterator_array arr = new int *[chCnt];
-    listData.push_back(arr);
+    // 第一个空行
+    iterator_array arr = new int *[char_cnt];
+    list_data.push_back(arr);
     list_index.push_back(arr);
 
     int curID = 0;
 
-    clock.start("main loop.");
     while (!qunflag.empty()) {
-        // 标记 X
+        // 标记当前状态
         scur = qunflag.front();
+        // 当前状态 ID
         curID = qid.front();
         qunflag.pop();
         qid.pop();
 
-        // for 每一个输入字符 a
+        // for 每一个输入字符
         for (char ch : nfa.schar()) {
+            // 拷贝状态，准备做 smove + 空闭包 处理
             std::set<size_t> su = scur;
             nfa.getRouteClosure(ch, su);
             nfa.getEplisonClosure(su);
 
+            // 如果没在集合中找到这个状态集
             if (sdstates.find(su) == sdstates.end()) {
+                // 标记新的 ID
                 ++cnt;
                 sdstates[su] = cnt;
                 qunflag.push(su);
                 qid.push(cnt);
-                iterator_array arr = new int *[chCnt];
-                listData.push_back(arr);
+                // 新的行
+                iterator_array arr = new int *[char_cnt];
+                list_data.push_back(arr);
                 list_index.push_back(arr);
 
+                // 如果包含终态，那么将这一行的地址加入到 dfa 的终态集合中
                 if (su.find(nfa.index_tail()) != su.end()) {
-                    sendState.insert(arr);
+                    s_end_state.insert(arr);
                 }
             }
 
-            auto it = listData.begin();
+            auto it = list_data.begin();
 
+            // 移动迭代器到 cur ID 对应的行上
             for (int i = 0; i < curID; ++i) {
                 ++it;
             }
 
-            unsigned int a = sdstates[su];
+            // 建立跳转
+            // 先获得目标行的 ID
+            size_t a = sdstates[su];
+            // 填入 a 对应行的指针
+            // list_index 在这里使用，可以根据 ID 在 O(1) 复杂度内取得对应指针，而 list 需要 O(n) 复杂度，所以多建了这个 list_index
             (*(it))[char_hash[static_cast<size_t>(ch)]] =
                 reinterpret_cast<int *>(list_index[a]);
         }
     }
 
-    clock.terminal("main loop end.");
-
-    return new DFA(char_hash, chCnt, listData, sendState);
+    return new DFA(char_hash, char_cnt, list_data, s_end_state);
 }
 
 #endif
