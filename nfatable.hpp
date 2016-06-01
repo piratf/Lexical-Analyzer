@@ -90,6 +90,7 @@ class NFATable {
             }
         }
 
+        // 去除空跳转字符
         _schar.erase(0);
     }
 

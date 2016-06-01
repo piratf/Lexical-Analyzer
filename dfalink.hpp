@@ -125,10 +125,17 @@ class DFA {
 
     }
 
+    /**
+     * DFA 最小化
+     * @author piratf
+     */
     void minimize() {
+        // 类型推导
         decltype(_s_end_state) sstart;
+        // 使用终态集合初始化 send
         decltype(sstart) send(_s_end_state.begin(), _s_end_state.end());
 
+        // 所有内容分成两个集合
         for (auto var : _list_data) {
             if (send.find(var) == send.end()) {
                 sstart.insert(var);
@@ -141,43 +148,31 @@ class DFA {
         stemp.insert(send);
         unsigned int currentChar = 0;
 
-        // display();
 
         while (stemp != sdivide) {
             sdivide.swap(stemp);
             stemp.clear();
 
-            // puts("==========================");
-            // printf("sdivide\n");
-
-            // for (auto &d : sdivide) {
-            //     for (unsigned int data : d) {
-            //         printf("%d ", data);
-            //     }
-
-            //     putchar(10);
-            // }
-
+            // 判断当前集合是否有变化
             bool endOfMinimize = true;
 
             // 遍历当前划分中的每一个集合
             for (const auto &divide : sdivide) {
 
                 endOfMinimize = true;
-
-                // puts("new divide ========> ");
+                // 如果当前集合没有变化，就直接添加到 stemp 中
 
                 if (divide.size() == 1) {
                     stemp.insert(divide);
                     continue;
                 }
+                // 如果当前集合没有变化，就直接添加到 stemp 中
 
                 decltype(sstart) subset;
 
                 // 遍历 _title 中每一个可能的输入字符
                 for (unsigned int i = 0; i < _char_count; ++i) {
                     currentChar = i;
-                    // printf("currentChar = %d\n", currentChar);
                     subset.clear();
 
                     // 遍历当前所有状态，填充 subset 集合
@@ -189,14 +184,6 @@ class DFA {
 
                     bool needChange = true;
 
-                    // printf("subset: => ");
-
-                    // for (auto &var : subset) {
-                    //     printf("%d ", var);
-                    // }
-
-                    // putchar(10);
-
                     // 判断结果是不是在同一个划分内
                     for (auto d : sdivide) {
                         if (std::includes(d.begin(), d.end(), subset.begin(), subset.end())) {
@@ -207,7 +194,6 @@ class DFA {
 
                     // 如果不是
                     if (needChange) {
-                        // printf("need change.\n");
 
                         // 获得和所有 divide 的交集
                         for (auto d : sdivide) {
@@ -217,10 +203,10 @@ class DFA {
                             // 得到一个不为空的交集，添加所有单步结果在此交集内的元素到新的划分中
                             if (!st.empty()) {
 
+                                // 如果集合和外层处理的是同一个集合，那么拆分出来的项可以汇总作为单独的新集合
                                 if (d == divide) {
                                     decltype(subset) temp;
 
-                                    // traverse current divide
                                     for (auto state : divide) {
 
                                         if (st.find(reinterpret_cast<iterator_array>(state[currentChar]))
@@ -231,6 +217,7 @@ class DFA {
 
                                     stemp.insert(temp);
                                 } else {
+                                    // 否则，每一个拆分出来的项都要单独作为一个集合
                                     for (auto state : divide) {
 
                                         if (st.find(reinterpret_cast<iterator_array>(state[currentChar])) != st.end()) {
@@ -245,68 +232,42 @@ class DFA {
                         }
 
                         endOfMinimize = false;
-                        // puts("stemp: ");
-
-                        // for (auto &d : stemp) {
-                        //     for (unsigned int data : d) {
-                        //         printf("%d ", data);
-                        //     }
-
-                        //     putchar(10);
-                        // }
-
+                    
                         break;
                     }
                 }
 
+                // 如果当前集合没有变化，就直接添加到 stemp 中
                 if (endOfMinimize) {
                     stemp.insert(divide);
                 }
             }
         }
 
-        // puts("after minimize");
+        // 得到所有集合的状态后，开始处理数据，删除多余行
+        for (const auto &divide : sdivide) {
 
-        // for (const auto &s : sdivide) {
-
-        //     for (auto var : s) {
-        //         printf("%-8p ", reinterpret_cast<void *>(var));
-        //     }
-
-        //     putchar(10);
-        // }
-
-        // puts("=========================");
-        // fflush(stdout);
-
-
-        // puts("modify data matrix.");
-        // fflush(stdout);
-        // display();
-
-        // decltype(_vecData) vecNew;
-        // vecNew.clear();
-
-        for (const auto &divid : sdivide) {
-
-            auto it = divid.begin();
+            auto it = divide.begin();
+            // 集合的第一个内容作为保留内容，其他的会被删掉
             auto nodeID = *it;
 
             ++it;
 
-            if (it != divid.end()) {
-                // start from the second one of the divid
-                for (; it != divid.end(); ++it) {
+            // 这个判断表示如果 divide 集合中不止一个元素，就继续处理
+            if (it != divide.end()) {
+                // start from the second one of the divide
+                for (; it != divide.end(); ++it) {
 
                     if (_s_end_state.find(*it) != _s_end_state.end()) {
                         _s_end_state.erase(*it);
                         _s_end_state.insert(nodeID);
                     }
 
-                    // find in data matrix;
+                    // search in data matrix;
                     for (auto it_data = _list_data.begin(); it_data != _list_data
                             .end(); ++it_data) {
 
+                        // 删除对应行
                         if (*it == *(it_data)) {
                             delete [] *(it_data);
                             it_data = _list_data.erase(it_data);
@@ -316,6 +277,7 @@ class DFA {
                             }
                         }
 
+                        // 如果不是对应行，查看是否有集合内的下标，处理下标
                         for (unsigned int i = 0; i < _char_count; ++i) {
 
                             if ((*it_data)[i] == reinterpret_cast<int *>(*it)) {
@@ -325,49 +287,7 @@ class DFA {
                     }
                 }
             }
-
-            // printf("id = %d\n", id);
-            // printf("nodeID = %d\n", nodeID);
-            // vecNew.push_back(_vecData[nodeID]);
         }
-
-        // display();
-        // fflush(stdout);
-
-        // printf("\n");
-
-        // for (auto &row : vecNew) {
-        //     for (auto &var : row) {
-        //         printf("%d ", var);
-        //     }
-
-        //     putchar(10);
-        // }
-
-        // // printf("start to remove died node\n");
-        // // fflush(stdout);
-
-        // 记录死亡的节点
-
-        // bool diedFlag = true;
-
-        // for (auto it = _list_data.begin(); it != _list_data.end(); ++it) {
-        //     auto index = *it;
-        //     diedFlag = true;
-
-        //     for (unsigned int i = 0; i < _char_count; ++i) {
-        //         if (index[i] != reinterpret_cast<int *>(index)) {
-        //             diedFlag = false;
-        //             break;
-        //         }
-        //     }
-
-        //     if (diedFlag) {
-        //         // printf("died: %d\n", index);
-        //         delete *(it);
-        //         it = _list_data.erase(it);
-        //     }
-        // }
     }
 
     std::string tag() {
