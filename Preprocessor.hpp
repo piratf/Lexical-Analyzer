@@ -2,7 +2,6 @@
 #define PREPROCESSOR_H_
 
 #include "nfatable.hpp"
-#include "dfalink.hpp"
 #include "LexicalAnalyzer.hpp"
 #include "pclock.hpp"
 #include <string>
@@ -197,10 +196,7 @@ class Preprocessor {
 
             // // _regTrees[tag] -> backOrderDisplay();
             // // _regTrees[tag] -> middleOrderDisplay();
-            buildDFAClock.start(tag.data());
             DFA *dfa = buildDFA(nfa);
-            buildDFAClock.terminal();
-            buildDFAClock.display_micro_seconds();
             dfa -> tag(tag);
             dfa -> minimize();
 

@@ -14,7 +14,7 @@ debug: $(resources)
 
 run: $(resources)
 	g++ --std=c++11 -o3 main.cpp -o main
-	./main input.txt main.cpp
+	./main input.txt code.txt
 
 check: $(resources)
 	g++ --std=c++11 -o0 -g main.cpp -o main

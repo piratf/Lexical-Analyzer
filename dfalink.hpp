@@ -1,6 +1,10 @@
 #ifndef DFA_H_
 #define DFA_H_
 
+#include "pclock.hpp"
+
+using namespace piratf;
+
 #include "nfatable.hpp"
 #include <cstdio>
 #include <cstring>
@@ -37,8 +41,8 @@ class DFA {
         std::set<iterator_array> &sendState)
         : _char_hash(char_hash),
           _char_count(char_count),
+          _listData(std::move(listData)),
           _sendState(sendState) {
-        _listData = std::move(listData);
     }
 
     ~DFA() {
@@ -383,7 +387,10 @@ class DFA {
 };
 
 DFA *buildDFA(NFATable &nfa) {
+    Clock clock;
+    clock.start("nfa update.");
     nfa.update();
+    clock.terminal("nfa update end.");
     auto chCnt = nfa.schar().size();
     std::array<int, CHAR_CNT> char_hash;
     // the invaild of char hash is -1
@@ -427,6 +434,7 @@ DFA *buildDFA(NFATable &nfa) {
 
     int curID = 0;
 
+    clock.start("main loop.");
     while (!qunflag.empty()) {
         // 标记 X
         scur = qunflag.front();
@@ -465,6 +473,8 @@ DFA *buildDFA(NFATable &nfa) {
                 reinterpret_cast<int *>(list_index[a]);
         }
     }
+
+    clock.terminal("main loop end.");
 
     return new DFA(char_hash, chCnt, listData, sendState);
 }

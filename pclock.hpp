@@ -21,9 +21,10 @@ namespace piratf {
         }
 
         void terminal(const char *message) {
-            printf("%s\n", message);
+            printf("%s => ", message);
             fflush(stdout);
             _end = std::chrono::high_resolution_clock::now();
+            display_seconds();
         }
 
         void terminal() {

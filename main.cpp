@@ -1,8 +1,10 @@
 #include "LexicalAnalyzer.hpp"
 #include "Preprocessor.hpp"
+#include "pclock.hpp"
 #include <cstdio>
 #include <fstream>
 #include <chrono>
+using namespace piratf;
 using namespace std;
 
 /**
@@ -13,7 +15,6 @@ using namespace std;
  */
 void preprocess(const char *filePath, Preprocessor &ppr) {
 
-    auto begin = std::chrono::high_resolution_clock::now();
     ifstream input(filePath);
     char str[N] = {};
 
@@ -36,9 +37,6 @@ void preprocess(const char *filePath, Preprocessor &ppr) {
     input.close();
 
     ppr.display();
-    auto end = std::chrono::high_resolution_clock::now();
-    printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
-    fflush(stdout);
 }
 
 void test(Preprocessor &ppr, LexicalAnalyzer &la) {
@@ -51,24 +49,25 @@ int main(int argc, char *argv[]) {
     freopen("output.txt", "w", stdout);
     Preprocessor ppr;
     LexicalAnalyzer la;
+    Clock clock;
 
     printf("argc = %d\n", argc);
 
     if (argc > 1) {
+        clock.start("preprocess.");
         preprocess(argv[1], ppr);
-        auto begin = std::chrono::high_resolution_clock::now();
+        clock.terminal("preprocess end.");
+        clock.start("build LA.");
         ppr.buildLA(la);
-        auto end = std::chrono::high_resolution_clock::now();
-        printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+        clock.terminal("build LA end.");
     } else {
         test(ppr, la);
     }
 
     if (argc > 2) {
-        auto begin = std::chrono::high_resolution_clock::now();
+        clock.start("parse.");
         la.parse(argv[2]);
-        auto end = std::chrono::high_resolution_clock::now();
-        printf("%lld micro seconds\n", std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+        clock.terminal("parse end.");
     }
 
     return 0;
