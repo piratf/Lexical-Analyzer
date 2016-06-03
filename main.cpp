@@ -1,5 +1,5 @@
-#include "LexicalAnalyzer.hpp"
-#include "Preprocessor.hpp"
+#include "lexical_analyzer.hpp"
+#include "preprocessor.hpp"
 #include "pclock.hpp"
 #include <cstdio>
 #include <fstream>

@@ -1,5 +1,4 @@
-argc = 3
-preprocess.
+argc = 1
 tag = number
 reg = [0-9]
 tag = char
@@ -41,77 +40,417 @@ reg = \[numseq\].\|\[numseq\]E\|\[numseq\]E\(+\|-\)\|"\(\[char\]\|\[number\]\|\[
 ----- to dfa -----
 value keyword id operator literal temp 
 -------- end display -------------------
-preprocess end. => 0 seconds
-build LA.
-build LA end. => 12 seconds
-parse.
 ===============================
 => start parse.
-read cnt = 210
-buf[0] =  
+read cnt = 1024
+buf[0] = #
 Current content: 
-  void 123main()
-{ int _x,a,b;
-// float y,c,d;
- /*     x = a + b;
-      y = c / d; */
-      string str = "111";
-      if(x>y)
-        x = 10;
-      else
-        y=100;
-        z = 23.;
-        f=23E-233;
-}
-
-
-
-
-
-line 1   : (    keyword : void )
-----------> 123main() 
+#include "lexical_analyzer.hpp"
+#include "preprocessor.hpp"
+#include "pclock.hpp"
+#include <cstdio>
+#include <fstream>
+#include <chrono>
+using namespace piratf;
+using namespace std;
+
+/**
+ * 预处理正规式文件
+ * @author piratf
+ * @param  filePath 正规式文件路径
+ * @param  ppr      被更新的预处理对象
+ */
+void preprocess(const char *filePath, Preprocessor &ppr) {
+
+    ifstream input(filePath);
+    char str[N] = {};
+
+    while (!input.eof()) {
+        input.getline(str, N, '\n');
+
+        // 处理正规式注释
+        if (str[0] && str[0] != '#') {
+            std::string reg(str, strlen(str));
+
+            // 处理 CRLF 换行
+            if (*reg.rbegin() == 13) {
+                reg.pop_back();
+            }
+
+            ppr.update(reg);
+        }
+    }
+
+    input.close();
+
+    ppr.display();
+}
+
+void test(Preprocessor &ppr, LexicalAnalyzer &la) {
+    preprocess("input.txt", ppr);
+    ppr.buildLA(la);
+    la.parse("main.cpp");
+}
+
+int main
+line 1   : (    keyword : #include )
+----------> "lexical_analyzer.hpp"
 error** : Unreachable sequences. line 1
-line 1   : (   operator : { )
-line 1   : (    keyword : int )
-line 1   : (         id : _x )
-line 1   : (   operator : , )
-line 1   : (         id : a )
-line 1   : (   operator : , )
-line 1   : (         id : b )
-line 1   : (   operator : ; )
-line 3   : (    comment : // float y,c,d; )
-line 4   : (    comment : /*     x = a + b;
-      y = c / d; */ )
-line 5   : (         id : string )
-line 5   : (         id : str )
-line 5   : (   operator : = )
-line 5   : (    literal : "111" )
-line 5   : (   operator : ; )
-line 6   : (    keyword : if )
-line 6   : (   operator : ( )
-line 6   : (         id : x )
+line 2   : (    keyword : #include )
+----------> "preprocessor.hpp"
+error** : Unreachable sequences. line 2
+line 3   : (    keyword : #include )
+----------> "pclock.hpp"
+error** : Unreachable sequences. line 3
+line 4   : (    keyword : #include )
+line 4   : (   operator : < )
+line 4   : (         id : cstdio )
+line 4   : (   operator : > )
+line 5   : (    keyword : #include )
+line 5   : (   operator : < )
+line 5   : (         id : fstream )
+line 5   : (   operator : > )
+line 6   : (    keyword : #include )
+line 6   : (   operator : < )
+line 6   : (         id : chrono )
 line 6   : (   operator : > )
-line 6   : (         id : y )
-line 6   : (   operator : ) )
-line 7   : (         id : x )
-line 7   : (   operator : = )
-line 7   : (      value : 10 )
+line 7   : (         id : using )
+line 7   : (         id : namespace )
+line 7   : (         id : piratf )
 line 7   : (   operator : ; )
-line 8   : (    keyword : else )
-line 9   : (         id : y )
-line 9   : (   operator : = )
-line 9   : (      value : 100 )
-line 9   : (   operator : ; )
-line 10  : (         id : z )
-line 10  : (   operator : = )
-----------> 23.; 
-error** : Unreachable sequences. line 10
-line 10  : (         id : f )
-line 10  : (   operator : = )
-line 10  : (      value : 23E-233 )
-line 10  : (   operator : ; )
-line 11  : (   operator : } )
+line 8   : (         id : using )
+line 8   : (         id : namespace )
+line 8   : (         id : std )
+line 8   : (   operator : ; )
+line 15  : (    comment : /**
+ * 预处理正规式文件
+ * @author piratf
+ * @param  filePath 正规式文件路径
+ * @param  ppr      被更新的预处理对象
+ */ )
+line 16  : (    keyword : void )
+line 16  : (         id : preprocess )
+line 16  : (   operator : ( )
+line 16  : (         id : const )
+line 16  : (         id : char )
+line 16  : (   operator : * )
+line 16  : (         id : filePath )
+line 16  : (   operator : , )
+line 16  : (         id : Preprocessor )
+line 16  : (   operator : & )
+line 16  : (         id : ppr )
+line 16  : (   operator : ) )
+line 16  : (   operator : { )
+line 18  : (         id : ifstream )
+line 18  : (         id : input )
+line 18  : (   operator : ( )
+line 18  : (         id : filePath )
+line 18  : (   operator : ) )
+line 18  : (   operator : ; )
+line 19  : (         id : char )
+line 19  : (         id : str )
+line 19  : (   operator : [ )
+line 19  : (         id : N )
+line 19  : (   operator : ] )
+line 19  : (   operator : = )
+line 19  : (   operator : { )
+line 19  : (   operator : } )
+line 19  : (   operator : ; )
+line 21  : (    keyword : while )
+line 21  : (   operator : ( )
+line 21  : (   operator : ! )
+line 21  : (         id : input )
+line 21  : (   operator : . )
+line 21  : (         id : eof )
+line 21  : (   operator : ( )
+line 21  : (   operator : ) )
+line 21  : (   operator : ) )
+line 21  : (   operator : { )
+line 22  : (         id : input )
+line 22  : (   operator : . )
+line 22  : (         id : getline )
+line 22  : (   operator : ( )
+line 22  : (         id : str )
+line 22  : (   operator : , )
+line 22  : (         id : N )
+line 22  : (   operator : , )
+line 22  : (    literal : '\n' )
+line 22  : (   operator : ) )
+line 22  : (   operator : ; )
+line 25  : (    comment : // 处理正规式注释 )
+line 25  : (    keyword : if )
+line 25  : (   operator : ( )
+line 25  : (         id : str )
+line 25  : (   operator : [ )
+line 25  : (      value : 0 )
+line 25  : (   operator : ] )
+line 25  : (   operator : && )
+line 25  : (         id : str )
+line 25  : (   operator : [ )
+line 25  : (      value : 0 )
+line 25  : (   operator : ] )
+line 25  : (   operator : ! )
+line 25  : (   operator : = )
+line 25  : (    literal : '#' )
+line 25  : (   operator : ) )
+line 25  : (   operator : { )
+line 26  : (         id : std )
+line 26  : (   operator : :: )
+line 26  : (         id : string )
+line 26  : (         id : reg )
+line 26  : (   operator : ( )
+line 26  : (         id : str )
+line 26  : (   operator : , )
+line 26  : (         id : strlen )
+line 26  : (   operator : ( )
+line 26  : (         id : str )
+line 26  : (   operator : ) )
+line 26  : (   operator : ) )
+line 26  : (   operator : ; )
+line 29  : (    comment : // 处理 CRLF 换行 )
+line 29  : (    keyword : if )
+line 29  : (   operator : ( )
+line 29  : (   operator : * )
+line 29  : (         id : reg )
+line 29  : (   operator : . )
+line 29  : (         id : rbegin )
+line 29  : (   operator : ( )
+line 29  : (   operator : ) )
+line 29  : (   operator : = )
+line 29  : (   operator : = )
+line 29  : (      value : 13 )
+line 29  : (   operator : ) )
+line 29  : (   operator : { )
+line 30  : (         id : reg )
+line 30  : (   operator : . )
+line 30  : (         id : pop_back )
+line 30  : (   operator : ( )
+line 30  : (   operator : ) )
+line 30  : (   operator : ; )
+line 31  : (   operator : } )
+line 33  : (         id : ppr )
+line 33  : (   operator : . )
+line 33  : (         id : update )
+line 33  : (   operator : ( )
+line 33  : (         id : reg )
+line 33  : (   operator : ) )
+line 33  : (   operator : ; )
+line 34  : (   operator : } )
+line 35  : (   operator : } )
+line 37  : (         id : input )
+line 37  : (   operator : . )
+line 37  : (         id : close )
+line 37  : (   operator : ( )
+line 37  : (   operator : ) )
+line 37  : (   operator : ; )
+line 39  : (         id : ppr )
+line 39  : (   operator : . )
+line 39  : (         id : display )
+line 39  : (   operator : ( )
+line 39  : (   operator : ) )
+line 39  : (   operator : ; )
+line 40  : (   operator : } )
+line 42  : (    keyword : void )
+line 42  : (         id : test )
+line 42  : (   operator : ( )
+line 42  : (         id : Preprocessor )
+line 42  : (   operator : & )
+line 42  : (         id : ppr )
+line 42  : (   operator : , )
+line 42  : (         id : LexicalAnalyzer )
+line 42  : (   operator : & )
+line 42  : (         id : la )
+line 42  : (   operator : ) )
+line 42  : (   operator : { )
+line 43  : (         id : preprocess )
+line 43  : (   operator : ( )
+line 43  : (    literal : "input.txt" )
+line 43  : (   operator : , )
+line 43  : (         id : ppr )
+line 43  : (   operator : ) )
+line 43  : (   operator : ; )
+line 44  : (         id : ppr )
+line 44  : (   operator : . )
+line 44  : (         id : buildLA )
+line 44  : (   operator : ( )
+line 44  : (         id : la )
+line 44  : (   operator : ) )
+line 44  : (   operator : ; )
+line 45  : (         id : la )
+line 45  : (   operator : . )
+line 45  : (         id : parse )
+line 45  : (   operator : ( )
+line 45  : (    literal : "main.cpp" )
+line 45  : (   operator : ) )
+line 45  : (   operator : ; )
+line 46  : (   operator : } )
+line 48  : (    keyword : int )
+read cnt = 605
+buf[0] = m
+Current content: 
+main(int argc, char *argv[]) {
+    freopen("output.txt", "w", stdout);
+    Preprocessor ppr;
+    LexicalAnalyzer la;
+    Clock clock;
+
+    printf("argc = %d\n", argc);
+
+    if (argc > 1) {
+        clock.start("preprocess.");
+        preprocess(argv[1], ppr);
+        clock.terminal("preprocess end.");
+        clock.start("build LA.");
+        ppr.buildLA(la);
+        clock.terminal("build LA end.");
+    } else {
+        test(ppr, la);
+    }
+
+    if (argc > 2) {
+        clock.start("parse.");
+        la.parse(argv[2]);
+        clock.terminal("parse end.");
+    }
+
+    return 0;
+}
+line 48  : (         id : main )
+line 48  : (   operator : ( )
+line 48  : (    keyword : int )
+line 48  : (         id : argc )
+line 48  : (   operator : , )
+line 48  : (         id : char )
+line 48  : (   operator : * )
+line 48  : (         id : argv )
+line 48  : (   operator : [ )
+line 48  : (   operator : ] )
+line 48  : (   operator : ) )
+line 48  : (   operator : { )
+line 49  : (         id : freopen )
+line 49  : (   operator : ( )
+line 49  : (    literal : "output.txt" )
+line 49  : (   operator : , )
+line 49  : (    literal : "w" )
+line 49  : (   operator : , )
+line 49  : (         id : stdout )
+line 49  : (   operator : ) )
+line 49  : (   operator : ; )
+line 50  : (         id : Preprocessor )
+line 50  : (         id : ppr )
+line 50  : (   operator : ; )
+line 51  : (         id : LexicalAnalyzer )
+line 51  : (         id : la )
+line 51  : (   operator : ; )
+line 52  : (         id : Clock )
+line 52  : (         id : clock )
+line 52  : (   operator : ; )
+line 54  : (         id : printf )
+line 54  : (   operator : ( )
+line 54  : (    literal : "argc = %d\n" )
+line 54  : (   operator : , )
+line 54  : (         id : argc )
+line 54  : (   operator : ) )
+line 54  : (   operator : ; )
+line 56  : (    keyword : if )
+line 56  : (   operator : ( )
+line 56  : (         id : argc )
+line 56  : (   operator : > )
+line 56  : (      value : 1 )
+line 56  : (   operator : ) )
+line 56  : (   operator : { )
+line 57  : (         id : clock )
+line 57  : (   operator : . )
+line 57  : (         id : start )
+line 57  : (   operator : ( )
+line 57  : (    literal : "preprocess." )
+line 57  : (   operator : ) )
+line 57  : (   operator : ; )
+line 58  : (         id : preprocess )
+line 58  : (   operator : ( )
+line 58  : (         id : argv )
+line 58  : (   operator : [ )
+line 58  : (      value : 1 )
+line 58  : (   operator : ] )
+line 58  : (   operator : , )
+line 58  : (         id : ppr )
+line 58  : (   operator : ) )
+line 58  : (   operator : ; )
+line 59  : (         id : clock )
+line 59  : (   operator : . )
+line 59  : (         id : terminal )
+line 59  : (   operator : ( )
+line 59  : (    literal : "preprocess end." )
+line 59  : (   operator : ) )
+line 59  : (   operator : ; )
+line 60  : (         id : clock )
+line 60  : (   operator : . )
+line 60  : (         id : start )
+line 60  : (   operator : ( )
+line 60  : (    literal : "build LA." )
+line 60  : (   operator : ) )
+line 60  : (   operator : ; )
+line 61  : (         id : ppr )
+line 61  : (   operator : . )
+line 61  : (         id : buildLA )
+line 61  : (   operator : ( )
+line 61  : (         id : la )
+line 61  : (   operator : ) )
+line 61  : (   operator : ; )
+line 62  : (         id : clock )
+line 62  : (   operator : . )
+line 62  : (         id : terminal )
+line 62  : (   operator : ( )
+line 62  : (    literal : "build LA end." )
+line 62  : (   operator : ) )
+line 62  : (   operator : ; )
+line 63  : (   operator : } )
+line 63  : (    keyword : else )
+line 63  : (   operator : { )
+line 64  : (         id : test )
+line 64  : (   operator : ( )
+line 64  : (         id : ppr )
+line 64  : (   operator : , )
+line 64  : (         id : la )
+line 64  : (   operator : ) )
+line 64  : (   operator : ; )
+line 65  : (   operator : } )
+line 67  : (    keyword : if )
+line 67  : (   operator : ( )
+line 67  : (         id : argc )
+line 67  : (   operator : > )
+line 67  : (      value : 2 )
+line 67  : (   operator : ) )
+line 67  : (   operator : { )
+line 68  : (         id : clock )
+line 68  : (   operator : . )
+line 68  : (         id : start )
+line 68  : (   operator : ( )
+line 68  : (    literal : "parse." )
+line 68  : (   operator : ) )
+line 68  : (   operator : ; )
+line 69  : (         id : la )
+line 69  : (   operator : . )
+line 69  : (         id : parse )
+line 69  : (   operator : ( )
+line 69  : (         id : argv )
+line 69  : (   operator : [ )
+line 69  : (      value : 2 )
+line 69  : (   operator : ] )
+line 69  : (   operator : ) )
+line 69  : (   operator : ; )
+line 70  : (         id : clock )
+line 70  : (   operator : . )
+line 70  : (         id : terminal )
+line 70  : (   operator : ( )
+line 70  : (    literal : "parse end." )
+line 70  : (   operator : ) )
+line 70  : (   operator : ; )
+line 71  : (   operator : } )
+line 73  : (    keyword : return )
+line 73  : (      value : 0 )
+line 73  : (   operator : ; )
+line 74  : (   operator : } )
 -------------------------------
-Parse end, 2 error found.
+Parse end, 3 error found.
 ===============================
-parse end. => 0 seconds

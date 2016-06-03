@@ -2,7 +2,7 @@
 #define PREPROCESSOR_H_
 
 #include "nfatable.hpp"
-#include "LexicalAnalyzer.hpp"
+#include "lexical_analyzer.hpp"
 #include "pclock.hpp"
 #include <string>
 #include <map>
